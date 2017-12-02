@@ -1,5 +1,7 @@
 function [modelOut]=useHighFiberDiet_AGORA(modelIn)
 % assign a high fiber diet for the AGORA microbes
+% used as constraints to predict the growth rates shown in Table S6 in
+% Magnusdottir et al., Nat Biotech 2017
 % defined similarly as in Heinken and Thiele, AEM 2015
 % anaerobic medium
 
