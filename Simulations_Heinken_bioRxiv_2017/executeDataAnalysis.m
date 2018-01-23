@@ -52,23 +52,23 @@ load(strcat(currentDir,'\InputFiles\BileAcidProducers.mat'));
 mets=fieldnames(SingleModel_BileAcid_Production);
 mets=sort(mets);
 for i=1:length(BileAcidProducers)
-    SingelModels_Output_Table{i+1,1}=BileAcidProducers{i,1};
+    SingleModels_Output_Table{i+1,1}=BileAcidProducers{i,1};
     for j=1:length(mets)
-        SingelModels_Output_Table{1,j+1}=strrep(mets{j},'BA_','');
+        SingleModels_Output_Table{1,j+1}=strrep(mets{j},'BA_','');
         if ~isempty(SingleModel_BileAcid_Production.(mets{j})(strcmp(BileAcidProducers{i,1},SingleModel_BileAcid_Production.(mets{j})(:,1)),2))
             val=SingleModel_BileAcid_Production.(mets{j})(strcmp(BileAcidProducers{i,1},SingleModel_BileAcid_Production.(mets{j})(:,1)),2);
             val=val{1};
             if ischar(val)
-                SingelModels_Output_Table{i+1,j+1}=str2num(val);
+                SingleModels_Output_Table{i+1,j+1}=str2num(val);
             else
-                SingelModels_Output_Table{i+1,j+1}=val;
+                SingleModels_Output_Table{i+1,j+1}=val;
             end
         else
-            SingelModels_Output_Table{i+1,j+1}=0;
+            SingleModels_Output_Table{i+1,j+1}=0;
         end
     end
 end
-save(strcat(currentDir,'\Results\SingleModels_Output_Table'),'SingelModels_Output_Table');
+save(strcat(currentDir,'\Results\SingleModels_Output_Table'),'SingleModels_Output_Table');
 
 %% Analysis of pairwise models
 load(strcat(currentDir,'\InputFiles\BileAcid_Production_ComplementaryPairs.mat'));
