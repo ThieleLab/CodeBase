@@ -2,21 +2,9 @@
 % gut microbiome reveals distinct bile acid deconjugation and 
 % biotransformation potential in healthy and IBD individuals (preprint on 
 % bioRxiv, 2017)
-
-% Includes the following steps:
-% Calculation of reaction abundances
-% Creation of output tables summarizing the results shown in the paper
-% Statistical analysis
-% Analysis of shadow prices
-
-% NOTE: Pairwise modeling results, strain-level flux contributions,and 
-% shadow prices are provided already extracted from the computed flux
-% solutions. The source flux solutions are several GB of data and thus 
-% could not be provided.
 % Almut Heinken, 01/2018
 
-%% repeat the analysis
-
+%% Execute this script to repeat the analysis.
 currentDir = pwd;
 % create a folder where the results will be saved
 mkdir('Results');
