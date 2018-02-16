@@ -10,6 +10,8 @@ model=changeRxnBounds(model,model.rxns(strmatch('EX_',model.rxns)),0,'l');
 % simple sugars and starch
 model=changeRxnBounds(model,'EX_fru(e)',-0.148986,'l');
 model=changeRxnBounds(model,'EX_glc(e)',-0.148986,'l');
+% changed reaction ID in newer versions of AGORA
+model=changeRxnBounds(model,'EX_glc_D(e)',-0.148986,'l');
 model=changeRxnBounds(model,'EX_gal(e)',-0.148986,'l');
 model=changeRxnBounds(model,'EX_man(e)',-0.148986,'l');
 model=changeRxnBounds(model,'EX_mnl(e)',-0.148986,'l');
