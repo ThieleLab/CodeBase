@@ -66,7 +66,7 @@ save(strcat(savePath,'SingleModels_Output_Table'),'SingleModels_Output_Table');
 %% Analysis of pairwise models
 load('BileAcid_Production_ComplementaryPairs.mat');
 % calculate the number of pairs that enabled production for each bile acid
-mets=strrep(mets,'BA_','');
+mets=unique(ComplementaryPairs(2:end,9));
 for i=1:length(mets)
     Number_Enabling_Pairs{i,1}=mets{i};
     numPairs=strmatch(mets{i},ComplementaryPairs(:,9));
