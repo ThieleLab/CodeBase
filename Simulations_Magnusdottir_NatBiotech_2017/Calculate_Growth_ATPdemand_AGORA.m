@@ -9,7 +9,7 @@ initCobraToolbox
 
 % Import file with information on AGORA including reconstruction names
 currentDir = pwd;
-[~,infoFile,~]=xlsread(strcat(currentDir,'\InputFiles\','ModelInformation.xlsx'));
+[~,infoFile,~]=xlsread('ModelInformation.xlsx');
 
 %% do the calculations
 Biomass.species=infoFile(2:end,3);
@@ -31,7 +31,7 @@ ATPDemand.HFaerobic=zeros(size(ATPDemand.species));
 % loop through all AGORA models and calculate the growth rates and ATP
 % demand on the two diets with/without oxygen
 for i=2:size(infoFile,1)
-    load(strcat(currentDir,'\AGORA\',infoFile{i,3},'.mat'));
+    load(strcat(currentDir,'\Agora-1.02\mat\',infoFile{i,3},'.mat'));
     % calculate growth rates
     bioID=model.rxns(strmatch('biomass',model.rxns));
     model=changeObjective(model,bioID{1,1});

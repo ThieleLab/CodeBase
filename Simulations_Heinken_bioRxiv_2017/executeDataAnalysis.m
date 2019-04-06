@@ -5,63 +5,68 @@
 % Almut Heinken, 01/2018
 
 %% Execute this script to repeat the analysis.
-currentDir = pwd;
-% create a folder where the results will be saved
-mkdir('Results');
+% First, please download the AGORA resource (version 1.02) from here: https://webdav-r3lab.uni.lu/public/msp/AGORA-1.02/Agora-1.02-EuropeanAverage.zip
+% Extract the mat files and the them into a folder.
+% Define the path to the folder contaibning AGORA.
+modelPath='YOUR_PATH_TO_AGORA';
+
+% Import a file with information on the AGORA organisms including 
+% reconstruction names and taxonomy.
+[~,taxonomy,~]=xlsread('AGORA_infoFile.xlsx');
+
+% Define the path where you want the created pairwise models and 
+% computed results to  be saved.
+savePath='YOUR_PATH_TO_RESULTS';
 
 %% Calculation of reaction abundances
 
 rxnsList={'TCDCHOLBHSe';'GCDCHOLBHSe';'GCHOLBHSe';'TCHOLBHSe';'12aHSDHe';'7AHSDHe';'CDCA7aHSDHe';'7AHSDH';'UCA7bHSDHe';'UDCA7bHSDHe';'CA3aHSDHe';'CDCA3aHSDHe';'ICA3bHSDHe';'ICDCA3bHSDHe';'BICoAL1';'BICoAL2';'BICoAL3';'BAIA1';'BAIA2';'BAIA3';'BAICDH1';'BAICDH2';'BAICDH3';'BAICDH4';'BAICDH5';'BAICDH6';'BAIF1';'BAIF2';'BAIF3';'BAIEI1';'BAIEI2';'BAIEI3'};
-[~,~,taxonomy] = xlsread(strcat(currentDir,'\InputFiles\ModelInformation.xlsx'));
-modelFolder=strcat(currentDir,'\AGORA_models\');
 
 % calculation of reaction abundance for HMP microbiomes
-load(strcat(currentDir,'\InputFiles\HMP_abundance.mat'));
-[ReactionAbundance]=calculateReactionAbundance(HMP_abundance,modelFolder,rxnsList,[],taxonomy);
-save(strcat(currentDir,'\Results\HMP_ReactionAbundance'),'ReactionAbundance');
+load('HMP_abundance.mat');
+[ReactionAbundance]=calculateReactionAbundance(HMP_abundance,modelPath,taxonomy,rxnsList,[]);
+save(strcat(savePath,'HMP_ReactionAbundance'),'ReactionAbundance');
 %delete(gcp('nocreate'))
 % calculation of reaction abundance for MetaHIT microbiomes
-load(strcat(currentDir,'\InputFiles\MetaHIT_abundance.mat'));
-[ReactionAbundance]=calculateReactionAbundance(MetaHIT_abundance,modelFolder,rxnsList,[],taxonomy);
-save(strcat(currentDir,'\Results\MetaHIT_ReactionAbundance'),'ReactionAbundance');
+load('MetaHIT_abundance.mat');
+[ReactionAbundance]=calculateReactionAbundance(MetaHIT_abundance,modelPath,taxonomy,rxnsList,[]);
+save(strcat(savePath,'MetaHIT_ReactionAbundance'),'ReactionAbundance');
 %delete(gcp('nocreate'))
 % calculation of reaction abundance for pediatric IBD microbiomes
-load(strcat(currentDir,'\InputFiles\pIBD_abundance.mat'));
-[ReactionAbundance]=calculateReactionAbundance(pIBD_abundance,modelFolder,rxnsList,[],taxonomy);
-save(strcat(currentDir,'\Results\pIBD_ReactionAbundance'),'ReactionAbundance');
+load('pIBD_abundance.mat');
+[ReactionAbundance]=calculateReactionAbundance(pIBD_abundance,modelPath,taxonomy,rxnsList,[]);
+save(strcat(savePath,'pIBD_ReactionAbundance'),'ReactionAbundance');
 
 
 %% Creation of output tables
-%% Analysis of single models
+%% Prediction of bile acid production by single models
+% Initialize the COBRA Toolbox
+initCobraToolbox
 % create a table with bile acid production by the 217 bile acid producers
 % on Average European diet
-load(strcat(currentDir,'\InputFiles\SingleModel_BileAcid_Production.mat'));
-load(strcat(currentDir,'\InputFiles\BileAcidProducers.mat'));
-mets=fieldnames(SingleModel_BileAcid_Production);
-mets=sort(mets);
+load('BileAcidProducers.mat');
+BA_Objectives={'EX_C02528(e)','EX_cholate(e)','EX_12dhchol(e)','EX_7ocholate(e)','EX_7dhcdchol(e)','EX_3dhchol(e)','EX_3dhcdchol(e)','EX_isochol(e)','EX_icdchol(e)','EX_HC02191(e)','EX_dchac(e)','EX_adchac(e)','EX_alchac(e)','EX_uchol(e)','EX_HC02194(e)'};
+for j=1:length(BA_Objectives)
+    SingleModels_Output_Table{1,j+1}=BA_Objectives{j};
+end
 for i=1:length(BileAcidProducers)
+    load(strcat(modelPath,BileAcidProducers{i,1}));
     SingleModels_Output_Table{i+1,1}=BileAcidProducers{i,1};
-    for j=1:length(mets)
-        SingleModels_Output_Table{1,j+1}=strrep(mets{j},'BA_','');
-        if ~isempty(SingleModel_BileAcid_Production.(mets{j})(strcmp(BileAcidProducers{i,1},SingleModel_BileAcid_Production.(mets{j})(:,1)),2))
-            val=SingleModel_BileAcid_Production.(mets{j})(strcmp(BileAcidProducers{i,1},SingleModel_BileAcid_Production.(mets{j})(:,1)),2);
-            val=val{1};
-            if ischar(val)
-                SingleModels_Output_Table{i+1,j+1}=str2num(val);
-            else
-                SingleModels_Output_Table{i+1,j+1}=val;
-            end
-        else
-            SingleModels_Output_Table{i+1,j+1}=0;
+    for j=1:length(BA_Objectives)
+        if ~isempty(find(strcmp(model.rxns,BA_Objectives{j})))
+            SingleModels_Output_Table{1,j+1}=model.rxnNames(find(strcmp(model.rxns,BA_Objectives{j})));
+            model=changeObjective(model,BA_Objectives{j});
+            FBAsolution=optimizeCbModel(model,'max');
+            SingleModels_Output_Table{i+1,j+1}=FBAsolution.f;
         end
     end
 end
-save(strcat(currentDir,'\Results\SingleModels_Output_Table'),'SingleModels_Output_Table');
+save(strcat(savePath,'SingleModels_Output_Table'),'SingleModels_Output_Table');
 
 %% Analysis of pairwise models
-load(strcat(currentDir,'\InputFiles\BileAcid_Production_ComplementaryPairs.mat'));
+load('BileAcid_Production_ComplementaryPairs.mat');
 % calculate the number of pairs that enabled production for each bile acid
-mets=strrep(mets,'BA_','');
+mets=unique(ComplementaryPairs(2:end,9));
 for i=1:length(mets)
     Number_Enabling_Pairs{i,1}=mets{i};
     numPairs=strmatch(mets{i},ComplementaryPairs(:,9));
@@ -70,7 +75,7 @@ end
 
 % calculate the number of total bile acids produced by each single model and pair (shown in
 % Figure 3a)
-load(strcat(currentDir,'\InputFiles\Pairwise_BileAcid_Production.mat'));
+load('Pairwise_BileAcid_Production.mat');
 ProducerPairs={};
 for i=1:length(BileAcidProducers)
     ProducerPairs{i+1,1}=BileAcidProducers{i,1};
@@ -97,11 +102,11 @@ for i=1:length(BileAcidProducers)
         end
     end
 end
-save(strcat(currentDir,'\Results\BileAcid_Production_ProducerPairs_forFigure3a'),'ProducerPairs');
+save(strcat(savePath,'BileAcid_Production_ProducerPairs_forFigure3a'),'ProducerPairs');
 
 %% analysis of HMP microbiome models
-load(strcat(currentDir,'\InputFiles\HMP_IndividualIDs.mat'));
-load(strcat(currentDir,'\InputFiles\HMP_BileAcid_Production.mat'));
+load('HMP_IndividualIDs.mat');
+load('HMP_BileAcid_Production.mat');
 % summarize the computed bile acid production potential values (data shown
 % in Table S6)
 mets=fieldnames(HMP_BileAcid_Production);
@@ -123,7 +128,7 @@ for i=1:length(HMP_IndividualIDs)
         end
     end
 end
-save(strcat(currentDir,'\Results\HMP_Output_Table'),'HMP_Output_Table');
+save(strcat(savePath,'HMP_Output_Table'),'HMP_Output_Table');
 % normalize the computed bile acid production potential values (data shown
 % in Figure 3b)
 for i=1:length(HMP_IndividualIDs)
@@ -155,15 +160,15 @@ for i=1:length(HMP_IndividualIDs)
         end
     end
 end
-save(strcat(currentDir,'\Results\HMP_Output_Table_Normalized_forFigure3b'),'HMP_Output_Table_Normalized');
+save(strcat(savePath,'HMP_Output_Table_Normalized_forFigure3b'),'HMP_Output_Table_Normalized');
 
 % load the flux spans on internal exchanges representing strain-level
 % contributions to overall production (data shown in Figure S4)
-load(strcat(currentDir,'\InputFiles\HMP_FluxSpans_InternalExchanges.mat'));
+load('HMP_FluxSpans_InternalExchanges.mat');
 
 %% analysis of MetaHIT microbiome models
-load(strcat(currentDir,'\InputFiles\MetaHIT_IndividualIDs.mat'));
-load(strcat(currentDir,'\InputFiles\MetaHIT_BileAcid_Production.mat'));
+load('MetaHIT_IndividualIDs.mat');
+load('MetaHIT_BileAcid_Production.mat');
 % summarize the computed bile acid production potential values (data shown
 % in Table S7)
 mets=fieldnames(MetaHIT_BileAcid_Production);
@@ -185,7 +190,7 @@ for i=1:length(MetaHIT_IndividualIDs)
         end
     end
 end
-save(strcat(currentDir,'\Results\MetaHIT_Output_Table'),'MetaHIT_Output_Table');
+save(strcat(savePath,'MetaHIT_Output_Table'),'MetaHIT_Output_Table');
 % normalize the computed bile acid production potential values (data shown
 % in Figure 3c)
 for i=1:length(MetaHIT_IndividualIDs)
@@ -217,15 +222,15 @@ for i=1:length(MetaHIT_IndividualIDs)
         end
     end
 end
-save(strcat(currentDir,'\Results\MetaHIT_Output_Table_Normalized_forFigure3c'),'MetaHIT_Output_Table_Normalized');
+save(strcat(savePath,'MetaHIT_Output_Table_Normalized_forFigure3c'),'MetaHIT_Output_Table_Normalized');
 
 % load the flux spans on internal exchanges representing strain-level
 % contributions to overall production (data shown in Figure S5)
-load(strcat(currentDir,'\InputFiles\MetaHIT_FluxSpans_InternalExchanges.mat'));
+load('MetaHIT_FluxSpans_InternalExchanges.mat');
 
 % analysis of pediatric IBD microbiome models
-load(strcat(currentDir,'\InputFiles\pIBD_IndividualIDs.mat'));
-load(strcat(currentDir,'\InputFiles\pIBD_BileAcid_Production.mat'));
+load('pIBD_IndividualIDs.mat');
+load('pIBD_BileAcid_Production.mat');
 % summarize the computed bile acid production potential values (data shown
 % in Table S8)
 mets=fieldnames(pIBD_BileAcid_Production);
@@ -247,7 +252,7 @@ for i=1:length(pIBD_IndividualIDs)
         end
     end
 end
-save(strcat(currentDir,'\Results\pIBD_Output_Table'),'pIBD_Output_Table');
+save(strcat(savePath,'pIBD_Output_Table'),'pIBD_Output_Table');
 % normalize the computed bile acid production potential values (data shown
 % in Figure 3d)
 for i=1:length(pIBD_IndividualIDs)
@@ -279,11 +284,11 @@ for i=1:length(pIBD_IndividualIDs)
         end
     end
 end
-save(strcat(currentDir,'\Results\pIBD_Output_Table_Normalized_forFigure3d'),'pIBD_Output_Table_Normalized');
+save(strcat(savePath,'pIBD_Output_Table_Normalized_forFigure3d'),'pIBD_Output_Table_Normalized');
 
 % load the flux spans on internal exchanges representing strain-level
 % contributions to overall production (data shown in Figure 4a)
-load(strcat(currentDir,'\InputFiles\pIBD_FluxSpans_InternalExchanges.mat'));
+load('pIBD_FluxSpans_InternalExchanges.mat');
 
 %% Statistical analysis
 % MetaHIT models: comparison of healthy and ulcerative colitis microbiomes
@@ -292,8 +297,8 @@ load(strcat(currentDir,'\InputFiles\pIBD_FluxSpans_InternalExchanges.mat'));
 
 %% MetaHIT dataset
 % bile acid production quantitative
-load(strcat(currentDir,'\InputFiles\MetaHIT_IndividualIDs.mat'));
-load(strcat(currentDir,'\Results\MetaHIT_Output_Table.mat'));
+load('MetaHIT_IndividualIDs.mat');
+load(strcat(savePath,'MetaHIT_Output_Table.mat'));
 Statistics={};
 Statistics{1,1}='Reaction';
 Statistics{1,2}='p_value';
@@ -331,10 +336,10 @@ for i=2:size(MetaHIT_Output_Table,2)
     Statistics{i,7}=mean(data2);
     Statistics{i,8}=std(data2);
 end
-save(strcat(currentDir,'\Results\MetaHIT_Statistics_BA_Production'),'Statistics');
+save(strcat(savePath,'MetaHIT_Statistics_BA_Production'),'Statistics');
 
 % total reaction abundance
-load(strcat(currentDir,'\Results\MetaHIT_ReactionAbundance.mat'));
+load(strcat(savePath,'MetaHIT_ReactionAbundance.mat'));
 Statistics={};
 Statistics{1,1}='Reaction';
 Statistics{1,2}='p_value';
@@ -374,7 +379,7 @@ for i=2:size(ReactionAbundance.('Total'),2)
         Statistics{i,8}=std(data2);
     end
 end
-save(strcat(currentDir,'\Results\MetaHIT_Statistics_TotalReactionAbundance'),'Statistics');
+save(strcat(savePath,'MetaHIT_Statistics_TotalReactionAbundance'),'Statistics');
 
 % Reaction abundance on the phylum level
 Statistics={};
@@ -416,7 +421,7 @@ for i=2:size(ReactionAbundance.('Phylum'),2)
         Statistics{i,8}=std(data2);
     end
 end
-save(strcat(currentDir,'\Results\MetaHIT_Statistics_ReactionAbundance_Phylum'),'Statistics');
+save(strcat(savePath,'MetaHIT_Statistics_ReactionAbundance_Phylum'),'Statistics');
 
 % Reaction abundance on the genus level
 Statistics={};
@@ -458,10 +463,10 @@ for i=2:size(ReactionAbundance.('Genus'),2)
         Statistics{i,8}=std(data2);
     end
 end
-save(strcat(currentDir,'\Results\MetaHIT_Statistics_ReactionAbundance_Genus'),'Statistics');
+save(strcat(savePath,'MetaHIT_Statistics_ReactionAbundance_Genus'),'Statistics');
 
 % flux spans
-load(strcat(currentDir,'\InputFiles\MetaHIT_FluxSpans_InternalExchanges.mat'));
+load('MetaHIT_FluxSpans_InternalExchanges.mat');
 Statistics={};
 Statistics{1,1}='Reaction';
 Statistics{1,2}='p_value';
@@ -501,12 +506,12 @@ for i=4:size(MetaHIT_FluxSpans_InternalExchanges,1)
         Statistics{i,8}=std(data2);
     end
 end
-save(strcat(currentDir,'\Results\MetaHIT_Statistics_FluxSpans'),'Statistics');
+save(strcat(savePath,'MetaHIT_Statistics_FluxSpans'),'Statistics');
 
 %% pediatric IBD dataset
 % bile acid production quantitative
-load(strcat(currentDir,'\InputFiles\pIBD_IndividualIDs.mat'));
-load(strcat(currentDir,'\Results\pIBD_Output_Table.mat'));
+load('pIBD_IndividualIDs.mat');
+load(strcat(savePath,'pIBD_Output_Table.mat'));
 Statistics={};
 Statistics{1,1}='Reaction';
 Statistics{1,2}='p_value';
@@ -544,10 +549,10 @@ for i=2:size(pIBD_Output_Table,2)
     Statistics{i,7}=mean(data2);
     Statistics{i,8}=std(data2);
 end
-save(strcat(currentDir,'\Results\pIBD_Statistics_BA_Production'),'Statistics');
+save(strcat(savePath,'pIBD_Statistics_BA_Production'),'Statistics');
 
 % total reaction abundance
-load(strcat(currentDir,'\Results\pIBD_ReactionAbundance.mat'));
+load(strcat(savePath,'pIBD_ReactionAbundance.mat'));
 Statistics={};
 Statistics{1,1}='Reaction';
 Statistics{1,2}='p_value';
@@ -587,7 +592,7 @@ for i=2:size(ReactionAbundance.('Total'),2)
         Statistics{i,8}=std(data2);
     end
 end
-save(strcat(currentDir,'\Results\pIBD_Statistics_TotalReactionAbundance'),'Statistics');
+save(strcat(savePath,'pIBD_Statistics_TotalReactionAbundance'),'Statistics');
 
 % Reaction abundance on the phylum level
 Statistics={};
@@ -629,7 +634,7 @@ for i=2:size(ReactionAbundance.('Phylum'),2)
         Statistics{i,8}=std(data2);
     end
 end
-save(strcat(currentDir,'\Results\pIBD_Statistics_ReactionAbundance_Phylum'),'Statistics');
+save(strcat(savePath,'pIBD_Statistics_ReactionAbundance_Phylum'),'Statistics');
 
 % Reaction abundance on the genus level
 Statistics={};
@@ -671,10 +676,10 @@ for i=2:size(ReactionAbundance.('Genus'),2)
         Statistics{i,8}=std(data2);
     end
 end
-save(strcat(currentDir,'\Results\pIBD_Statistics_ReactionAbundance_Genus'),'Statistics');
+save(strcat(savePath,'pIBD_Statistics_ReactionAbundance_Genus'),'Statistics');
 
 % flux spans
-load(strcat(currentDir,'\InputFiles\pIBD_FluxSpans_InternalExchanges.mat'));
+load('pIBD_FluxSpans_InternalExchanges.mat');
 Statistics={};
 Statistics{1,1}='Reaction';
 Statistics{1,2}='p_value';
@@ -714,11 +719,11 @@ for i=4:size(pIBD_FluxSpans_InternalExchanges,1)
         Statistics{i,8}=std(data2);
     end
 end
-save(strcat(currentDir,'\Results\pIBD_Statistics_FluxSpans'),'Statistics');
+save(strcat(savePath,'pIBD_Statistics_FluxSpans'),'Statistics');
 
 %% Analysis of shadow prices
 % load shadow prices for pediatric IBD models to calculate the statistics
-load(strcat(currentDir,'\InputFiles\pIBD_ShadowPricesExtracted.mat'));
+load('pIBD_ShadowPricesExtracted.mat');
 % extract and summarize in table-data shown in Figure 5a
 pIBD_ShadowPrices_Table={};
 for i=2:size(ShadowPricesExtracted,1)
@@ -754,7 +759,7 @@ for j=2:size(ShadowPricesExtracted,2)
         rowCnt=rowCnt+1;
     end
 end
-save(strcat(currentDir,'\Results\pIBD_ShadowPrices_Table'),'pIBD_ShadowPrices_Table');
+save(strcat(savePath,'pIBD_ShadowPrices_Table'),'pIBD_ShadowPrices_Table');
 
 % calculate the statistics, comparing pediatric IBD patients in the dataset
 % and healthy controls
@@ -806,12 +811,12 @@ Statistics{8,2}=std(dataCD);
 % all microbiome models (data shown in Table S11)
 % reaction abundances are calculated from the mapped relative strain-level abundances
 % and the reaction content of the corresponding AGORA models (see above)
-load(strcat(currentDir,'\InputFiles\pIBD_BileAcid_Production.mat'));
+load('pIBD_BileAcid_Production.mat');
 mets=fieldnames(pIBD_BileAcid_Production);
 for i=1:length(mets)
     %% first combine all three datasets
-    load(strcat(currentDir,'\InputFiles\pIBD_IndividualIDs.mat'));
-    load(strcat(currentDir,'\InputFiles\pIBD_BileAcid_Production.mat'));
+    load('pIBD_IndividualIDs.mat');
+    load('pIBD_BileAcid_Production.mat');
     Production={};
     % production
     Production{1,1}='Individual';
@@ -830,8 +835,8 @@ for i=1:length(mets)
         end
         cnt=cnt+1;
     end
-    load(strcat(currentDir,'\InputFiles\MetaHIT_BileAcid_Production.mat'));
-    load(strcat(currentDir,'\InputFiles\MetaHIT_IndividualIDs.mat'));
+    load('MetaHIT_BileAcid_Production.mat');
+    load('MetaHIT_IndividualIDs.mat');
     for j=2:size(MetaHIT_BileAcid_Production.(mets{i,1}),1)
         Production{cnt,1}=MetaHIT_BileAcid_Production.(mets{i,1}){j,1};
         Production{cnt,3}=str2num(MetaHIT_BileAcid_Production.(mets{i,1}){j,2});
@@ -848,7 +853,7 @@ for i=1:length(mets)
         cnt=cnt+1;
     end
     
-    load(strcat(currentDir,'\InputFiles\HMP_BileAcid_Production.mat'));
+    load('HMP_BileAcid_Production.mat');
     for j=2:size(HMP_BileAcid_Production.(mets{i,1}),1)
         Production{cnt,1}=HMP_BileAcid_Production.(mets{i,1}){j,1};
         Production{cnt,3}=str2num(HMP_BileAcid_Production.(mets{i,1}){j,2});
@@ -860,8 +865,8 @@ for i=1:length(mets)
     RxnAbundance{1,1}='Individual';
     RxnAbundance{1,2}='Stratification';
     cnt=2;
-    load(strcat(currentDir,'\Results\pIBD_ReactionAbundance.mat'));
-    load(strcat(currentDir,'\InputFiles\pIBD_IndividualIDs.mat'));
+    load(strcat(savePath,'pIBD_ReactionAbundance.mat'));
+    load('pIBD_IndividualIDs.mat');
     for k=2:size(ReactionAbundance.('Total'),1)
             RxnAbundance{cnt,1}=ReactionAbundance.('Total'){k,1};
             group=pIBD_IndividualIDs(find(strcmp(ReactionAbundance.('Total'){k,1},pIBD_IndividualIDs(:,1))),2);
@@ -877,9 +882,9 @@ for i=1:length(mets)
             end
             cnt=cnt+1;
     end
-    load(strcat(currentDir,'\Results\MetaHIT_ReactionAbundance.mat'));
-    load(strcat(currentDir,'\InputFiles\MetaHIT_BileAcid_Production.mat'));
-    load(strcat(currentDir,'\InputFiles\MetaHIT_IndividualIDs.mat'));
+    load(strcat(savePath,'MetaHIT_ReactionAbundance.mat'));
+    load('MetaHIT_BileAcid_Production.mat');
+    load('MetaHIT_IndividualIDs.mat');
     % order doesn't always match
     for j=2:size(MetaHIT_BileAcid_Production.(mets{i,1}),1)
         indID=find(strcmp(MetaHIT_BileAcid_Production.(mets{i,1}){j,1},ReactionAbundance.('Total')(:,1)));
@@ -899,7 +904,7 @@ for i=1:length(mets)
         end
         cnt=cnt+1;
     end
-    load(strcat(currentDir,'\Results\HMP_ReactionAbundance.mat'));
+    load(strcat(savePath,'HMP_ReactionAbundance.mat'));
     for k=2:size(ReactionAbundance.('Total'),1)
         RxnAbundance{cnt,1}=ReactionAbundance.('Total'){k,1};
         RxnAbundance{cnt,2}='Healthy_HMP';
@@ -910,7 +915,7 @@ for i=1:length(mets)
     end
 end
 
-load(strcat(currentDir,'\InputFiles\All_ShadowPricesExtracted.mat'));
+load('All_ShadowPricesExtracted.mat');
 % extract and summarize in table-data shown in Table S12
 All_ShadowPrices_Table={};
 for i=2:size(ShadowPricesExtracted,1)
@@ -946,4 +951,4 @@ for j=2:size(ShadowPricesExtracted,2)
         rowCnt=rowCnt+1;
     end
 end
-save(strcat(currentDir,'\Results\All_ShadowPrices_Table'),'All_ShadowPrices_Table');
+save(strcat(savePath,'All_ShadowPrices_Table'),'All_ShadowPrices_Table');
