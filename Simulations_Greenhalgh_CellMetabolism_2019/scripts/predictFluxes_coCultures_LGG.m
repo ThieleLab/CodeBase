@@ -1,13 +1,13 @@
-% predict fluxes for LGG with/without Caco-2 model
-% only with LGG-leave
-
-%% DMEM medium
+%% Predicts the fluxes for L. rhamnosus GG (LGG) and Caco-2 (host) cells alone and in co-culture with each other.
+% The minimal fluxes, maximal fluxes, and flux spans are calculated for
+% each reaction on two diets, REF (fiber-free reference diet) and HF
+% (high-fiber diet).
+%% REF diet
 clear all
 % for adding the correct reaction names and formulas
 load('rBioNetDB.mat');
 initCobraToolbox
-currentDir = pwd;
-modelPath=currentDir;
+
 modelIDs={
     'model_LGG'
     'model_Caco2'
@@ -17,7 +17,7 @@ modelIDs={
 % first collect all of the reactions
 Reactions={};
 for i=1:length(modelIDs)
-    load(strcat(modelPath,'\',modelIDs{i},'.mat'));
+    load(strcat(modelIDs{i},'.mat'));
     Reactions=vertcat(Reactions,model.rxns);
 end
 Reactions=unique(Reactions);
@@ -50,9 +50,10 @@ for i=1:length(modelIDs)
     MinFluxes{1,i+6}=modelIDs{i};
     MaxFluxes{1,i+6}=modelIDs{i};
     FluxSpans{1,i+6}=modelIDs{i};
-    load(strcat(modelPath,'\',modelIDs{i},'.mat'));
-    % DMEM model
-    model=useDMEM(model);
+    load(strcat(modelIDs{i},'.mat'));
+    model=convertOldStyleModel(model);
+    % use REF diet
+    model=useREFDiet(model);
     % needed for Caco2 model
     model=changeRxnBounds(model,'EX_tag_hs[u]',-10,'l');
     % adjust the biomass constraints
@@ -63,12 +64,10 @@ for i=1:length(modelIDs)
     end
     % set the experimentally determined growth rates as
     % constraints-microbes
-    % data in Excel sheet 'bac_cellcount_beforehumix'
     if strcmp(modelIDs{i},'modelJoint_Caco2_LGG')
         model=changeRxnBounds(model,'Lactobacillus_rhamnosus_GG_ATCC_53103_biomass0',0.282377135,'b');
     end
     % now the Caco-2 cell growth rates
-    % data in Excel sheet 'Bac_cellcount_Nhumix_25012017'
     if strcmp(modelIDs{i},'model_Caco2')
         model=changeRxnBounds(model,'Host_biomass_reaction',0.010632074,'b');
     end
@@ -78,14 +77,11 @@ for i=1:length(modelIDs)
         model=changeRxnBounds(model,'Host_biomass_reaction',0.01,'b');
     end
     % now the SCFA measurements (only LGG alone), add as ratio
-    % underlying data in Excel file 'SCFA_analysis_25_08_2017'
-    % it seems there is a bug in the function so the ratio need to be
-    % written in reverse for it to work.
     if strcmp(modelIDs{i},'model_LGG')
         model = addRatioReaction(model, {'EX_ac[u]' 'EX_for[u]'}, [0.418 0.326]);
     end
     % save the model
-    save(strcat(modelIDs{i},'_DMEM'),'model');
+    save(strcat(modelIDs{i},'_REF'),'model');
     % perform computations
     formulas=printRxnFormula(model);
     currentDir = pwd;
@@ -174,18 +170,16 @@ for i=1:length(modelIDs)
         end
     end
 end
-save('MinFluxes_DMEM_LGG.mat','MinFluxes');
-save('MaxFluxes_DMEM_LGG.mat','MaxFluxes');
-save('FluxSpans_DMEM_LGG.mat','FluxSpans');
+save('MinFluxes_REF_LGG.mat','MinFluxes');
+save('MaxFluxes_REF_LGG.mat','MaxFluxes');
+save('FluxSpans_REF_LGG.mat','FluxSpans');
 
-%% SIEM medium
+%% HF diet
 clear all
 % for adding the correct reaction names and formulas
 load('rBioNetDB.mat');
-currentDir = pwd;
 initCobraToolbox
-cd(currentDir);
-modelPath=currentDir;
+
 modelIDs={
     'model_LGG'
     'model_Caco2'
@@ -195,7 +189,7 @@ modelIDs={
 % first collect all of the reactions
 Reactions={};
 for i=1:length(modelIDs)
-    load(strcat(modelPath,'\',modelIDs{i},'.mat'));
+    load(strcat(modelIDs{i},'.mat'));
     Reactions=vertcat(Reactions,model.rxns);
 end
 Reactions=unique(Reactions);
@@ -227,9 +221,10 @@ for i=1:length(modelIDs)
     MinFluxes{1,i+6}=modelIDs{i};
     MaxFluxes{1,i+6}=modelIDs{i};
     FluxSpans{1,i+6}=modelIDs{i};
-    load(strcat(modelPath,'\',modelIDs{i},'.mat'));
-    % SIEM medium
-    model=useSIEM(model);
+    load(strcat(modelIDs{i},'.mat'));
+    model=convertOldStyleModel(model);
+    % use HF diet
+    model=useHFDiet(model);
     % needed for Caco2/ model
     model=changeRxnBounds(model,'EX_tag_hs[u]',-10,'l');
     % adjust the biomass constraints
@@ -239,7 +234,6 @@ for i=1:length(modelIDs)
         model=changeObjective(model,'Host_biomass_reaction');
     end
     % now the Caco-2 cell growth rates
-    % data in Excel sheet 'Bac_cellcount_Nhumix_25012017'
     if strcmp(modelIDs{i},'model_Caco2') || strcmp(modelIDs{i},'model_Control')
         model=changeRxnBounds(model,'Host_biomass_reaction',0.00231344,'b');
     end
@@ -247,7 +241,7 @@ for i=1:length(modelIDs)
         model=changeRxnBounds(model,'Host_biomass_reaction',0.006414041,'b');
     end
         % save the model
-    save(strcat(modelIDs{i},'_SIEM'),'model');
+    save(strcat(modelIDs{i},'_HF'),'model');
     % perform computations
     formulas=printRxnFormula(model);
     currentDir = pwd;
@@ -336,8 +330,8 @@ for i=1:length(modelIDs)
         end
     end
 end
-save('MinFluxes_SIEM_LGG','MinFluxes');
-save('MaxFluxes_SIEM_LGG','MaxFluxes');
-save('FluxSpans_SIEM_LGG','FluxSpans');
+save('MinFluxes_HF_LGG','MinFluxes');
+save('MaxFluxes_HF_LGG','MaxFluxes');
+save('FluxSpans_HF_LGG','FluxSpans');
 
 
