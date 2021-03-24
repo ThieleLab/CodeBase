@@ -2,10 +2,17 @@
 % model of metabolite dynamics. This exemple computes the growth rates of
 % E.coli and g6p time-course using dynamic constraints.
 % Please add the COBRA Toolbox and this repository to your path
+%%
+% Requirements:
+% Ubuntu 16.04+ / Windows 7
+% MATLAB 2013b+ (https://www.mathworks.com/products/matlab.html)
+% the COBRA Toolbox v3.0 (https://github.com/opencobra/cobratoolbox/)
+% TOMLAB CPLEX v7.9+ or IBM CPLEX v12.6.0+
+% Please check software incompatiblity at the COBRA Toolbox page (https://opencobra.github.io/cobratoolbox/latest/installation.html)
+%%
 initCobraToolbox
 changeCobraSolver('ibm_cplex')
 
-% All time steps are in 1 hour and all fluxes are per hour.
 %%
 % Case 1: Computing E.coli growth rate using indirect coupling
 
@@ -19,7 +26,8 @@ model.csense = repmat('E',length(model.mets),1);
 growthID = findRxnIDs(model,'Biomass_Ecoli_core_N(w/GAM)-Nmet2');
 
 % 1. Toy ODE Model for intracellular D-glucose 6-phosphate generation over 4 hours span
-% Let's set the time step to 1 hour
+% Let's set the time step (Default 1 hour to match the units of the Ecoli
+% core model)
 ts    = 1;
 tspan = 0:ts:5;%we over extend by 1 hour to account for the last time step
 y0    = 3;%initial g6p amounts in mmol/gDW
@@ -28,6 +36,11 @@ y0    = 3;%initial g6p amounts in mmol/gDW
 % We can derive two types of constraints from this model
 % 1.a. generating flux of g6p (we reverse the sign to account for reaction directionality)
 depg6pFlux = -1*y;
+
+% Change model flux units based on time step (ATPM and EX_glce(e) are the only constraints in the ecoli core model)
+model.lb(findRxnIDs(model,'ATPM')) = model.lb(findRxnIDs(model,'ATPM'))*ts;
+model.ub(findRxnIDs(model,'ATPM')) = model.ub(findRxnIDs(model,'ATPM'))*ts;
+model.lb(findRxnIDs(model,'EX_glc(e)')) = model.lb(findRxnIDs(model,'EX_glc(e)'))*ts;
 
 % Start ODE-FBA loop
 for i = 1:length(t)-1
@@ -77,14 +90,20 @@ for i = 1:length(t)-1
         model.c(growthID) = 0;
         % The objective becomes minimizing the flux to the previous time
         % step (MOMA)
-        [solutionDel,totalFluxDiff,solStatus] = linearMOMAHarveyMOD(solution.x,model,...
-            'max',1,1,1:length(model.rxns),cpxControl);
+        try
+            [solutionDel,totalFluxDiff,solStatus] = linearMOMAHarveyMOD(solution.x,model,...
+                'max',1,1,1:length(model.rxns),cpxControl);
+        catch ME
+            solStatus    =0;
+            solutionDel.x=[];
+        end
         solution.origStat = solStatus; solution.x = solutionDel.x;
     end
 
     if solution.origStat == 1
         % Take the value of biomass from the corresponding reaction
-        newGrowth=solution.x(growthID);
+        % and scale back the growth rate
+        newGrowth=solution.x(growthID)*(1/ts);
     else
         newGrowth=0;
     end
@@ -92,9 +111,9 @@ for i = 1:length(t)-1
 end
 
 % Plot results
-figure;
+hold on
 plot(t(1:end-1),growthVec,'-o', 'LineWidth', 1.5, 'MarkerSize', 8);
-ylabel('growth rate (gDW/h)', 'FontSize', 14)
+ylabel(['growth rate (gDW/' num2str(ts) 'h)'], 'FontSize', 14)
 xlabel('time (h)', 'FontSize', 14)
 title('Modeling growth rate of Ecoli using indirect coupling', 'FontSize', 14)
 %%
@@ -116,8 +135,8 @@ model.b(end+1)=0;
 model.mets{end+1}='dummy_g6p';
 
 % ODE parameters
-ts       = 1;%time step
-timeSpan = 0:ts:4;%a 1-hour simulation setting over 5 hour period
+ts       = 0.5;%time step
+timeSpan = 0:ts:4;%a ts-hour simulation setting over 5 hour period
                   % the last time step will be added in the end
 y0    = 0.03;%initial g6p amounts in mmol/gDW
 g6pcc = y0;
@@ -127,7 +146,7 @@ growthID = findRxnIDs(model,'Biomass_Ecoli_core_N(w/GAM)-Nmet2');
 % 1. First simulate ODE model for the current time step
 % Toy ODE Model for intracellular D-glucose 6-phosphate generation over the span
 % of 1 time step
-tspan = timeSpan(1):timeSpan(2);
+tspan = [timeSpan(1) timeSpan(2)];
 [t,y] = ode15s(@(t,y) 1*y, tspan, y0);
 g6pccVec=[y(1) y(end)];
 
@@ -135,6 +154,11 @@ g6pccVec=[y(1) y(end)];
 % 1.a. generating flux of g6p (we reverse the sign to account for reaction directionality)
 depg6pFlux = -y(1);
     
+% Change model flux units based on time step (ATPM and EX_glce(e) are the only constraints in the ecoli core model)
+model.lb(findRxnIDs(model,'ATPM')) = model.lb(findRxnIDs(model,'ATPM'))*ts;
+model.ub(findRxnIDs(model,'ATPM')) = model.ub(findRxnIDs(model,'ATPM'))*ts;
+model.lb(findRxnIDs(model,'EX_glc(e)')) = model.lb(findRxnIDs(model,'EX_glc(e)'))*ts;
+
 % Start ODE-FBA loop
 for i = 1:length(timeSpan)-1
 
@@ -190,8 +214,13 @@ for i = 1:length(timeSpan)-1
         model.c(growthID) = 0;
         % The objective becomes minimizing the flux to the previous time
         % step (MOMA)
-        [solutionDel,totalFluxDiff,solStatus] = linearMOMAHarveyMOD(solution.x,model,...
+        try
+            [solutionDel,totalFluxDiff,solStatus] = linearMOMAHarveyMOD(solution.x,model,...
             'max',1,1,1:length(model.rxns),cpxControl);
+        catch ME
+            solStatus=0;
+            solutionDel.x=[];
+        end
         solution.origStat = solStatus; solution.x = solutionDel.x;
     end
 
@@ -199,7 +228,7 @@ for i = 1:length(timeSpan)-1
     if solution.origStat == 1
         depg6pFlux= solution.x(findRxnIDs(model,'PGI'))
     else
-        error('The FBA problem is infeasible.')
+        error('The FBA problem is infeasible, please adjust the time step to 1 hour.')
     end
     % We can simply use Euler's forward method to get the new concentration
     % we also take into account the reaction directionality
