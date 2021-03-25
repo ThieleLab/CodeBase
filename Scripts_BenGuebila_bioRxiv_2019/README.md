@@ -8,11 +8,15 @@ Corresponding author: Ines Thiele ines.thiele@gmail.com
 
 ## System requirements
 
-- Ubuntu 16.04+ / Windows 10
+- Ubuntu 16.04+ / Windows 7
 
 - MATLAB 2013b+ (https://www.mathworks.com/products/matlab.html)
 
 - the COBRA Toolbox v3.0 (https://github.com/opencobra/cobratoolbox/)
+
+- TOMLAB CPLEX v7.9+ or IBM CPLEX v12.6.0+
+
+Please check software incompatiblity at the COBRA Toolbox page (https://opencobra.github.io/cobratoolbox/latest/installation.html)
 
 ## Installation guide
 
