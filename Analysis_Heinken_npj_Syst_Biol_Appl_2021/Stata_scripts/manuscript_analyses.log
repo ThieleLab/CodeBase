@@ -1,0 +1,5167 @@
+-------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  A:\IBD_project\IBD_simulation_data\manuscript_analyses.log
+  log type:  text
+ opened on:  26 Aug 2019, 17:43:19
+
+. 
+. use data_merge_all.dta
+
+. merge 1:1 id using reactions.dta
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                               108  (_merge==3)
+    -----------------------------------------
+
+. drop _merge
+
+. 
+. tab stratification, gen(group_)
+
+  Stratification |      Freq.     Percent        Cum.
+-----------------+-----------------------------------
+         Healthy |         25       23.15       23.15
+   IBD_dysbiotic |         20       18.52       41.67
+IBD_nondysbiotic |         63       58.33      100.00
+-----------------+-----------------------------------
+           Total |        108      100.00
+
+. 
+. *General classification
+. 
+. foreach j of varlist __12dhchol-__xtsn{
+  2.         gen bin`j'=0 if `j'!=.
+  3.         replace bin`j'=1 if `j'!=. & `j'>0
+  4.         }
+(100 real changes made)
+(28 real changes made)
+(33 real changes made)
+(85 real changes made)
+(104 real changes made)
+(104 real changes made)
+(93 real changes made)
+(32 real changes made)
+(108 real changes made)
+(6 real changes made)
+(96 real changes made)
+(96 real changes made)
+(107 real changes made)
+(107 real changes made)
+(51 real changes made)
+(44 real changes made)
+(40 real changes made)
+(4 real changes made)
+(32 real changes made)
+(66 real changes made)
+(66 real changes made)
+(107 real changes made)
+(107 real changes made)
+(108 real changes made)
+(53 real changes made)
+(96 real changes made)
+(99 real changes made)
+(99 real changes made)
+(12 real changes made)
+(100 real changes made)
+(100 real changes made)
+(100 real changes made)
+(108 real changes made)
+(107 real changes made)
+(108 real changes made)
+(101 real changes made)
+(87 real changes made)
+(87 real changes made)
+(87 real changes made)
+(104 real changes made)
+(87 real changes made)
+(100 real changes made)
+(71 real changes made)
+(53 real changes made)
+(108 real changes made)
+(108 real changes made)
+(5 real changes made)
+(6 real changes made)
+(108 real changes made)
+(108 real changes made)
+(108 real changes made)
+(53 real changes made)
+(5 real changes made)
+(108 real changes made)
+(108 real changes made)
+(108 real changes made)
+(3 real changes made)
+(105 real changes made)
+(31 real changes made)
+(12 real changes made)
+(107 real changes made)
+(5 real changes made)
+(10 real changes made)
+(56 real changes made)
+(108 real changes made)
+(98 real changes made)
+(107 real changes made)
+(8 real changes made)
+(108 real changes made)
+(8 real changes made)
+(4 real changes made)
+(100 real changes made)
+(100 real changes made)
+(100 real changes made)
+(89 real changes made)
+(87 real changes made)
+(87 real changes made)
+(87 real changes made)
+(87 real changes made)
+(87 real changes made)
+(43 real changes made)
+(108 real changes made)
+(108 real changes made)
+(108 real changes made)
+(8 real changes made)
+(53 real changes made)
+(108 real changes made)
+(107 real changes made)
+(102 real changes made)
+(9 real changes made)
+(72 real changes made)
+(79 real changes made)
+(58 real changes made)
+(70 real changes made)
+(108 real changes made)
+(7 real changes made)
+(94 real changes made)
+(108 real changes made)
+(108 real changes made)
+(108 real changes made)
+(52 real changes made)
+(108 real changes made)
+(83 real changes made)
+(83 real changes made)
+(43 real changes made)
+(108 real changes made)
+(108 real changes made)
+(106 real changes made)
+(88 real changes made)
+(108 real changes made)
+(108 real changes made)
+(10 real changes made)
+(108 real changes made)
+(104 real changes made)
+(108 real changes made)
+(108 real changes made)
+(98 real changes made)
+(108 real changes made)
+(99 real changes made)
+(99 real changes made)
+(8 real changes made)
+(108 real changes made)
+(108 real changes made)
+(1 real change made)
+(108 real changes made)
+(108 real changes made)
+(108 real changes made)
+(85 real changes made)
+(85 real changes made)
+(108 real changes made)
+(108 real changes made)
+(79 real changes made)
+(83 real changes made)
+(83 real changes made)
+(83 real changes made)
+(83 real changes made)
+(83 real changes made)
+(83 real changes made)
+(83 real changes made)
+(83 real changes made)
+(83 real changes made)
+(83 real changes made)
+(83 real changes made)
+(83 real changes made)
+(83 real changes made)
+(107 real changes made)
+(95 real changes made)
+(27 real changes made)
+(88 real changes made)
+(108 real changes made)
+(11 real changes made)
+(32 real changes made)
+(107 real changes made)
+(5 real changes made)
+(108 real changes made)
+(102 real changes made)
+(101 real changes made)
+(95 real changes made)
+(101 real changes made)
+(58 real changes made)
+(108 real changes made)
+(108 real changes made)
+(108 real changes made)
+(108 real changes made)
+(108 real changes made)
+(108 real changes made)
+(46 real changes made)
+(90 real changes made)
+(108 real changes made)
+(94 real changes made)
+(108 real changes made)
+(9 real changes made)
+(41 real changes made)
+(108 real changes made)
+(8 real changes made)
+(93 real changes made)
+(108 real changes made)
+(99 real changes made)
+(41 real changes made)
+(103 real changes made)
+(35 real changes made)
+(108 real changes made)
+(108 real changes made)
+(98 real changes made)
+(98 real changes made)
+(32 real changes made)
+(108 real changes made)
+(84 real changes made)
+(58 real changes made)
+(2 real changes made)
+(108 real changes made)
+(108 real changes made)
+(32 real changes made)
+(108 real changes made)
+(108 real changes made)
+(49 real changes made)
+(90 real changes made)
+(103 real changes made)
+(99 real changes made)
+(107 real changes made)
+(107 real changes made)
+(100 real changes made)
+(108 real changes made)
+(51 real changes made)
+(92 real changes made)
+(66 real changes made)
+(79 real changes made)
+(108 real changes made)
+(108 real changes made)
+(108 real changes made)
+(66 real changes made)
+(17 real changes made)
+(108 real changes made)
+(108 real changes made)
+(103 real changes made)
+(98 real changes made)
+(108 real changes made)
+(79 real changes made)
+(47 real changes made)
+(108 real changes made)
+(79 real changes made)
+(108 real changes made)
+(96 real changes made)
+(105 real changes made)
+(108 real changes made)
+(108 real changes made)
+(108 real changes made)
+(73 real changes made)
+(51 real changes made)
+
+. 
+. gen class_sec=""
+(108 missing values generated)
+
+. foreach j of varlist bin*{
+  2.         tostring(`j'), gen(s_`j')
+  3.         replace class_sec=class_sec+s_`j'
+  4.         drop s_`j'
+  5.         }
+s_bin__12dhchol generated as str1
+(108 real changes made)
+s_bin__12ppd_S generated as str1
+variable class_sec was str1 now str2
+(108 real changes made)
+s_bin__13ppd generated as str1
+variable class_sec was str2 now str3
+(108 real changes made)
+s_bin__15dap generated as str1
+variable class_sec was str3 now str4
+(108 real changes made)
+s_bin__26dap_M generated as str1
+variable class_sec was str4 now str5
+(108 real changes made)
+s_bin__2ddglcn generated as str1
+variable class_sec was str5 now str6
+(108 real changes made)
+s_bin__2hyoxplac generated as str1
+variable class_sec was str6 now str7
+(108 real changes made)
+s_bin__2mbut generated as str1
+variable class_sec was str7 now str8
+(108 real changes made)
+s_bin__2obut generated as str1
+variable class_sec was str8 now str9
+(108 real changes made)
+s_bin__34dhpha generated as str1
+variable class_sec was str9 now str10
+(108 real changes made)
+s_bin__3dhcdchol generated as str1
+variable class_sec was str10 now str11
+(108 real changes made)
+s_bin__3dhchol generated as str1
+variable class_sec was str11 now str12
+(108 real changes made)
+s_bin__3mop generated as str1
+variable class_sec was str12 now str13
+(108 real changes made)
+s_bin__4abut generated as str1
+variable class_sec was str13 now str14
+(108 real changes made)
+s_bin__4hbz generated as str1
+variable class_sec was str14 now str15
+(108 real changes made)
+s_bin__4hoxpacd generated as str1
+variable class_sec was str15 now str16
+(108 real changes made)
+s_bin__4hphac generated as str1
+variable class_sec was str16 now str17
+(108 real changes made)
+s_bin__4mcat generated as str1
+variable class_sec was str17 now str18
+(108 real changes made)
+s_bin__5aptn generated as str1
+variable class_sec was str18 now str19
+(108 real changes made)
+s_bin__5mta generated as str1
+variable class_sec was str19 now str20
+(108 real changes made)
+s_bin__5mthf generated as str1
+variable class_sec was str20 now str21
+(108 real changes made)
+s_bin__7dhcdchol generated as str1
+variable class_sec was str21 now str22
+(108 real changes made)
+s_bin__7ocholate generated as str1
+variable class_sec was str22 now str23
+(108 real changes made)
+s_bin__C02528 generated as str1
+variable class_sec was str23 now str24
+(108 real changes made)
+s_bin__HC02191 generated as str1
+variable class_sec was str24 now str25
+(108 real changes made)
+s_bin__HC02194 generated as str1
+variable class_sec was str25 now str26
+(108 real changes made)
+s_bin__Lcystin generated as str1
+variable class_sec was str26 now str27
+(108 real changes made)
+s_bin__Lkynr generated as str1
+variable class_sec was str27 now str28
+(108 real changes made)
+s_bin__M03134 generated as str1
+variable class_sec was str28 now str29
+(108 real changes made)
+s_bin__Ser_Thr generated as str1
+variable class_sec was str29 now str30
+(108 real changes made)
+s_bin__T_antigen generated as str1
+variable class_sec was str30 now str31
+(108 real changes made)
+s_bin__Tn_antigen generated as str1
+variable class_sec was str31 now str32
+(108 real changes made)
+s_bin__ac generated as str1
+variable class_sec was str32 now str33
+(108 real changes made)
+s_bin__acac generated as str1
+variable class_sec was str33 now str34
+(108 real changes made)
+s_bin__acald generated as str1
+variable class_sec was str34 now str35
+(108 real changes made)
+s_bin__acgal generated as str1
+variable class_sec was str35 now str36
+(108 real changes made)
+s_bin__acgalglcur generated as str1
+variable class_sec was str36 now str37
+(108 real changes made)
+s_bin__acgalidour2s generated as str1
+variable class_sec was str37 now str38
+(108 real changes made)
+s_bin__acgalidour generated as str1
+variable class_sec was str38 now str39
+(108 real changes made)
+s_bin__acgam generated as str1
+variable class_sec was str39 now str40
+(108 real changes made)
+s_bin__acmana generated as str1
+variable class_sec was str40 now str41
+(108 real changes made)
+s_bin__acnam generated as str1
+variable class_sec was str41 now str42
+(108 real changes made)
+s_bin__actn_R generated as str1
+variable class_sec was str42 now str43
+(108 real changes made)
+s_bin__adchac generated as str1
+variable class_sec was str43 now str44
+(108 real changes made)
+s_bin__ade generated as str1
+variable class_sec was str44 now str45
+(108 real changes made)
+s_bin__adn generated as str1
+variable class_sec was str45 now str46
+(108 real changes made)
+s_bin__adocbl generated as str1
+variable class_sec was str46 now str47
+(108 real changes made)
+s_bin__ahcys generated as str1
+variable class_sec was str47 now str48
+(108 real changes made)
+s_bin__akg generated as str1
+variable class_sec was str48 now str49
+(108 real changes made)
+s_bin__ala_D generated as str1
+variable class_sec was str49 now str50
+(108 real changes made)
+s_bin__ala_L generated as str1
+variable class_sec was str50 now str51
+(108 real changes made)
+s_bin__alchac generated as str1
+variable class_sec was str51 now str52
+(108 real changes made)
+s_bin__arab_D generated as str1
+variable class_sec was str52 now str53
+(108 real changes made)
+s_bin__arg_L generated as str1
+variable class_sec was str53 now str54
+(108 real changes made)
+s_bin__asn_L generated as str1
+variable class_sec was str54 now str55
+(108 real changes made)
+s_bin__asp_L generated as str1
+variable class_sec was str55 now str56
+(108 real changes made)
+s_bin__bglc generated as str1
+variable class_sec was str56 now str57
+(108 real changes made)
+s_bin__bhb generated as str1
+variable class_sec was str57 now str58
+(108 real changes made)
+s_bin__btd_RR generated as str1
+variable class_sec was str58 now str59
+(108 real changes made)
+s_bin__btoh generated as str1
+variable class_sec was str59 now str60
+(108 real changes made)
+s_bin__but generated as str1
+variable class_sec was str60 now str61
+(108 real changes made)
+s_bin__cbl1 generated as str1
+variable class_sec was str61 now str62
+(108 real changes made)
+s_bin__ch4 generated as str1
+variable class_sec was str62 now str63
+(108 real changes made)
+s_bin__ch4s generated as str1
+variable class_sec was str63 now str64
+(108 real changes made)
+s_bin__cholate generated as str1
+variable class_sec was str64 now str65
+(108 real changes made)
+s_bin__chor generated as str1
+variable class_sec was str65 now str66
+(108 real changes made)
+s_bin__cit generated as str1
+variable class_sec was str66 now str67
+(108 real changes made)
+s_bin__cmp generated as str1
+variable class_sec was str67 now str68
+(108 real changes made)
+s_bin__co2 generated as str1
+variable class_sec was str68 now str69
+(108 real changes made)
+s_bin__coa generated as str1
+variable class_sec was str69 now str70
+(108 real changes made)
+s_bin__coprost generated as str1
+variable class_sec was str70 now str71
+(108 real changes made)
+s_bin__core2 generated as str1
+variable class_sec was str71 now str72
+(108 real changes made)
+s_bin__core3 generated as str1
+variable class_sec was str72 now str73
+(108 real changes made)
+s_bin__core6 generated as str1
+variable class_sec was str73 now str74
+(108 real changes made)
+s_bin__csn generated as str1
+variable class_sec was str74 now str75
+(108 real changes made)
+s_bin__cspg_a_degr generated as str1
+variable class_sec was str75 now str76
+(108 real changes made)
+s_bin__cspg_ab_rest generated as str1
+variable class_sec was str76 now str77
+(108 real changes made)
+s_bin__cspg_b_degr generated as str1
+variable class_sec was str77 now str78
+(108 real changes made)
+s_bin__cspg_c_degr generated as str1
+variable class_sec was str78 now str79
+(108 real changes made)
+s_bin__cspg_c_rest generated as str1
+variable class_sec was str79 now str80
+(108 real changes made)
+s_bin__ctbt generated as str1
+variable class_sec was str80 now str81
+(108 real changes made)
+s_bin__cys_L generated as str1
+variable class_sec was str81 now str82
+(108 real changes made)
+s_bin__cytd generated as str1
+variable class_sec was str82 now str83
+(108 real changes made)
+s_bin__dad_2 generated as str1
+variable class_sec was str83 now str84
+(108 real changes made)
+s_bin__datp generated as str1
+variable class_sec was str84 now str85
+(108 real changes made)
+s_bin__dchac generated as str1
+variable class_sec was str85 now str86
+(108 real changes made)
+s_bin__dcyt generated as str1
+variable class_sec was str86 now str87
+(108 real changes made)
+s_bin__ddca generated as str1
+variable class_sec was str87 now str88
+(108 real changes made)
+s_bin__dgsn generated as str1
+variable class_sec was str88 now str89
+(108 real changes made)
+s_bin__dhpppn generated as str1
+variable class_sec was str89 now str90
+(108 real changes made)
+s_bin__diact generated as str1
+variable class_sec was str90 now str91
+(108 real changes made)
+s_bin__dopa generated as str1
+variable class_sec was str91 now str92
+(108 real changes made)
+s_bin__dtmp generated as str1
+variable class_sec was str92 now str93
+(108 real changes made)
+s_bin__dttp generated as str1
+variable class_sec was str93 now str94
+(108 real changes made)
+s_bin__etoh generated as str1
+variable class_sec was str94 now str95
+(108 real changes made)
+s_bin__fald generated as str1
+variable class_sec was str95 now str96
+(108 real changes made)
+s_bin__fol generated as str1
+variable class_sec was str96 now str97
+(108 real changes made)
+s_bin__for generated as str1
+variable class_sec was str97 now str98
+(108 real changes made)
+s_bin__fru generated as str1
+variable class_sec was str98 now str99
+(108 real changes made)
+s_bin__fum generated as str1
+variable class_sec was str99 now str100
+(108 real changes made)
+s_bin__g6p generated as str1
+variable class_sec was str100 now str101
+(108 real changes made)
+s_bin__gal generated as str1
+variable class_sec was str101 now str102
+(108 real changes made)
+s_bin__gam26s generated as str1
+variable class_sec was str102 now str103
+(108 real changes made)
+s_bin__gam generated as str1
+variable class_sec was str103 now str104
+(108 real changes made)
+s_bin__gbbtn generated as str1
+variable class_sec was str104 now str105
+(108 real changes made)
+s_bin__gcald generated as str1
+variable class_sec was str105 now str106
+(108 real changes made)
+s_bin__glc_D generated as str1
+variable class_sec was str106 now str107
+(108 real changes made)
+s_bin__glcn generated as str1
+variable class_sec was str107 now str108
+(108 real changes made)
+s_bin__glcur generated as str1
+variable class_sec was str108 now str109
+(108 real changes made)
+s_bin__gln_L generated as str1
+variable class_sec was str109 now str110
+(108 real changes made)
+s_bin__glu_L generated as str1
+variable class_sec was str110 now str111
+(108 real changes made)
+s_bin__glutar generated as str1
+variable class_sec was str111 now str112
+(108 real changes made)
+s_bin__gly generated as str1
+variable class_sec was str112 now str113
+(108 real changes made)
+s_bin__glyb generated as str1
+variable class_sec was str113 now str114
+(108 real changes made)
+s_bin__glyc3p generated as str1
+variable class_sec was str114 now str115
+(108 real changes made)
+s_bin__glyc generated as str1
+variable class_sec was str115 now str116
+(108 real changes made)
+s_bin__glyclt generated as str1
+variable class_sec was str116 now str117
+(108 real changes made)
+s_bin__gsn generated as str1
+variable class_sec was str117 now str118
+(108 real changes made)
+s_bin__gthox generated as str1
+variable class_sec was str118 now str119
+(108 real changes made)
+s_bin__gthrd generated as str1
+variable class_sec was str119 now str120
+(108 real changes made)
+s_bin__gtp generated as str1
+variable class_sec was str120 now str121
+(108 real changes made)
+s_bin__gua generated as str1
+variable class_sec was str121 now str122
+(108 real changes made)
+s_bin__h2 generated as str1
+variable class_sec was str122 now str123
+(108 real changes made)
+s_bin__h2o2 generated as str1
+variable class_sec was str123 now str124
+(108 real changes made)
+s_bin__h2o generated as str1
+variable class_sec was str124 now str125
+(108 real changes made)
+s_bin__h2s generated as str1
+variable class_sec was str125 now str126
+(108 real changes made)
+s_bin__h generated as str1
+variable class_sec was str126 now str127
+(108 real changes made)
+s_bin__ha_deg1 generated as str1
+variable class_sec was str127 now str128
+(108 real changes made)
+s_bin__ha_pre1 generated as str1
+variable class_sec was str128 now str129
+(108 real changes made)
+s_bin__hdca generated as str1
+variable class_sec was str129 now str130
+(108 real changes made)
+s_bin__his_L generated as str1
+variable class_sec was str130 now str131
+(108 real changes made)
+s_bin__hista generated as str1
+variable class_sec was str131 now str132
+(108 real changes made)
+s_bin__hspg_degr_10 generated as str1
+variable class_sec was str132 now str133
+(108 real changes made)
+s_bin__hspg_degr_11 generated as str1
+variable class_sec was str133 now str134
+(108 real changes made)
+s_bin__hspg_degr_12 generated as str1
+variable class_sec was str134 now str135
+(108 real changes made)
+s_bin__hspg_degr_13 generated as str1
+variable class_sec was str135 now str136
+(108 real changes made)
+s_bin__hspg_degr_1 generated as str1
+variable class_sec was str136 now str137
+(108 real changes made)
+s_bin__hspg_degr_2 generated as str1
+variable class_sec was str137 now str138
+(108 real changes made)
+s_bin__hspg_degr_3 generated as str1
+variable class_sec was str138 now str139
+(108 real changes made)
+s_bin__hspg_degr_4 generated as str1
+variable class_sec was str139 now str140
+(108 real changes made)
+s_bin__hspg_degr_5 generated as str1
+variable class_sec was str140 now str141
+(108 real changes made)
+s_bin__hspg_degr_6 generated as str1
+variable class_sec was str141 now str142
+(108 real changes made)
+s_bin__hspg_degr_7 generated as str1
+variable class_sec was str142 now str143
+(108 real changes made)
+s_bin__hspg_degr_8 generated as str1
+variable class_sec was str143 now str144
+(108 real changes made)
+s_bin__hspg_degr_9 generated as str1
+variable class_sec was str144 now str145
+(108 real changes made)
+s_bin__hxan generated as str1
+variable class_sec was str145 now str146
+(108 real changes made)
+s_bin__icdchol generated as str1
+variable class_sec was str146 now str147
+(108 real changes made)
+s_bin__idon_L generated as str1
+variable class_sec was str147 now str148
+(108 real changes made)
+s_bin__idour generated as str1
+variable class_sec was str148 now str149
+(108 real changes made)
+s_bin__ile_L generated as str1
+variable class_sec was str149 now str150
+(108 real changes made)
+s_bin__ind3ac generated as str1
+variable class_sec was str150 now str151
+(108 real changes made)
+s_bin__ind3ppa generated as str1
+variable class_sec was str151 now str152
+(108 real changes made)
+s_bin__indole generated as str1
+variable class_sec was str152 now str153
+(108 real changes made)
+s_bin__inost generated as str1
+variable class_sec was str153 now str154
+(108 real changes made)
+s_bin__ins generated as str1
+variable class_sec was str154 now str155
+(108 real changes made)
+s_bin__isobut generated as str1
+variable class_sec was str155 now str156
+(108 real changes made)
+s_bin__isocapr generated as str1
+variable class_sec was str156 now str157
+(108 real changes made)
+s_bin__isochol generated as str1
+variable class_sec was str157 now str158
+(108 real changes made)
+s_bin__isoval generated as str1
+variable class_sec was str158 now str159
+(108 real changes made)
+s_bin__ispre generated as str1
+variable class_sec was str159 now str160
+(108 real changes made)
+s_bin__lac_D generated as str1
+variable class_sec was str160 now str161
+(108 real changes made)
+s_bin__lac_L generated as str1
+variable class_sec was str161 now str162
+(108 real changes made)
+s_bin__leu_L generated as str1
+variable class_sec was str162 now str163
+(108 real changes made)
+s_bin__lys_L generated as str1
+variable class_sec was str163 now str164
+(108 real changes made)
+s_bin__mal_L generated as str1
+variable class_sec was str164 now str165
+(108 real changes made)
+s_bin__malt generated as str1
+variable class_sec was str165 now str166
+(108 real changes made)
+s_bin__malttr generated as str1
+variable class_sec was str166 now str167
+(108 real changes made)
+s_bin__meoh generated as str1
+variable class_sec was str167 now str168
+(108 real changes made)
+s_bin__met_L generated as str1
+variable class_sec was str168 now str169
+(108 real changes made)
+s_bin__mnl generated as str1
+variable class_sec was str169 now str170
+(108 real changes made)
+s_bin__mqn8 generated as str1
+variable class_sec was str170 now str171
+(108 real changes made)
+s_bin__n2 generated as str1
+variable class_sec was str171 now str172
+(108 real changes made)
+s_bin__n2o generated as str1
+variable class_sec was str172 now str173
+(108 real changes made)
+s_bin__nac generated as str1
+variable class_sec was str173 now str174
+(108 real changes made)
+s_bin__nadp generated as str1
+variable class_sec was str174 now str175
+(108 real changes made)
+s_bin__ncam generated as str1
+variable class_sec was str175 now str176
+(108 real changes made)
+s_bin__nh4 generated as str1
+variable class_sec was str176 now str177
+(108 real changes made)
+s_bin__no2 generated as str1
+variable class_sec was str177 now str178
+(108 real changes made)
+s_bin__no generated as str1
+variable class_sec was str178 now str179
+(108 real changes made)
+s_bin__o2 generated as str1
+variable class_sec was str179 now str180
+(108 real changes made)
+s_bin__oaa generated as str1
+variable class_sec was str180 now str181
+(108 real changes made)
+s_bin__ocdca generated as str1
+variable class_sec was str181 now str182
+(108 real changes made)
+s_bin__orn generated as str1
+variable class_sec was str182 now str183
+(108 real changes made)
+s_bin__oxa generated as str1
+variable class_sec was str183 now str184
+(108 real changes made)
+s_bin__pac generated as str1
+variable class_sec was str184 now str185
+(108 real changes made)
+s_bin__pcresol generated as str1
+variable class_sec was str185 now str186
+(108 real changes made)
+s_bin__phe_L generated as str1
+variable class_sec was str186 now str187
+(108 real changes made)
+s_bin__phenol generated as str1
+variable class_sec was str187 now str188
+(108 real changes made)
+s_bin__phpyr generated as str1
+variable class_sec was str188 now str189
+(108 real changes made)
+s_bin__pi generated as str1
+variable class_sec was str189 now str190
+(108 real changes made)
+s_bin__ppa generated as str1
+variable class_sec was str190 now str191
+(108 real changes made)
+s_bin__ppi generated as str1
+variable class_sec was str191 now str192
+(108 real changes made)
+s_bin__pppn generated as str1
+variable class_sec was str192 now str193
+(108 real changes made)
+s_bin__pro_L generated as str1
+variable class_sec was str193 now str194
+(108 real changes made)
+s_bin__ptrc generated as str1
+variable class_sec was str194 now str195
+(108 real changes made)
+s_bin__pydx generated as str1
+variable class_sec was str195 now str196
+(108 real changes made)
+s_bin__pydxn generated as str1
+variable class_sec was str196 now str197
+(108 real changes made)
+s_bin__pyr generated as str1
+variable class_sec was str197 now str198
+(108 real changes made)
+s_bin__rbflvrd generated as str1
+variable class_sec was str198 now str199
+(108 real changes made)
+s_bin__rib_D generated as str1
+variable class_sec was str199 now str200
+(108 real changes made)
+s_bin__ribflv generated as str1
+variable class_sec was str200 now str201
+(108 real changes made)
+s_bin__sT_antigen generated as str1
+variable class_sec was str201 now str202
+(108 real changes made)
+s_bin__ser_L generated as str1
+variable class_sec was str202 now str203
+(108 real changes made)
+s_bin__so3 generated as str1
+variable class_sec was str203 now str204
+(108 real changes made)
+s_bin__so4 generated as str1
+variable class_sec was str204 now str205
+(108 real changes made)
+s_bin__spmd generated as str1
+variable class_sec was str205 now str206
+(108 real changes made)
+s_bin__srtn generated as str1
+variable class_sec was str206 now str207
+(108 real changes made)
+s_bin__strch2 generated as str1
+variable class_sec was str207 now str208
+(108 real changes made)
+s_bin__succ generated as str1
+variable class_sec was str208 now str209
+(108 real changes made)
+s_bin__taur generated as str1
+variable class_sec was str209 now str210
+(108 real changes made)
+s_bin__thf generated as str1
+variable class_sec was str210 now str211
+(108 real changes made)
+s_bin__thm generated as str1
+variable class_sec was str211 now str212
+(108 real changes made)
+s_bin__thr_L generated as str1
+variable class_sec was str212 now str213
+(108 real changes made)
+s_bin__thymd generated as str1
+variable class_sec was str213 now str214
+(108 real changes made)
+s_bin__tma generated as str1
+variable class_sec was str214 now str215
+(108 real changes made)
+s_bin__tmao generated as str1
+variable class_sec was str215 now str216
+(108 real changes made)
+s_bin__trp_L generated as str1
+variable class_sec was str216 now str217
+(108 real changes made)
+s_bin__trypta generated as str1
+variable class_sec was str217 now str218
+(108 real changes made)
+s_bin__tsul generated as str1
+variable class_sec was str218 now str219
+(108 real changes made)
+s_bin__ttdca generated as str1
+variable class_sec was str219 now str220
+(108 real changes made)
+s_bin__tym generated as str1
+variable class_sec was str220 now str221
+(108 real changes made)
+s_bin__tyr_L generated as str1
+variable class_sec was str221 now str222
+(108 real changes made)
+s_bin__uchol generated as str1
+variable class_sec was str222 now str223
+(108 real changes made)
+s_bin__ura generated as str1
+variable class_sec was str223 now str224
+(108 real changes made)
+s_bin__urea generated as str1
+variable class_sec was str224 now str225
+(108 real changes made)
+s_bin__uri generated as str1
+variable class_sec was str225 now str226
+(108 real changes made)
+s_bin__val_L generated as str1
+variable class_sec was str226 now str227
+(108 real changes made)
+s_bin__xan generated as str1
+variable class_sec was str227 now str228
+(108 real changes made)
+s_bin__xtsn generated as str1
+variable class_sec was str228 now str229
+(108 real changes made)
+
+. tab class_sec
+
+                              class_sec |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+0001010010001110000111110000000011100.. |          1        0.93        0.93
+0111010010001110000111110000000011100.. |          1        0.93        1.85
+0111111010001111000111110001000011100.. |          1        0.93        2.78
+0111111010001111000111110001000011100.. |          1        0.93        3.70
+0111111010001111100101110001011111111.. |          1        0.93        4.63
+0111111010001111100111110001000011100.. |          1        0.93        5.56
+0111111010001111100111110001000011111.. |          1        0.93        6.48
+0111111010111111100111110111011111111.. |          1        0.93        7.41
+1000010010111100000001110111011111110.. |          1        0.93        8.33
+1000010010111100000011110011000011100.. |          1        0.93        9.26
+1000101010111100000001111110011111110.. |          1        0.93       10.19
+1000101110111100101101110110011111111.. |          1        0.93       11.11
+1000110010111100000001110111011111110.. |          1        0.93       12.04
+1000110010111100000001110111011111110.. |          1        0.93       12.96
+1000110010111100000011111111011111110.. |          1        0.93       13.89
+1000110010111100000011111111011111111.. |          1        0.93       14.81
+1000111010001100000001110111011111111.. |          1        0.93       15.74
+1000111010111100000001110111011111110.. |          1        0.93       16.67
+1000111010111100000001110111011111111.. |          1        0.93       17.59
+1000111010111100000001110111011111111.. |          1        0.93       18.52
+1000111010111100000001111111011111111.. |          1        0.93       19.44
+1000111010111100000011110111011111111.. |          1        0.93       20.37
+1000111010111100000011110111011111111.. |          1        0.93       21.30
+1000111010111100000011110111011111111.. |          1        0.93       22.22
+1000111010111100000011110111011111111.. |          1        0.93       23.15
+1000111010111100000011110111011111111.. |          1        0.93       24.07
+1000111010111100000011111111011111111.. |          1        0.93       25.00
+1000111010111100000011111111011111111.. |          1        0.93       25.93
+1000111110111100101111110111011111111.. |          1        0.93       26.85
+1000111110111101101111111111011111111.. |          1        0.93       27.78
+1000111110111110101011111111011111111.. |          1        0.93       28.70
+1001100010000100000011110010011110111.. |          1        0.93       29.63
+1001101010111100000011110110011111111.. |          1        0.93       30.56
+1001110010111000000010010010011111111.. |          1        0.93       31.48
+1001110010111100000001110111011111110.. |          1        0.93       32.41
+1001110010111110000101110111011111111.. |          1        0.93       33.33
+1001110010111110000101111110011111110.. |          1        0.93       34.26
+1001111010001100000011110111011111111.. |          1        0.93       35.19
+1001111010001111000111110111011111111.. |          1        0.93       36.11
+1001111010111100000001110111011111111.. |          1        0.93       37.04
+1001111010111100000001110111011111111.. |          1        0.93       37.96
+1001111010111100000001110111011111111.. |          1        0.93       38.89
+1001111010111100000001110111011111111.. |          1        0.93       39.81
+1001111010111100000001110111011111111.. |          1        0.93       40.74
+1001111010111100000001110111011111111.. |          1        0.93       41.67
+1001111010111100000001111111011111111.. |          1        0.93       42.59
+1001111010111100000011110111011111111.. |          1        0.93       43.52
+1001111010111100000011110111011111111.. |          1        0.93       44.44
+1001111010111100000011111111011111111.. |          1        0.93       45.37
+1001111010111100000011111111011111111.. |          1        0.93       46.30
+1001111010111100000011111111011111111.. |          1        0.93       47.22
+1001111010111110000111111111011111111.. |          1        0.93       48.15
+1001111010111111000011111111011111111.. |          1        0.93       49.07
+1001111010111111000101110111011111110.. |          1        0.93       50.00
+1001111010111111000101110111011111111.. |          1        0.93       50.93
+1001111010111111000101111111011111111.. |          1        0.93       51.85
+1001111010111111000101111111011111111.. |          1        0.93       52.78
+1001111010111111000101111111011111111.. |          1        0.93       53.70
+1001111010111111000111110001011111111.. |          1        0.93       54.63
+1001111010111111000111110111011111111.. |          1        0.93       55.56
+1001111010111111000111110111011111111.. |          1        0.93       56.48
+1001111011111111100111111111011111111.. |          1        0.93       57.41
+1001111110111100101001110111011111111.. |          1        0.93       58.33
+1001111110111100101001111111111111111.. |          1        0.93       59.26
+1001111110111100101011110111011111111.. |          1        0.93       60.19
+1001111110111100101011111111011111111.. |          1        0.93       61.11
+1001111110111100101101111111011111111.. |          1        0.93       62.04
+1001111110111100101111110111011111111.. |          1        0.93       62.96
+1001111110111100101111111111011111111.. |          1        0.93       63.89
+1001111110111100101111111111011111111.. |          1        0.93       64.81
+1001111110111100101111111111111111111.. |          1        0.93       65.74
+1001111110111100101111111111111111111.. |          1        0.93       66.67
+1001111110111100101111111111111111111.. |          1        0.93       67.59
+1001111110111100101111111111111111111.. |          1        0.93       68.52
+1001111110111101101111111111011111111.. |          1        0.93       69.44
+1001111110111101101111111111111111111.. |          1        0.93       70.37
+1001111110111110101111111111011111111.. |          1        0.93       71.30
+1001111110111111101101110111011111111.. |          1        0.93       72.22
+1001111110111111101101110111011111111.. |          1        0.93       73.15
+1001111110111111101101111111011111111.. |          1        0.93       74.07
+1001111111111111111111111111111111111.. |          1        0.93       75.00
+1001111111111111111111111111111111111.. |          1        0.93       75.93
+1011110010111100000111111111011111110.. |          1        0.93       76.85
+1011111010111111000111111111011111110.. |          1        0.93       77.78
+1011111010111111000111111111011111110.. |          1        0.93       78.70
+1011111110111100101111111111011111111.. |          1        0.93       79.63
+1011111110111101101111111111011111111.. |          1        0.93       80.56
+1111110010111110000101111110011111110.. |          1        0.93       81.48
+1111111010001111000111110001000011100.. |          1        0.93       82.41
+1111111010111110000101110111011111111.. |          1        0.93       83.33
+1111111010111110000101111111011111111.. |          1        0.93       84.26
+1111111010111110000111110111011111111.. |          1        0.93       85.19
+1111111010111111000101110111011111111.. |          1        0.93       86.11
+1111111010111111000101111111011111111.. |          1        0.93       87.04
+1111111010111111000101111111011111111.. |          1        0.93       87.96
+1111111010111111000101111111011111111.. |          1        0.93       88.89
+1111111010111111000111110111011111110.. |          1        0.93       89.81
+1111111010111111000111110111011111111.. |          1        0.93       90.74
+1111111010111111000111111111011111111.. |          1        0.93       91.67
+1111111010111111100101110111011111111.. |          1        0.93       92.59
+1111111010111111100101111111011111111.. |          1        0.93       93.52
+1111111011111111100111111111011111111.. |          1        0.93       94.44
+1111111110111100101111111111011111111.. |          1        0.93       95.37
+1111111110111111101101111111011111111.. |          1        0.93       96.30
+1111111110111111101111111111111111111.. |          1        0.93       97.22
+1111111110111111101111111111111111111.. |          1        0.93       98.15
+1111111111111111111111111111111111111.. |          1        0.93       99.07
+1111111111111111111111111111111111111.. |          1        0.93      100.00
+----------------------------------------+-----------------------------------
+                                  Total |        108      100.00
+
+. egen gr_class_sec=group(class_sec)
+
+. 
+. egen total_number_secr=rowtotal(bin__*)
+
+. 
+. gen hspg_cspg_bin=bin__hspg_degr_1
+
+. replace hspg_cspg_bin=1 if bin__cspg_a_degr==1
+(5 real changes made)
+
+. 
+. *Classification Sulfur metabolites
+. 
+. 
+. local list="gam26s Lcystin thm hspg_degr_1 cspg_a_degr coa ch4s acgalidour2s tsul so3 so4 gthrd gthox ahcys 5mta h2s met_L cys_L ta
+> ur hspg_degr_10 hspg_degr_11 hspg_degr_12 hspg_degr_13 hspg_degr_1 hspg_degr_2 hspg_degr_3 hspg_degr_4 hspg_degr_5 hspg_degr_6 hspg
+> _degr_7 hspg_degr_8 hspg_degr_9 cspg_a_degr cspg_ab_rest cspg_b_degr cspg_c_degr cspg_c_rest" 
+
+. 
+. gen class_sulfur_sec=""
+(108 missing values generated)
+
+. gen total_number_sulfur=0
+
+. foreach k in `list'{
+  2.         replace total_number_sulfur=total_number_sulfur+bin__`k'
+  3.         tostring(bin__`k'), gen(s_EX_`k'_e__bin)
+  4.         replace class_sulfur_sec=class_sulfur_sec+s_EX_`k'_e__bin
+  5.         drop s_EX_`k'_e__bin
+  6.         }
+(83 real changes made)
+s_EX_gam26s_e__bin generated as str1
+(108 real changes made)
+(99 real changes made)
+s_EX_Lcystin_e__bin generated as str1
+variable class_sulfur_sec was str1 now str2
+(108 real changes made)
+(17 real changes made)
+s_EX_thm_e__bin generated as str1
+variable class_sulfur_sec was str2 now str3
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_1_e__bin generated as str1
+variable class_sulfur_sec was str3 now str4
+(108 real changes made)
+(87 real changes made)
+s_EX_cspg_a_degr_e__bin generated as str1
+variable class_sulfur_sec was str4 now str5
+(108 real changes made)
+(8 real changes made)
+s_EX_coa_e__bin generated as str1
+variable class_sulfur_sec was str5 now str6
+(108 real changes made)
+(56 real changes made)
+s_EX_ch4s_e__bin generated as str1
+variable class_sulfur_sec was str6 now str7
+(108 real changes made)
+(87 real changes made)
+s_EX_acgalidour2s_e__bin generated as str1
+variable class_sulfur_sec was str7 now str8
+(108 real changes made)
+(47 real changes made)
+s_EX_tsul_e__bin generated as str1
+variable class_sulfur_sec was str8 now str9
+(108 real changes made)
+(51 real changes made)
+s_EX_so3_e__bin generated as str1
+variable class_sulfur_sec was str9 now str10
+(108 real changes made)
+(92 real changes made)
+s_EX_so4_e__bin generated as str1
+variable class_sulfur_sec was str10 now str11
+(108 real changes made)
+(99 real changes made)
+s_EX_gthrd_e__bin generated as str1
+variable class_sulfur_sec was str11 now str12
+(108 real changes made)
+(99 real changes made)
+s_EX_gthox_e__bin generated as str1
+variable class_sulfur_sec was str12 now str13
+(108 real changes made)
+(6 real changes made)
+s_EX_ahcys_e__bin generated as str1
+variable class_sulfur_sec was str13 now str14
+(108 real changes made)
+(66 real changes made)
+s_EX_5mta_e__bin generated as str1
+variable class_sulfur_sec was str14 now str15
+(108 real changes made)
+(108 real changes made)
+s_EX_h2s_e__bin generated as str1
+variable class_sulfur_sec was str15 now str16
+(108 real changes made)
+(108 real changes made)
+s_EX_met_L_e__bin generated as str1
+variable class_sulfur_sec was str16 now str17
+(108 real changes made)
+(108 real changes made)
+s_EX_cys_L_e__bin generated as str1
+variable class_sulfur_sec was str17 now str18
+(108 real changes made)
+(108 real changes made)
+s_EX_taur_e__bin generated as str1
+variable class_sulfur_sec was str18 now str19
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_10_e__bin generated as str1
+variable class_sulfur_sec was str19 now str20
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_11_e__bin generated as str1
+variable class_sulfur_sec was str20 now str21
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_12_e__bin generated as str1
+variable class_sulfur_sec was str21 now str22
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_13_e__bin generated as str1
+variable class_sulfur_sec was str22 now str23
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_1_e__bin generated as str1
+variable class_sulfur_sec was str23 now str24
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_2_e__bin generated as str1
+variable class_sulfur_sec was str24 now str25
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_3_e__bin generated as str1
+variable class_sulfur_sec was str25 now str26
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_4_e__bin generated as str1
+variable class_sulfur_sec was str26 now str27
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_5_e__bin generated as str1
+variable class_sulfur_sec was str27 now str28
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_6_e__bin generated as str1
+variable class_sulfur_sec was str28 now str29
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_7_e__bin generated as str1
+variable class_sulfur_sec was str29 now str30
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_8_e__bin generated as str1
+variable class_sulfur_sec was str30 now str31
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_9_e__bin generated as str1
+variable class_sulfur_sec was str31 now str32
+(108 real changes made)
+(87 real changes made)
+s_EX_cspg_a_degr_e__bin generated as str1
+variable class_sulfur_sec was str32 now str33
+(108 real changes made)
+(87 real changes made)
+s_EX_cspg_ab_rest_e__bin generated as str1
+variable class_sulfur_sec was str33 now str34
+(108 real changes made)
+(87 real changes made)
+s_EX_cspg_b_degr_e__bin generated as str1
+variable class_sulfur_sec was str34 now str35
+(108 real changes made)
+(87 real changes made)
+s_EX_cspg_c_degr_e__bin generated as str1
+variable class_sulfur_sec was str35 now str36
+(108 real changes made)
+(87 real changes made)
+s_EX_cspg_c_rest_e__bin generated as str1
+variable class_sulfur_sec was str36 now str37
+(108 real changes made)
+
+. tab class_sulfur_sec
+
+                     class_sulfur_sec |      Freq.     Percent        Cum.
+--------------------------------------+-----------------------------------
+0000000000000011111000000000000000000 |          6        5.56        5.56
+0000100101100011111000000000000011111 |          1        0.93        6.48
+0100000000011001111000000000000000000 |          5        4.63       11.11
+0100000000011011111000000000000000000 |          3        2.78       13.89
+0100000001011101111000000000000000000 |          1        0.93       14.81
+0100001000011011111000000000000000000 |          1        0.93       15.74
+0100001000111111111000000000000000000 |          1        0.93       16.67
+0100100100111001111000000000000011111 |          2        1.85       18.52
+0100100101111011111000000000000011111 |          1        0.93       19.44
+0100101111111011111000000000000011111 |          1        0.93       20.37
+0110000000111101111000000000000000000 |          1        0.93       21.30
+0110001000111011111000000000000000000 |          1        0.93       22.22
+0110001001111111111000000000000000000 |          1        0.93       23.15
+1001100111100011111111111111111111111 |          1        0.93       24.07
+1001101100100011111111111111111111111 |          1        0.93       25.00
+1101000011111001111111111111111100000 |          1        0.93       25.93
+1101100100111001111111111111111111111 |         11       10.19       36.11
+1101100100111011111111111111111111111 |         13       12.04       48.15
+1101100111111001111111111111111111111 |          5        4.63       52.78
+1101100111111011111111111111111111111 |          1        0.93       53.70
+1101101100111001111111111111111111111 |          7        6.48       60.19
+1101101100111011111111111111111111111 |          3        2.78       62.96
+1101101110111011111111111111111111111 |          1        0.93       63.89
+1101101111111001111111111111111111111 |          8        7.41       71.30
+1101101111111011111111111111111111111 |         15       13.89       85.19
+1101111101111011111111111111111111111 |          1        0.93       86.11
+1101111111111011111111111111111111111 |          1        0.93       87.04
+1111101110111001111111111111111111111 |          1        0.93       87.96
+1111101111111011111111111111111111111 |          6        5.56       93.52
+1111101111111111111111111111111111111 |          1        0.93       94.44
+1111111101111011111111111111111111111 |          1        0.93       95.37
+1111111111111011111111111111111111111 |          4        3.70       99.07
+1111111111111111111111111111111111111 |          1        0.93      100.00
+--------------------------------------+-----------------------------------
+                                Total |        108      100.00
+
+. egen gr_class_sulfur_sec=group(class_sulfur_sec)
+
+. 
+. gen total_number_minusS=total_number_secr-total_number_sulfur
+
+. graph box total_number_sulfur, over(stratification) saving(temp1, replace)
+(file temp1.gph saved)
+
+. graph box total_number_secr, over(stratification)  saving(temp2, replace)
+(file temp2.gph saved)
+
+. graph box total_number_minusS, over(stratification)  saving(temp3, replace)
+(file temp3.gph saved)
+
+. 
+. graph combine temp1.gph temp2.gph temp3.gph, row(1) 
+
+. 
+. graph box total_number_sulfur, over(bin__cspg_a_degr) saving(temp1, replace)
+(file temp1.gph saved)
+
+. graph box total_number_secr, over(bin__cspg_a_degr)  saving(temp2, replace)
+(file temp2.gph saved)
+
+. graph box total_number_minusS, over(bin__cspg_a_degr)  saving(temp3, replace)
+(file temp3.gph saved)
+
+. 
+. graph combine temp1.gph temp2.gph temp3.gph, row(1)
+
+. 
+. gen total_number_strains=0
+
+. foreach j of varlist _ATCC_49176-_ATCC_43003{
+  2.         gen bin`j'=0 if `j'==0
+  3.         replace bin`j'=1 if `j'>0 & `j'<1.5
+  4.         replace total_number_strains=total_number_strains+bin`j'
+  5.         }
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(12 missing values generated)
+(12 real changes made)
+(12 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(12 missing values generated)
+(12 real changes made)
+(12 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(19 missing values generated)
+(19 real changes made)
+(19 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(32 missing values generated)
+(32 real changes made)
+(32 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(67 missing values generated)
+(67 real changes made)
+(67 real changes made)
+(31 missing values generated)
+(31 real changes made)
+(31 real changes made)
+(66 missing values generated)
+(66 real changes made)
+(66 real changes made)
+(78 missing values generated)
+(78 real changes made)
+(78 real changes made)
+(68 missing values generated)
+(68 real changes made)
+(68 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(53 missing values generated)
+(53 real changes made)
+(53 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(74 missing values generated)
+(74 real changes made)
+(74 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(104 missing values generated)
+(104 real changes made)
+(104 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(78 missing values generated)
+(78 real changes made)
+(78 real changes made)
+(29 missing values generated)
+(29 real changes made)
+(29 real changes made)
+(50 missing values generated)
+(50 real changes made)
+(50 real changes made)
+(59 missing values generated)
+(59 real changes made)
+(59 real changes made)
+(64 missing values generated)
+(64 real changes made)
+(64 real changes made)
+(76 missing values generated)
+(76 real changes made)
+(76 real changes made)
+(55 missing values generated)
+(55 real changes made)
+(55 real changes made)
+(53 missing values generated)
+(53 real changes made)
+(53 real changes made)
+(57 missing values generated)
+(57 real changes made)
+(57 real changes made)
+(75 missing values generated)
+(75 real changes made)
+(75 real changes made)
+(71 missing values generated)
+(71 real changes made)
+(71 real changes made)
+(69 missing values generated)
+(69 real changes made)
+(69 real changes made)
+(61 missing values generated)
+(61 real changes made)
+(61 real changes made)
+(66 missing values generated)
+(66 real changes made)
+(66 real changes made)
+(50 missing values generated)
+(50 real changes made)
+(50 real changes made)
+(12 missing values generated)
+(12 real changes made)
+(12 real changes made)
+(53 missing values generated)
+(53 real changes made)
+(53 real changes made)
+(70 missing values generated)
+(70 real changes made)
+(70 real changes made)
+(39 missing values generated)
+(39 real changes made)
+(39 real changes made)
+(51 missing values generated)
+(51 real changes made)
+(51 real changes made)
+(67 missing values generated)
+(67 real changes made)
+(67 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(71 missing values generated)
+(71 real changes made)
+(71 real changes made)
+(55 missing values generated)
+(55 real changes made)
+(55 real changes made)
+(55 missing values generated)
+(55 real changes made)
+(55 real changes made)
+(27 missing values generated)
+(27 real changes made)
+(27 real changes made)
+(28 missing values generated)
+(28 real changes made)
+(28 real changes made)
+(67 missing values generated)
+(67 real changes made)
+(67 real changes made)
+(70 missing values generated)
+(70 real changes made)
+(70 real changes made)
+(71 missing values generated)
+(71 real changes made)
+(71 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(53 missing values generated)
+(53 real changes made)
+(53 real changes made)
+(67 missing values generated)
+(67 real changes made)
+(67 real changes made)
+(67 missing values generated)
+(67 real changes made)
+(67 real changes made)
+(66 missing values generated)
+(66 real changes made)
+(66 real changes made)
+(58 missing values generated)
+(58 real changes made)
+(58 real changes made)
+(67 missing values generated)
+(67 real changes made)
+(67 real changes made)
+(71 missing values generated)
+(71 real changes made)
+(71 real changes made)
+(75 missing values generated)
+(75 real changes made)
+(75 real changes made)
+(32 missing values generated)
+(32 real changes made)
+(32 real changes made)
+(77 missing values generated)
+(77 real changes made)
+(77 real changes made)
+(77 missing values generated)
+(77 real changes made)
+(77 real changes made)
+(76 missing values generated)
+(76 real changes made)
+(76 real changes made)
+(64 missing values generated)
+(64 real changes made)
+(64 real changes made)
+(72 missing values generated)
+(72 real changes made)
+(72 real changes made)
+(64 missing values generated)
+(64 real changes made)
+(64 real changes made)
+(71 missing values generated)
+(71 real changes made)
+(71 real changes made)
+(65 missing values generated)
+(65 real changes made)
+(65 real changes made)
+(35 missing values generated)
+(35 real changes made)
+(35 real changes made)
+(67 missing values generated)
+(67 real changes made)
+(67 real changes made)
+(81 missing values generated)
+(81 real changes made)
+(81 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(68 missing values generated)
+(68 real changes made)
+(68 real changes made)
+(58 missing values generated)
+(58 real changes made)
+(58 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(13 missing values generated)
+(13 real changes made)
+(13 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(16 missing values generated)
+(16 real changes made)
+(16 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(11 missing values generated)
+(11 real changes made)
+(11 real changes made)
+(9 missing values generated)
+(9 real changes made)
+(9 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(10 missing values generated)
+(10 real changes made)
+(10 real changes made)
+(18 missing values generated)
+(18 real changes made)
+(18 real changes made)
+(9 missing values generated)
+(9 real changes made)
+(9 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(9 missing values generated)
+(9 real changes made)
+(9 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(29 missing values generated)
+(29 real changes made)
+(29 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(14 missing values generated)
+(14 real changes made)
+(14 real changes made)
+(49 missing values generated)
+(49 real changes made)
+(49 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(57 missing values generated)
+(57 real changes made)
+(57 real changes made)
+(58 missing values generated)
+(58 real changes made)
+(58 real changes made)
+(74 missing values generated)
+(74 real changes made)
+(74 real changes made)
+(40 missing values generated)
+(40 real changes made)
+(40 real changes made)
+(81 missing values generated)
+(81 real changes made)
+(81 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(41 missing values generated)
+(41 real changes made)
+(41 real changes made)
+(44 missing values generated)
+(44 real changes made)
+(44 real changes made)
+(10 missing values generated)
+(10 real changes made)
+(10 real changes made)
+(36 missing values generated)
+(36 real changes made)
+(36 real changes made)
+(48 missing values generated)
+(48 real changes made)
+(48 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(18 missing values generated)
+(18 real changes made)
+(18 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(11 missing values generated)
+(11 real changes made)
+(11 real changes made)
+(10 missing values generated)
+(10 real changes made)
+(10 real changes made)
+(11 missing values generated)
+(11 real changes made)
+(11 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(11 missing values generated)
+(11 real changes made)
+(11 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(60 missing values generated)
+(60 real changes made)
+(60 real changes made)
+(56 missing values generated)
+(56 real changes made)
+(56 real changes made)
+(45 missing values generated)
+(45 real changes made)
+(45 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(74 missing values generated)
+(74 real changes made)
+(74 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(11 missing values generated)
+(11 real changes made)
+(11 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(52 missing values generated)
+(52 real changes made)
+(52 real changes made)
+(54 missing values generated)
+(54 real changes made)
+(54 real changes made)
+(20 missing values generated)
+(20 real changes made)
+(20 real changes made)
+(21 missing values generated)
+(21 real changes made)
+(21 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(42 missing values generated)
+(42 real changes made)
+(42 real changes made)
+(60 missing values generated)
+(60 real changes made)
+(60 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(16 missing values generated)
+(16 real changes made)
+(16 real changes made)
+(45 missing values generated)
+(45 real changes made)
+(45 real changes made)
+(45 missing values generated)
+(45 real changes made)
+(45 real changes made)
+(44 missing values generated)
+(44 real changes made)
+(44 real changes made)
+(81 missing values generated)
+(81 real changes made)
+(81 real changes made)
+(12 missing values generated)
+(12 real changes made)
+(12 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(25 missing values generated)
+(25 real changes made)
+(25 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(45 missing values generated)
+(45 real changes made)
+(45 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(57 missing values generated)
+(57 real changes made)
+(57 real changes made)
+(69 missing values generated)
+(69 real changes made)
+(69 real changes made)
+(56 missing values generated)
+(56 real changes made)
+(56 real changes made)
+(28 missing values generated)
+(28 real changes made)
+(28 real changes made)
+(28 missing values generated)
+(28 real changes made)
+(28 real changes made)
+(26 missing values generated)
+(26 real changes made)
+(26 real changes made)
+(20 missing values generated)
+(20 real changes made)
+(20 real changes made)
+(58 missing values generated)
+(58 real changes made)
+(58 real changes made)
+(32 missing values generated)
+(32 real changes made)
+(32 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(14 missing values generated)
+(14 real changes made)
+(14 real changes made)
+(48 missing values generated)
+(48 real changes made)
+(48 real changes made)
+(10 missing values generated)
+(10 real changes made)
+(10 real changes made)
+(11 missing values generated)
+(11 real changes made)
+(11 real changes made)
+(12 missing values generated)
+(12 real changes made)
+(12 real changes made)
+(27 missing values generated)
+(27 real changes made)
+(27 real changes made)
+(9 missing values generated)
+(9 real changes made)
+(9 real changes made)
+(60 missing values generated)
+(60 real changes made)
+(60 real changes made)
+(69 missing values generated)
+(69 real changes made)
+(69 real changes made)
+(36 missing values generated)
+(36 real changes made)
+(36 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(17 missing values generated)
+(17 real changes made)
+(17 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(27 missing values generated)
+(27 real changes made)
+(27 real changes made)
+(11 missing values generated)
+(11 real changes made)
+(11 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(67 missing values generated)
+(67 real changes made)
+(67 real changes made)
+(74 missing values generated)
+(74 real changes made)
+(74 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(21 missing values generated)
+(21 real changes made)
+(21 real changes made)
+(15 missing values generated)
+(15 real changes made)
+(15 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(12 missing values generated)
+(12 real changes made)
+(12 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(11 missing values generated)
+(11 real changes made)
+(11 real changes made)
+(15 missing values generated)
+(15 real changes made)
+(15 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(9 missing values generated)
+(9 real changes made)
+(9 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(51 missing values generated)
+(51 real changes made)
+(51 real changes made)
+(26 missing values generated)
+(26 real changes made)
+(26 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(25 missing values generated)
+(25 real changes made)
+(25 real changes made)
+(27 missing values generated)
+(27 real changes made)
+(27 real changes made)
+(14 missing values generated)
+(14 real changes made)
+(14 real changes made)
+(17 missing values generated)
+(17 real changes made)
+(17 real changes made)
+(15 missing values generated)
+(15 real changes made)
+(15 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(20 missing values generated)
+(20 real changes made)
+(20 real changes made)
+(14 missing values generated)
+(14 real changes made)
+(14 real changes made)
+(15 missing values generated)
+(15 real changes made)
+(15 real changes made)
+(32 missing values generated)
+(32 real changes made)
+(32 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(16 missing values generated)
+(16 real changes made)
+(16 real changes made)
+(53 missing values generated)
+(53 real changes made)
+(53 real changes made)
+(57 missing values generated)
+(57 real changes made)
+(57 real changes made)
+(31 missing values generated)
+(31 real changes made)
+(31 real changes made)
+(49 missing values generated)
+(49 real changes made)
+(49 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(11 missing values generated)
+(11 real changes made)
+(11 real changes made)
+(70 missing values generated)
+(70 real changes made)
+(70 real changes made)
+(49 missing values generated)
+(49 real changes made)
+(49 real changes made)
+(47 missing values generated)
+(47 real changes made)
+(47 real changes made)
+(44 missing values generated)
+(44 real changes made)
+(44 real changes made)
+(18 missing values generated)
+(18 real changes made)
+(18 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(59 missing values generated)
+(59 real changes made)
+(59 real changes made)
+(77 missing values generated)
+(77 real changes made)
+(77 real changes made)
+(87 missing values generated)
+(87 real changes made)
+(87 real changes made)
+(74 missing values generated)
+(74 real changes made)
+(74 real changes made)
+(73 missing values generated)
+(73 real changes made)
+(73 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(85 missing values generated)
+(85 real changes made)
+(85 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(14 missing values generated)
+(14 real changes made)
+(14 real changes made)
+(10 missing values generated)
+(10 real changes made)
+(10 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(34 missing values generated)
+(34 real changes made)
+(34 real changes made)
+(10 missing values generated)
+(10 real changes made)
+(10 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(19 missing values generated)
+(19 real changes made)
+(19 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(57 missing values generated)
+(57 real changes made)
+(57 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(21 missing values generated)
+(21 real changes made)
+(21 real changes made)
+(18 missing values generated)
+(18 real changes made)
+(18 real changes made)
+(14 missing values generated)
+(14 real changes made)
+(14 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(15 missing values generated)
+(15 real changes made)
+(15 real changes made)
+(61 missing values generated)
+(61 real changes made)
+(61 real changes made)
+(69 missing values generated)
+(69 real changes made)
+(69 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(49 missing values generated)
+(49 real changes made)
+(49 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(10 missing values generated)
+(10 real changes made)
+(10 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(11 missing values generated)
+(11 real changes made)
+(11 real changes made)
+(9 missing values generated)
+(9 real changes made)
+(9 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(12 missing values generated)
+(12 real changes made)
+(12 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(23 missing values generated)
+(23 real changes made)
+(23 real changes made)
+(74 missing values generated)
+(74 real changes made)
+(74 real changes made)
+(10 missing values generated)
+(10 real changes made)
+(10 real changes made)
+(9 missing values generated)
+(9 real changes made)
+(9 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(55 missing values generated)
+(55 real changes made)
+(55 real changes made)
+(42 missing values generated)
+(42 real changes made)
+(42 real changes made)
+(28 missing values generated)
+(28 real changes made)
+(28 real changes made)
+(60 missing values generated)
+(60 real changes made)
+(60 real changes made)
+(77 missing values generated)
+(77 real changes made)
+(77 real changes made)
+(63 missing values generated)
+(63 real changes made)
+(63 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(47 missing values generated)
+(47 real changes made)
+(47 real changes made)
+(47 missing values generated)
+(47 real changes made)
+(47 real changes made)
+(45 missing values generated)
+(45 real changes made)
+(45 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(55 missing values generated)
+(55 real changes made)
+(55 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(10 missing values generated)
+(10 real changes made)
+(10 real changes made)
+(13 missing values generated)
+(13 real changes made)
+(13 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(27 missing values generated)
+(27 real changes made)
+(27 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(9 missing values generated)
+(9 real changes made)
+(9 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(45 missing values generated)
+(45 real changes made)
+(45 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(68 missing values generated)
+(68 real changes made)
+(68 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(9 missing values generated)
+(9 real changes made)
+(9 real changes made)
+(12 missing values generated)
+(12 real changes made)
+(12 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(15 missing values generated)
+(15 real changes made)
+(15 real changes made)
+(10 missing values generated)
+(10 real changes made)
+(10 real changes made)
+(61 missing values generated)
+(61 real changes made)
+(61 real changes made)
+(60 missing values generated)
+(60 real changes made)
+(60 real changes made)
+(68 missing values generated)
+(68 real changes made)
+(68 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(9 missing values generated)
+(9 real changes made)
+(9 real changes made)
+(79 missing values generated)
+(79 real changes made)
+(79 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(32 missing values generated)
+(32 real changes made)
+(32 real changes made)
+(43 missing values generated)
+(43 real changes made)
+(43 real changes made)
+(41 missing values generated)
+(41 real changes made)
+(41 real changes made)
+(30 missing values generated)
+(30 real changes made)
+(30 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(9 missing values generated)
+(9 real changes made)
+(9 real changes made)
+(24 missing values generated)
+(24 real changes made)
+(24 real changes made)
+(90 missing values generated)
+(90 real changes made)
+(90 real changes made)
+(58 missing values generated)
+(58 real changes made)
+(58 real changes made)
+(70 missing values generated)
+(70 real changes made)
+(70 real changes made)
+(76 missing values generated)
+(76 real changes made)
+(76 real changes made)
+(72 missing values generated)
+(72 real changes made)
+(72 real changes made)
+(38 missing values generated)
+(38 real changes made)
+(38 real changes made)
+(80 missing values generated)
+(80 real changes made)
+(80 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(12 missing values generated)
+(12 real changes made)
+(12 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(8 missing values generated)
+(8 real changes made)
+(8 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(16 missing values generated)
+(16 real changes made)
+(16 real changes made)
+(7 missing values generated)
+(7 real changes made)
+(7 real changes made)
+(15 missing values generated)
+(15 real changes made)
+(15 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(13 missing values generated)
+(13 real changes made)
+(13 real changes made)
+(34 missing values generated)
+(34 real changes made)
+(34 real changes made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(15 missing values generated)
+(15 real changes made)
+(15 real changes made)
+(15 missing values generated)
+(15 real changes made)
+(15 real changes made)
+(35 missing values generated)
+(35 real changes made)
+(35 real changes made)
+(4 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(9 missing values generated)
+(9 real changes made)
+(9 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(29 missing values generated)
+(29 real changes made)
+(29 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(16 missing values generated)
+(16 real changes made)
+(16 real changes made)
+(71 missing values generated)
+(71 real changes made)
+(71 real changes made)
+(21 missing values generated)
+(21 real changes made)
+(21 real changes made)
+(40 missing values generated)
+(40 real changes made)
+(40 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(6 missing values generated)
+(6 real changes made)
+(6 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(2 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(3 missing values generated)
+(3 real changes made)
+(3 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(20 missing values generated)
+(20 real changes made)
+(20 real changes made)
+(22 missing values generated)
+(22 real changes made)
+(22 real changes made)
+(14 missing values generated)
+(14 real changes made)
+(14 real changes made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+(14 missing values generated)
+(14 real changes made)
+(14 real changes made)
+(14 missing values generated)
+(14 real changes made)
+(14 real changes made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(1 missing value generated)
+(1 real change made)
+(1 real change made)
+(5 missing values generated)
+(5 real changes made)
+(5 real changes made)
+
+. 
+. scatter total_number_secr total_number_strains
+
+. scatter total_number_sulfur total_number_strains
+
+. 
+. gen ln_total_number_strains=ln(total_number_strains)
+
+. 
+. reg total_number_secr ln_total_number_strains 2.group
+
+      Source |       SS           df       MS      Number of obs   =       108
+-------------+----------------------------------   F(2, 105)       =    174.43
+       Model |  49569.1258         2  24784.5629   Prob > F        =    0.0000
+    Residual |  14919.1242       105  142.086897   R-squared       =    0.7687
+-------------+----------------------------------   Adj R-squared   =    0.7642
+       Total |    64488.25       107  602.693925   Root MSE        =     11.92
+
+-----------------------------------------------------------------------------------------
+      total_number_secr |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------------+----------------------------------------------------------------
+ln_total_number_strains |   30.49032    1.95235    15.62   0.000     26.61917    34.36147
+                2.group |  -6.813693   3.312312    -2.06   0.042     -13.3814   -.2459896
+                  _cons |   37.76362   9.059679     4.17   0.000     19.79995    55.72729
+-----------------------------------------------------------------------------------------
+
+.         
+. local list_ind="thm hspg_degr_1 cspg_a_degr coa ch4s tsul so3 so4 gthrd ahcys 5mta met_L"
+
+. 
+. gen class_sulfur_sec_ind=""
+(108 missing values generated)
+
+. gen total_number_sulfur_ind=0
+
+. foreach k in `list_ind'{
+  2.         replace total_number_sulfur_ind=total_number_sulfur_ind+bin__`k'
+  3.         tostring(bin__`k'), gen(s_EX_`k'_e__bin)
+  4.         replace class_sulfur_sec_ind=class_sulfur_sec_ind+s_EX_`k'_e__bin
+  5.         drop s_EX_`k'_e__bin
+  6.         }
+(17 real changes made)
+s_EX_thm_e__bin generated as str1
+(108 real changes made)
+(83 real changes made)
+s_EX_hspg_degr_1_e__bin generated as str1
+variable class_sulfur_sec_ind was str1 now str2
+(108 real changes made)
+(87 real changes made)
+s_EX_cspg_a_degr_e__bin generated as str1
+variable class_sulfur_sec_ind was str2 now str3
+(108 real changes made)
+(8 real changes made)
+s_EX_coa_e__bin generated as str1
+variable class_sulfur_sec_ind was str3 now str4
+(108 real changes made)
+(56 real changes made)
+s_EX_ch4s_e__bin generated as str1
+variable class_sulfur_sec_ind was str4 now str5
+(108 real changes made)
+(47 real changes made)
+s_EX_tsul_e__bin generated as str1
+variable class_sulfur_sec_ind was str5 now str6
+(108 real changes made)
+(51 real changes made)
+s_EX_so3_e__bin generated as str1
+variable class_sulfur_sec_ind was str6 now str7
+(108 real changes made)
+(92 real changes made)
+s_EX_so4_e__bin generated as str1
+variable class_sulfur_sec_ind was str7 now str8
+(108 real changes made)
+(99 real changes made)
+s_EX_gthrd_e__bin generated as str1
+variable class_sulfur_sec_ind was str8 now str9
+(108 real changes made)
+(6 real changes made)
+s_EX_ahcys_e__bin generated as str1
+variable class_sulfur_sec_ind was str9 now str10
+(108 real changes made)
+(66 real changes made)
+s_EX_5mta_e__bin generated as str1
+variable class_sulfur_sec_ind was str10 now str11
+(108 real changes made)
+(108 real changes made)
+s_EX_met_L_e__bin generated as str1
+variable class_sulfur_sec_ind was str11 now str12
+(108 real changes made)
+
+. tab class_sulfur_sec
+
+                     class_sulfur_sec |      Freq.     Percent        Cum.
+--------------------------------------+-----------------------------------
+0000000000000011111000000000000000000 |          6        5.56        5.56
+0000100101100011111000000000000011111 |          1        0.93        6.48
+0100000000011001111000000000000000000 |          5        4.63       11.11
+0100000000011011111000000000000000000 |          3        2.78       13.89
+0100000001011101111000000000000000000 |          1        0.93       14.81
+0100001000011011111000000000000000000 |          1        0.93       15.74
+0100001000111111111000000000000000000 |          1        0.93       16.67
+0100100100111001111000000000000011111 |          2        1.85       18.52
+0100100101111011111000000000000011111 |          1        0.93       19.44
+0100101111111011111000000000000011111 |          1        0.93       20.37
+0110000000111101111000000000000000000 |          1        0.93       21.30
+0110001000111011111000000000000000000 |          1        0.93       22.22
+0110001001111111111000000000000000000 |          1        0.93       23.15
+1001100111100011111111111111111111111 |          1        0.93       24.07
+1001101100100011111111111111111111111 |          1        0.93       25.00
+1101000011111001111111111111111100000 |          1        0.93       25.93
+1101100100111001111111111111111111111 |         11       10.19       36.11
+1101100100111011111111111111111111111 |         13       12.04       48.15
+1101100111111001111111111111111111111 |          5        4.63       52.78
+1101100111111011111111111111111111111 |          1        0.93       53.70
+1101101100111001111111111111111111111 |          7        6.48       60.19
+1101101100111011111111111111111111111 |          3        2.78       62.96
+1101101110111011111111111111111111111 |          1        0.93       63.89
+1101101111111001111111111111111111111 |          8        7.41       71.30
+1101101111111011111111111111111111111 |         15       13.89       85.19
+1101111101111011111111111111111111111 |          1        0.93       86.11
+1101111111111011111111111111111111111 |          1        0.93       87.04
+1111101110111001111111111111111111111 |          1        0.93       87.96
+1111101111111011111111111111111111111 |          6        5.56       93.52
+1111101111111111111111111111111111111 |          1        0.93       94.44
+1111111101111011111111111111111111111 |          1        0.93       95.37
+1111111111111011111111111111111111111 |          4        3.70       99.07
+1111111111111111111111111111111111111 |          1        0.93      100.00
+--------------------------------------+-----------------------------------
+                                Total |        108      100.00
+
+. egen gr_class_sulfur_sec_ind=group(class_sulfur_sec)
+
+. 
+. local list_end="tsul h2s so3 so4 ch4s"
+
+. 
+. 
+. gen class_sulfur_sec_end=""
+(108 missing values generated)
+
+. gen total_number_sulfur_end=0
+
+. foreach k in `list_end'{
+  2.         replace total_number_sulfur_end=total_number_sulfur_end+bin__`k'
+  3.         tostring(bin__`k'), gen(s_EX_`k'_e__bin)
+  4.         replace class_sulfur_sec_end=class_sulfur_sec_end+s_EX_`k'_e__bin
+  5.         drop s_EX_`k'_e__bin
+  6.         }
+(47 real changes made)
+s_EX_tsul_e__bin generated as str1
+(108 real changes made)
+(108 real changes made)
+s_EX_h2s_e__bin generated as str1
+variable class_sulfur_sec_end was str1 now str2
+(108 real changes made)
+(51 real changes made)
+s_EX_so3_e__bin generated as str1
+variable class_sulfur_sec_end was str2 now str3
+(108 real changes made)
+(92 real changes made)
+s_EX_so4_e__bin generated as str1
+variable class_sulfur_sec_end was str3 now str4
+(108 real changes made)
+(56 real changes made)
+s_EX_ch4s_e__bin generated as str1
+variable class_sulfur_sec_end was str4 now str5
+(108 real changes made)
+
+. tab class_sulfur_sec_end
+
+class_sulfu |
+  r_sec_end |      Freq.     Percent        Cum.
+------------+-----------------------------------
+      01000 |         14       12.96       12.96
+      01001 |          1        0.93       13.89
+      01010 |         27       25.00       38.89
+      01011 |         13       12.04       50.93
+      01100 |          1        0.93       51.85
+      01110 |          2        1.85       53.70
+      01111 |          3        2.78       56.48
+      11011 |          2        1.85       58.33
+      11110 |          8        7.41       65.74
+      11111 |         37       34.26      100.00
+------------+-----------------------------------
+      Total |        108      100.00
+
+. egen gr_class_sulfur_sec_end=group(class_sulfur_sec_end)
+
+. 
+. *Table: Screen secretions on dependency on group-status
+. 
+. set obs 500
+number of observations (_N) was 108, now 500
+
+. gen name=""
+(500 missing values generated)
+
+. gen perc_1=.
+(500 missing values generated)
+
+. gen perc_2=.
+(500 missing values generated)
+
+. gen perc_3=.
+(500 missing values generated)
+
+. gen p_value=.
+(500 missing values generated)
+
+. local i=1
+
+. 
+. foreach j of varlist __12dhchol-__xtsn{
+  2.         local nam=substr("`j'", 3,.)
+  3.         replace name="`nam'" in `i'
+  4.         quietly tab bin`j' group, ex
+  5.         replace p_value=r(p_exact) in `i'
+  6.         foreach k in 1 2 3{
+  7.                 quietly sum bin`j' if group==`k'
+  8.                 replace perc_`k'=r(mean) in `i'
+  9.                 }
+ 10.         local i=`i'+1
+ 11.         }
+variable name was str1 now str8
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+variable name was str8 now str9
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+variable name was str9 now str10
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+variable name was str10 now str12
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+
+. 
+. export excel name perc_1 perc_2 perc_3 p_value using "secretions_binary_group.xlsx", replace firstrow(variables)
+file secretions_binary_group.xlsx saved
+
+. 
+. local i=1
+
+. replace name=""
+(229 real changes made)
+
+. replace perc_1=.
+(229 real changes made, 229 to missing)
+
+. replace perc_2=.
+(229 real changes made, 229 to missing)
+
+. replace perc_3=.
+(229 real changes made, 229 to missing)
+
+. replace p_value=.
+(160 real changes made, 160 to missing)
+
+.         
+. 
+. local list_all="__phenol __dtmp __tsul __acmana __pydxn __dttp __ha_deg1 __ha_pre1 __chor __ncam __hspg_degr_1 __cspg_c_degr __Ser_
+> Thr __acgal __idon_L __isobut __12dhchol __btd_RR __pac __pydx __uchol __so4 __gthrd __so3 __13ppd __icdchol __ch4s __phpyr __g6p _
+> _3dhcdchol __26dap_M __coprost __2mbut __ctbt __gbbtn __12ppd_S __oaa __2hyoxplac __glyclt __4hphac __4hbz __ahcys __xtsn __csn __x
+> an __HC02191 __4hoxpacd __5mthf __thf __fol __fald __n2o __n2 __oxa __actn_R __ind3ac __dopa __hista __coa __diact __5mta __ch4 __a
+> docbl __M03134 __but __34dhpha __mnl __pyr __dgsn __4mcat __h2o2 __ispre __dhpppn __tmao __ura __Lkynr __glutar __bglc __btoh __thm
+>  __15dap __2ddglcn __3mop __glcn __glyb __pi __rib_D __tma __met_L"
+
+.         
+. gen total_number_ind=0
+
+. foreach k in `list_all'{
+  2.         replace total_number_ind=total_number_ind+bin`k'
+  3.         }
+(476 real changes made, 392 to missing)
+(58 real changes made)
+(47 real changes made)
+(87 real changes made)
+(90 real changes made)
+(70 real changes made)
+(85 real changes made)
+(85 real changes made)
+(98 real changes made)
+(93 real changes made)
+(83 real changes made)
+(87 real changes made)
+(100 real changes made)
+(101 real changes made)
+(27 real changes made)
+(102 real changes made)
+(100 real changes made)
+(31 real changes made)
+(98 real changes made)
+(49 real changes made)
+(96 real changes made)
+(92 real changes made)
+(99 real changes made)
+(51 real changes made)
+(33 real changes made)
+(95 real changes made)
+(56 real changes made)
+(58 real changes made)
+(52 real changes made)
+(96 real changes made)
+(104 real changes made)
+(4 real changes made)
+(32 real changes made)
+(43 real changes made)
+(43 real changes made)
+(28 real changes made)
+(35 real changes made)
+(93 real changes made)
+(98 real changes made)
+(40 real changes made)
+(51 real changes made)
+(6 real changes made)
+(51 real changes made)
+(89 real changes made)
+(73 real changes made)
+(53 real changes made)
+(44 real changes made)
+(66 real changes made)
+(66 real changes made)
+(94 real changes made)
+(7 real changes made)
+(41 real changes made)
+(9 real changes made)
+(98 real changes made)
+(71 real changes made)
+(11 real changes made)
+(79 real changes made)
+(79 real changes made)
+(8 real changes made)
+(72 real changes made)
+(66 real changes made)
+(10 real changes made)
+(5 real changes made)
+(12 real changes made)
+(107 real changes made)
+(6 real changes made)
+(94 real changes made)
+(103 real changes made)
+(102 real changes made)
+(4 real changes made)
+(1 real change made)
+(58 real changes made)
+(9 real changes made)
+(98 real changes made)
+(105 real changes made)
+(99 real changes made)
+(10 real changes made)
+(3 real changes made)
+(12 real changes made)
+(17 real changes made)
+(85 real changes made)
+(104 real changes made)
+(107 real changes made)
+(106 real changes made)
+(104 real changes made)
+(2 real changes made)
+(107 real changes made)
+(103 real changes made)
+(108 real changes made)
+
+. 
+. reg total_number_sulfur_ind group_2 if group_3==0
+
+      Source |       SS           df       MS      Number of obs   =        45
+-------------+----------------------------------   F(1, 43)        =     48.14
+       Model |  180.454444         1  180.454444   Prob > F        =    0.0000
+    Residual |      161.19        43  3.74860465   R-squared       =    0.5282
+-------------+----------------------------------   Adj R-squared   =    0.5172
+       Total |  341.644444        44  7.76464646   Root MSE        =    1.9361
+
+------------------------------------------------------------------------------
+total~ur_ind |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     group_2 |      -4.03   .5808394    -6.94   0.000    -5.201374   -2.858626
+       _cons |       8.48   .3872263    21.90   0.000     7.699084    9.260916
+------------------------------------------------------------------------------
+
+. bootstrap r(ind_eff) r(dir_eff), reps(1000): sgmediation total_number_sulfur_ind, mv(hspg_csp) iv(group_2)
+(running sgmediation on estimation sample)
+
+Bootstrap replications (1000)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..................................................   100
+..................................................   150
+..................................................   200
+..................................................   250
+..................................................   300
+..................................................   350
+..................................................   400
+..................................................   450
+..................................................   500
+..................................................   550
+..................................................   600
+..................................................   650
+..................................................   700
+..................................................   750
+..................................................   800
+..................................................   850
+..................................................   900
+..................................................   950
+..................................................  1000
+
+Bootstrap results                               Number of obs     =        108
+                                                Replications      =      1,000
+
+      command:  sgmediation total_number_sulfur_ind, mv(hspg_csp) iv(group_2)
+        _bs_1:  r(ind_eff)
+        _bs_2:  r(dir_eff)
+
+------------------------------------------------------------------------------
+             |   Observed   Bootstrap                         Normal-based
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       _bs_1 |  -2.285474   .5324711    -4.29   0.000    -3.329098    -1.24185
+       _bs_2 |  -.4349804   .4093706    -1.06   0.288    -1.237332    .3673713
+------------------------------------------------------------------------------
+
+. 
+. tab class_sulfur_sec_end, gen(dummy)
+
+class_sulfu |
+  r_sec_end |      Freq.     Percent        Cum.
+------------+-----------------------------------
+      01000 |         14       12.96       12.96
+      01001 |          1        0.93       13.89
+      01010 |         27       25.00       38.89
+      01011 |         13       12.04       50.93
+      01100 |          1        0.93       51.85
+      01110 |          2        1.85       53.70
+      01111 |          3        2.78       56.48
+      11011 |          2        1.85       58.33
+      11110 |          8        7.41       65.74
+      11111 |         37       34.26      100.00
+------------+-----------------------------------
+      Total |        108      100.00
+
+. foreach j of varlist dummy*{
+  2.         tab `j' group, ex
+  3.         }
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 9
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |      group(stratification)
+   ==01000 |         1          2          3 |     Total
+-----------+---------------------------------+----------
+         0 |        25         12         57 |        94 
+         1 |         0          8          6 |        14 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.000
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 0
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |      group(stratification)
+   ==01001 |         1          2          3 |     Total
+-----------+---------------------------------+----------
+         0 |        25         20         62 |       107 
+         1 |         0          0          1 |         1 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 1.000
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 10
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |      group(stratification)
+   ==01010 |         1          2          3 |     Total
+-----------+---------------------------------+----------
+         0 |        23         17         41 |        81 
+         1 |         2          3         22 |        27 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.016
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 6
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |      group(stratification)
+   ==01011 |         1          2          3 |     Total
+-----------+---------------------------------+----------
+         0 |        24         15         56 |        95 
+         1 |         1          5          7 |        13 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.109
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 0
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |      group(stratification)
+   ==01100 |         1          2          3 |     Total
+-----------+---------------------------------+----------
+         0 |        25         19         63 |       107 
+         1 |         0          1          0 |         1 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.185
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 0
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |      group(stratification)
+   ==01110 |         1          2          3 |     Total
+-----------+---------------------------------+----------
+         0 |        25         18         63 |       106 
+         1 |         0          2          0 |         2 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.033
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 1
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |      group(stratification)
+   ==01111 |         1          2          3 |     Total
+-----------+---------------------------------+----------
+         0 |        25         19         61 |       105 
+         1 |         0          1          2 |         3 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.566
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 1
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |      group(stratification)
+   ==11011 |         1          2          3 |     Total
+-----------+---------------------------------+----------
+         0 |        23         20         63 |       106 
+         1 |         2          0          0 |         2 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.085
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 2
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |      group(stratification)
+   ==11110 |         1          2          3 |     Total
+-----------+---------------------------------+----------
+         0 |        23         20         57 |       100 
+         1 |         2          0          6 |         8 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.515
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 18
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |      group(stratification)
+   ==11111 |         1          2          3 |     Total
+-----------+---------------------------------+----------
+         0 |         7         20         44 |        71 
+         1 |        18          0         19 |        37 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.000
+
+. 
+. *Mediation analyses
+. bootstrap r(ind_eff) r(dir_eff), reps(1000): sgmediation total_number_sulfur_ind if group_3==0, mv(hspg_csp) iv(group_2)
+(running sgmediation on estimation sample)
+
+Bootstrap replications (1000)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..................................................   100
+..................................................   150
+..................................................   200
+..................................................   250
+..................................................   300
+..................................................   350
+..................................................   400
+..................................................   450
+..................................................   500
+..................................................   550
+..................................................   600
+..................................................   650
+..................................................   700
+..................................................   750
+..................................................   800
+..................................................   850
+..................................................   900
+..................................................   950
+..................................................  1000
+
+Bootstrap results                               Number of obs     =         45
+                                                Replications      =      1,000
+
+      command:  sgmediation total_number_sulfur_ind, mv(hspg_csp) iv(group_2)
+        _bs_1:  r(ind_eff)
+        _bs_2:  r(dir_eff)
+
+------------------------------------------------------------------------------
+             |   Observed   Bootstrap                         Normal-based
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       _bs_1 |  -1.835714   .4999451    -3.67   0.000    -2.815589     -.85584
+       _bs_2 |  -2.194286   .4402247    -4.98   0.000     -3.05711   -1.331461
+------------------------------------------------------------------------------
+
+.         
+.         
+. *Figures
+. 
+. *A
+. 
+. reg total_number_sec ln_total_number_strains 2.group
+
+      Source |       SS           df       MS      Number of obs   =       108
+-------------+----------------------------------   F(2, 105)       =    174.43
+       Model |  49569.1258         2  24784.5629   Prob > F        =    0.0000
+    Residual |  14919.1242       105  142.086897   R-squared       =    0.7687
+-------------+----------------------------------   Adj R-squared   =    0.7642
+       Total |    64488.25       107  602.693925   Root MSE        =     11.92
+
+-----------------------------------------------------------------------------------------
+      total_number_secr |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------------+----------------------------------------------------------------
+ln_total_number_strains |   30.49032    1.95235    15.62   0.000     26.61917    34.36147
+                2.group |  -6.813693   3.312312    -2.06   0.042     -13.3814   -.2459896
+                  _cons |   37.76362   9.059679     4.17   0.000     19.79995    55.72729
+-----------------------------------------------------------------------------------------
+
+. matrix B=e(b)
+
+. scatter total_number_sec total_number_strains if group==1 ||scatter total_number_sec total_number_strains if group==2 ||scatter tot
+> al_number_sec total_number_strains if group==3 || function y=B[1,1]*ln(x)+B[1,3], range(15 300) || function y=B[1,1]*ln(x)+B[1,3]+B
+> [1,2], range(15 300) saving(fig_A_raw, replace)
+(file fig_A_raw.gph saved)
+
+. 
+. *B
+. graph box total_number_secr, over(stratification) saving(fig_B_raw, replace)
+(file fig_B_raw.gph saved)
+
+. 
+. *C
+. graph box total_number_sulfur_ind, over(stratification) by(hspg_csp) saving(fig_C_raw, replace)
+(file fig_C_raw.gph saved)
+
+. 
+. *D      
+. 
+. tab class_sulfur_sec_end, gen(sulfur_pattern)
+
+class_sulfu |
+  r_sec_end |      Freq.     Percent        Cum.
+------------+-----------------------------------
+      01000 |         14       12.96       12.96
+      01001 |          1        0.93       13.89
+      01010 |         27       25.00       38.89
+      01011 |         13       12.04       50.93
+      01100 |          1        0.93       51.85
+      01110 |          2        1.85       53.70
+      01111 |          3        2.78       56.48
+      11011 |          2        1.85       58.33
+      11110 |          8        7.41       65.74
+      11111 |         37       34.26      100.00
+------------+-----------------------------------
+      Total |        108      100.00
+
+. foreach j of varlist *pattern*{
+  2.         tab `j' stratification, ex
+  3.         display r(p_exact)
+  4.         }
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 9
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |          Stratification
+   ==01000 |   Healthy  IBD_dys..  IBD_non.. |     Total
+-----------+---------------------------------+----------
+         0 |        25         12         57 |        94 
+         1 |         0          8          6 |        14 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.000
+.00030057
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 0
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |          Stratification
+   ==01001 |   Healthy  IBD_dys..  IBD_non.. |     Total
+-----------+---------------------------------+----------
+         0 |        25         20         62 |       107 
+         1 |         0          0          1 |         1 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 1.000
+1
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 10
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |          Stratification
+   ==01010 |   Healthy  IBD_dys..  IBD_non.. |     Total
+-----------+---------------------------------+----------
+         0 |        23         17         41 |        81 
+         1 |         2          3         22 |        27 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.016
+.01573524
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 6
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |          Stratification
+   ==01011 |   Healthy  IBD_dys..  IBD_non.. |     Total
+-----------+---------------------------------+----------
+         0 |        24         15         56 |        95 
+         1 |         1          5          7 |        13 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.109
+.10895846
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 0
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |          Stratification
+   ==01100 |   Healthy  IBD_dys..  IBD_non.. |     Total
+-----------+---------------------------------+----------
+         0 |        25         19         63 |       107 
+         1 |         0          1          0 |         1 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.185
+.18518519
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 0
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |          Stratification
+   ==01110 |   Healthy  IBD_dys..  IBD_non.. |     Total
+-----------+---------------------------------+----------
+         0 |        25         18         63 |       106 
+         1 |         0          2          0 |         2 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.033
+.03288335
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 1
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |          Stratification
+   ==01111 |   Healthy  IBD_dys..  IBD_non.. |     Total
+-----------+---------------------------------+----------
+         0 |        25         19         61 |       105 
+         1 |         0          1          2 |         3 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.566
+.56633163
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 1
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |          Stratification
+   ==11011 |   Healthy  IBD_dys..  IBD_non.. |     Total
+-----------+---------------------------------+----------
+         0 |        23         20         63 |       106 
+         1 |         2          0          0 |         2 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.085
+.08480443
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 2
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |          Stratification
+   ==11110 |   Healthy  IBD_dys..  IBD_non.. |     Total
+-----------+---------------------------------+----------
+         0 |        23         20         57 |       100 
+         1 |         2          0          6 |         8 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.515
+.51456273
+
+Enumerating sample-space combinations:
+stage 3:  enumerations = 1
+stage 2:  enumerations = 18
+stage 1:  enumerations = 0
+
+class_sulf |
+ur_sec_end |          Stratification
+   ==11111 |   Healthy  IBD_dys..  IBD_non.. |     Total
+-----------+---------------------------------+----------
+         0 |         7         20         44 |        71 
+         1 |        18          0         19 |        37 
+-----------+---------------------------------+----------
+     Total |        25         20         63 |       108 
+
+           Fisher's exact =                 0.000
+3.697e-07
+
+. 
+. clear 
+
+. log close
+      name:  <unnamed>
+       log:  A:\IBD_project\IBD_simulation_data\manuscript_analyses.log
+  log type:  text
+ closed on:  26 Aug 2019, 17:46:07
+-------------------------------------------------------------------------------------------------------------------------------------
