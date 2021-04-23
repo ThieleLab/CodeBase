@@ -77,7 +77,7 @@ addpath('scripts')
 % we provide the original microbiome models as a download.
 
 % To build personalized microbiome models:
-% runMgPipe
+% runMgPipe_IBD
 
 % To download the originally used microbiome models:
 modelPath=[pwd filesep 'Constrained_models'];
