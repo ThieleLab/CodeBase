@@ -1,0 +1,11 @@
+# code to start distributedFBA 
+
+julia
+Pkg.add("COBRA")
+Pkg.add("CPLEX")
+
+#to update:
+Pkg.update()
+
+# to start cobra.jl through the customised Julia script
+include("driver.jl")
