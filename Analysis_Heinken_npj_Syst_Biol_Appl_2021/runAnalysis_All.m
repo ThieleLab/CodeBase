@@ -13,7 +13,7 @@ unzip('AGORA-master')
 agoraPath = [pwd filesep 'AGORA-master' filesep 'CurrentVersion' filesep 'AGORA_1_03' filesep' 'AGORA_1_03_mat'];
 
 % download and extract the necessary input file
-websave('inputFiles','https://7d0178ba-85cc-458f-bb4a-8b987a027734.filesusr.com/archives/f63236_59cc1a0a3454476d873c39ae86418749.zip')
+websave('inputFiles','https://7d0178ba-85cc-458f-bb4a-8b987a027734.filesusr.com/archives/f63236_928f809251cb469792407080a862b9cd.zip')
 unzip('inputFiles')
 
 % download and extract the models and fluxes generated in the study
