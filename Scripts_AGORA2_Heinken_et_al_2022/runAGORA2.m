@@ -4,10 +4,9 @@
 % initialize the COBRA Toolbox and solvers
 initCobraToolbox
 solverOK=changeCobraSolver('ibm_cplex','LP');
-% solverOK=changeCobraSolver('gurobi','LP');
 
 rootDir = pwd;
-addpath(genpath([rootDir filesep 'Scripts']))
+addpath(genpath([rootDir filesep 'simulations']))
 addpath(genpath([rootDir filesep 'input']))
 
 %% Define input variables
