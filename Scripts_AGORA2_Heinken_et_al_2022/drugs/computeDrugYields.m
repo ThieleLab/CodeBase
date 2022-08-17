@@ -1,7 +1,7 @@
 
 %% Compute drug yields
 
-resultsFolder = [rootDir 'ComputeDrugReactions' filesep];
+resultsFolder = [rootDir filesep 'ComputedDrugFluxes' filesep];
 
 database=loadVMHDatabase;
 
@@ -54,7 +54,7 @@ for k=1:length(yieldsToCompute)
         changeCobraSolverParams('LP', 'logFile', 0);
         
         % load and constrain the model
-        model=readCbModel([refinedFolder orgs{i} '.mat']);
+        model=readCbModel([refinedFolder filesep orgs{i} '.mat']);
         model=addDemandReaction(model,{'co2[c]','pyr[c]','nh4[c]'});
         model = useDiet(model,basicCompounds);
         model.lb(find(strncmp(model.rxns,'sink_',5)))=0;
@@ -87,7 +87,7 @@ for k=1:length(yieldsToCompute)
         FBA=fluxesTmp{i}{1};
         drugPredictions{i+1,2}=FBA.f;
         for j = 1:length(drugExchanges)
-            drugPredictions{1,j+2}=[metaboliteDatabase{find(strcmp(metaboliteDatabase(:,1),drugExchanges{j,1})),2} '_' met];
+            drugPredictions{1,j+2}=[database.metabolites{find(strcmp(database.metabolites(:,1),drugExchanges{j,1})),2} '_' met];
 
             if ~isempty(fluxesTmp{i}{j+1})
                 FBA=fluxesTmp{i}{j+1};
@@ -117,22 +117,16 @@ for k=1:length(yieldsToCompute)
     end
     drugPredictions(:,delArray)=[];
     drugPredictions=cell2table(drugPredictions);
-    writetable(drugPredictions,[resultsFolder 'AGORA2_drugYields_' met],'FileType','text','WriteVariableNames',false,'Delimiter','tab');
+    writetable(drugPredictions,[resultsFolder filesep 'AGORA2_drugYields_' met],'FileType','text','WriteVariableNames',false,'Delimiter','tab');
 end
 
 %% Combine the yields into one file for the supplemental material
 
-dInfo = dir(resultsFolder);
-fileList={dInfo.name};
-fileList=fileList';
-fileList(find(strcmp(fileList(:,1),'.')),:)=[];
-fileList(find(strcmp(fileList(:,1),'..')),:)=[];
-fileList(find(~contains(fileList(:,1),'.txt')),:)=[];
+fileList = {'AGORA2_drugYields_atp.txt','AGORA2_drugYields_co2.txt','AGORA2_drugYields_nh4.txt','AGORA2_drugYields_pyr.txt'};
 
 orgs={};
 for i=1:length(fileList)
-    yields = readtable([resultsFolder fileList{i}], 'ReadVariableNames', false, 'Delimiter', 'tab','TreatAsEmpty',['UND. -60001','UND. -2011','UND. -62011']);
-    yields = table2cell(yields);
+    yields = readInputTableForPipeline([resultsFolder fileList{i}]);
     orgs=vertcat(orgs,yields(2:end,1));
 end
 orgs=unique(orgs);
@@ -143,8 +137,7 @@ for i=1:length(orgs)
 end
 
 for i=1:length(fileList)
-    yields = readtable([resultsFolder fileList{i}], 'ReadVariableNames', false, 'Delimiter', 'tab','TreatAsEmpty',['UND. -60001','UND. -2011','UND. -62011']);
-    yields = table2cell(yields);
+       yields = readInputTableForPipeline([resultsFolder fileList{i}]);
     if size(yields,1) >1
         cols=size(strainYields,2);
         strainYields(1,cols+1:cols+size(yields,2)-1)=yields(1,2:end);
@@ -155,5 +148,4 @@ for i=1:length(fileList)
         end
     end
 end
-strainYields=cell2table(strainYields);
-writetable(strainYields,[resultsFolder 'Table_S8'],'FileType','text','WriteVariableNames',false,'Delimiter','tab');
+writetable(cell2table(strainYields),[resultsFolder filesep 'Table_S8.txt'],'FileType','text','WriteVariableNames',false,'Delimiter','tab');

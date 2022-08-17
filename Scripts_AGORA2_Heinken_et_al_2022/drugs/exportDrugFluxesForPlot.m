@@ -13,10 +13,11 @@ reactions(find(strncmp(reactions(:,1),'bio',3)),:)=[];
 reactions(find(strncmp(reactions(:,1),'DM_',3)),:)=[];
 reactions(find(strncmp(reactions(:,1),'sink_',5)),:)=[];
 
-% Japanese diet
-fluxPath = [rootDir filesep 'Modeling_CRC' filesep 'Solutions_ShadowPrices_JD' filesep 'AGORA2_CRC_Objectives_JD.txt'];
+solutionFolder = [rootDir filesep 'Modeling_CRC' filesep 'Solutions_ShadowPrices_JD'];
+
 % load fluxes
-fluxes = readInputTableForPipeline(fluxPath);
+data=load([solutionFolder filesep 'AGORA2_CRC_Objectives_JD.mat']);
+fluxes=table2cell(data.('objectives'));
 
 fluxLabels={'EX_sn38[fe]','Diet_EX_sn38g[d]','Deglucuronidated irinotecan from irinotecan';'EX_r406[fe]','Diet_EX_r788[d]','R406 from R788 (fostamatinib)';'EX_5fura[fe]','Diet_EX_fcsn[d]','5-fluorouracil from 5-fluorocytosine';'EX_dh5fura[fe]','Diet_EX_fcsn[d]','56-Dihydro-5-Fluorouracil from 5-fluorocytosine';'EX_dh5fura[fe]','Diet_EX_5fura[d]','56-Dihydro-5-Fluorouracil from 5-fluorouracil';'EX_dfduri[fe]','Diet_EX_dfdcytd[d]','2''2''-Difluorodeoxyuridine from gemcitabine';'EX_dihydro_digoxin[fe]','Diet_EX_digoxin[d]','Dihydrodigoxin from digoxin';'EX_ac5asa[fe]','Diet_EX_5asa[d]','N-acetyl-5-aminosalicylic acid from 5-aminosalicylic acid';'EX_5asa[fe]','Diet_EX_bzd[d]','5-aminosalicylic acid from balsalazide';'EX_ac5asa[fe]','Diet_EX_bzd[d]','N-acetyl-5-aminosalicylic acid from balsalazide';'EX_nchlphncl[fe]','Diet_EX_chlphncl[d]','Nitrosochloramphenicol from chloramphenicol';'EX_bvu[fe]','Diet_EX_srv[d]','(E)-5-(2-Bromovinyl)Uracil from sorivudine';'EX_dopa[fe]','Diet_EX_34dhphe[d]','Dopamine from levodopa';'EX_mtym[fe]','Diet_EX_34dhphe[d]','m-Tyramine from levodopa';'EX_pcresol[fe]','Diet_EX_4hphac[d]','p-cresol from 4-hydroxyphenylacetate';'EX_cholate[fe]','Diet_EX_tchola[d]','Cholic acid from taurocholic acid'};
 
@@ -34,7 +35,7 @@ cell2csv([plotsPath filesep 'DrugFluxes_CRC_Microbiomes.csv'],fluxes);
 % export absolute values
 for i=2:size(fluxes,1)
     for j=2:size(fluxes,2)
-        if str2double(fluxes{i,j})>0.000001
+        if fluxes{i,j}>0.000001
             fluxes{i,j}=1;
         else
             fluxes{i,j}=0;

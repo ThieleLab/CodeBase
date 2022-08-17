@@ -1,8 +1,12 @@
 % generate summary tables of comparison by resource for Figure 2
 
 % overview table of general model statistics
+% load the relevant data
+load([rootDir filesep 'ValidationAgainstExperimentalData' filesep 'Model_statistics.mat'])
+resources=sort(fieldnames(stats));
+
 TableStatsOverview={
-    '','AGORA2','BiGG','CarveMe','gapseq','KBase','MAGMA'
+    '','','','','','',''
     '# reconstructions','','','','','',''
     'Average # of reactions','','','','','',''
     'Average # of metabolites','','','','','',''
@@ -13,33 +17,29 @@ TableStatsOverview={
     'ATP yield on anaerobic CM','','','','','',''
     };
 
-% load the relevant data
-load([rootDir filesep 'Comparison_other_GEMs' filesep 'Results' filesep 'Model_statistics.mat'])
-
-resources=sort(fieldnames(stats));
-
 for i=1:length(resources)
+    TableStatsOverview{1,i+1}=resources{i};
     TableStatsOverview{2,i+1}=size(stats.(resources{i}),1);
     TableStatsOverview{3,i+1}=mean(stats.(resources{i})(:,1));
     TableStatsOverview{4,i+1}=mean(stats.(resources{i})(:,2));
     TableStatsOverview{5,i+1}=mean(stats.(resources{i})(:,3));
 end
 
-load([rootDir filesep 'Comparison_other_GEMs' filesep 'Results' filesep 'Stoch_Flux_Consistency.mat'])
+load([rootDir filesep 'ValidationAgainstExperimentalData' filesep 'Stoch_Flux_Consistency.mat'])
 
 for i=1:length(resources)
     TableStatsOverview{6,i+1}=mean(SFconsist.(resources{i})(:,3));
     TableStatsOverview{7,i+1}=mean(SFconsist.(resources{i})(:,4));
 end
 
-load([rootDir filesep 'Comparison_other_GEMs' filesep 'Results' filesep 'ATP_production.mat'])
+load([rootDir filesep 'ValidationAgainstExperimentalData' filesep 'ATP_production.mat'])
 
 for i=1:length(resources)
     TableStatsOverview{8,i+1}=mean(atp.(resources{i})(:,1));
     TableStatsOverview{9,i+1}=mean(atp.(resources{i})(:,2));
 end
 
-save([rootDir filesep 'Comparison_other_GEMs' filesep 'Results' filesep 'OverViewTableStats.mat'],'TableStatsOverview');
+save([rootDir filesep 'ValidationAgainstExperimentalData' filesep 'Results' filesep 'OverViewTableStats.mat'],'TableStatsOverview');
 
 % Table comparing results of the validation against experimental data
 
@@ -63,12 +63,12 @@ TableValidation={
 
 % fill out results for resources one by one
 data2Load={
-    [rootDir filesep 'Comparison_other_GEMs' filesep 'AGORA2'],2,3
-    [rootDir filesep 'Comparison_other_GEMs' filesep 'BiGG'],3,4
-    [rootDir filesep 'Comparison_other_GEMs' filesep 'CarveMe'],4,4
-    [rootDir filesep 'Comparison_other_GEMs' filesep 'gapseq'],5,4
-    [rootDir filesep 'Comparison_other_GEMs' filesep 'AGORA2'],6,2
-    [rootDir filesep 'Comparison_other_GEMs' filesep 'MAGMA'],7,4
+    [rootDir filesep 'ValidationAgainstExperimentalData' filesep 'AGORA2'],2,3
+    [rootDir filesep 'ValidationAgainstExperimentalData' filesep 'BiGG'],3,4
+    [rootDir filesep 'ValidationAgainstExperimentalData' filesep 'CarveMe'],4,4
+    [rootDir filesep 'ValidationAgainstExperimentalData' filesep 'gapseq'],5,4
+    [rootDir filesep 'ValidationAgainstExperimentalData' filesep 'AGORA2'],6,2
+    [rootDir filesep 'ValidationAgainstExperimentalData' filesep 'MAGMA'],7,4
     };
 
 for i=1:size(data2Load,1)
@@ -78,7 +78,7 @@ tabCol=data2Load{i,2};
 resCol=data2Load{i,3};
 
 % load the datasets one by one
-load([data2Load{i,1} filesep 'Results_Lim.mat'])
+load([data2Load{i,1} filesep 'Results_NJC19.mat'])
 TableValidation{2,tabCol}=Results{9,resCol};
 TableValidation{3,tabCol}=Results{8,resCol};
 TableValidation{4,tabCol}=Results{6,resCol};
@@ -101,5 +101,5 @@ TableValidation{14,tabCol}=Results{5,resCol};
 TableValidation{15,tabCol}=Results{4,resCol};
 end
 
-save([rootDir filesep 'Comparison_other_GEMs' filesep 'Results' filesep 'OverViewTableValidation.mat'],'TableValidation');
+save([rootDir filesep 'ValidationAgainstExperimentalData' filesep 'Results' filesep 'OverViewTableValidation.mat'],'TableValidation');
 

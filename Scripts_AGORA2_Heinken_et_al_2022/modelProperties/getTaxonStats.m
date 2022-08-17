@@ -4,6 +4,8 @@ stats={'','AGORA 1.03','AGORA2'
     'Strains','',''};
 taxa={'Phylum','Class','Order','Family','Genus'};
 
+resultsFolder = [rootDir filesep 'modelProperties'];
+
 % AGORA 1.03
 taxonomy = readInputTableForPipeline('AGORA_infoFile.xlsx');
 stats{2,2}=length(unique(taxonomy(2:end,1)));
@@ -63,3 +65,4 @@ rfCol=find(strcmp(taxonomy(1,:),'Reference category'));
 [rc, ~, J]=unique(taxonomy(2:end,rfCol));
 cnt = histc(J, 1:numel(rc));
 
+save([resultsFolder filesep 'Taxon_statistics'],'stats')

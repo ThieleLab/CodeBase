@@ -1,16 +1,16 @@
 % exports all computed data points in comparison for Table S5
 
-cd([rootDir filesep 'Comparison_other_GEMs'])
+cd([rootDir filesep 'ValidationAgainstExperimentalData'])
 
 resources={
-    'NJC19','Uptake_Lim','Secretion_Lim'
+    'NJC19','Uptake_NJC19','Secretion_NJC19'
     'BacDive_Metabolites','Uptake_BacDive','Secretion_BacDive'
     'BacDive_Enzymes','Enzymes_BacDive',''
     'Madin','Uptake_Madin',''
     };
 
 for i=1:size(resources,1)
-    load([rootDir filesep 'Comparison_other_GEMs' filesep 'AGORA2' filesep 'Comparison_Findings.mat']);
+    load([rootDir filesep 'ValidationAgainstExperimentalData' filesep 'AGORA2' filesep 'Comparison_Findings.mat']);
     
     Table={'Organism','Exchange','Direction','AGORA2','KBase','BiGG','CarveMe','gapseq','MAGMA'};
     
@@ -45,7 +45,7 @@ for i=1:size(resources,1)
     
     % find for the other resources if possible
     for j=6:size(Table,2)
-        load([rootDir filesep 'Comparison_other_GEMs' filesep Table{1,j} filesep 'Comparison_Findings.mat']);
+        load([rootDir filesep 'ValidationAgainstExperimentalData' filesep Table{1,j} filesep 'Comparison_Findings.mat']);
         if size(findings.(resources{i,2}).(Table{1,j}),1)>0
             for k=2:size(Table,1)
                 if strcmp(Table{k,3},'Uptake')

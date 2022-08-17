@@ -1,20 +1,18 @@
 
 %% Compute flux through drug reactions and compare against experimental data
 
-resultsFolder = [rootDir 'ComputeDrugReactions' filesep];
+resultsFolder = [rootDir filesep 'ComputedDrugFluxes' filesep];
 mkdir(resultsFolder)
 
 ComplexMedium = readtable('ComplexMedium.txt', 'Delimiter', '\t');
 ComplexMedium=table2cell(ComplexMedium);
 ComplexMedium=cellstr(string(ComplexMedium));
 
-taxonomy = readtable('AGORA2_infoFile.xlsx', 'ReadVariableNames', false);
-taxonomy = table2cell(taxonomy);
+taxonomy = readInputTableForPipeline('AGORA2_infoFile.xlsx');
 
 panFolder = [rootDir filesep 'panModelsAGORA2' filesep 'Species'];
 
-inVitroData = readtable([resultsFolder filesep 'knownDrugMetabolizers.xlsx'], 'ReadVariableNames', false);
-inVitroData = table2cell(inVitroData);
+inVitroData = readInputTableForPipeline('knownDrugMetabolizers.xlsx');
 
 tol=0.0000001;
 
@@ -22,7 +20,7 @@ tol=0.0000001;
 
 for i=2:size(inVitroData,1)
     % load the strain's model if applies, otherwise the pan-species model
-    if isfile([refinedFolderFolder filesep inVitroData{i,1} '.mat'])
+    if isfile([refinedFolder filesep inVitroData{i,1} '.mat'])
     model=readCbModel([refinedFolder filesep inVitroData{i,1} '.mat']);
     else
         model=readCbModel([panFolder filesep 'pan' inVitroData{i,1} '.mat']);

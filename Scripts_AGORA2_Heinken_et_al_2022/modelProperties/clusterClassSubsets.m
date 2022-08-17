@@ -2,7 +2,7 @@
 % Cluster reaction presence in subsets of AGORA2 models 
 
 currentDir=pwd;
-cd(propertiesFolder)
+cd([rootDir filesep 'modelProperties'])
 
 % define certain classes for testing
 toTest={
@@ -18,11 +18,12 @@ for i=1:length(toTest)
     [extractedSubset,subsetFolder] = extractReconstructionResourceSubset(refinedFolder, infoFilePath, 'Class', toTest{i}, [pwd filesep 'Reconstructions']);
     % determine reaction presence in subset
     
-    getReactionMetabolitePresence(subsetFolder,[pwd filesep 'ReactionPresence'],reconVersion,numWorkers)
+    getReactionMetabolitePresence(subsetFolder,pwd,reconVersion,numWorkers)
     % cluster subset by reaction presence
-    producetSNEPlots([pwd filesep 'ReactionPresence'],infoFilePath,reconVersion)
+    producetSNEPlots(pwd,infoFilePath,reconVersion)
     
     rmdir(subsetFolder,'s')
+    cd ..
     
      % draft reconstructions
     mkdir([toTest{i} '_draft'])
@@ -31,9 +32,9 @@ for i=1:length(toTest)
     [extractedSubset,subsetFolder] = extractReconstructionResourceSubset(translatedDraftsFolder, infoFilePath, 'Class', toTest{i}, [pwd filesep 'Reconstructions']);
     % determine reaction presence in subset
     
-    getReactionMetabolitePresence(subsetFolder,[pwd filesep 'ReactionPresence'],reconVersion,numWorkers)
+    getReactionMetabolitePresence(subsetFolder,pwd,reconVersion,numWorkers)
     % cluster subset by reaction presence
-    producetSNEPlots([pwd filesep 'ReactionPresence'],infoFilePath,reconVersion)
+    producetSNEPlots(pwd,infoFilePath,reconVersion)
     
     rmdir(subsetFolder,'s')
     cd ..

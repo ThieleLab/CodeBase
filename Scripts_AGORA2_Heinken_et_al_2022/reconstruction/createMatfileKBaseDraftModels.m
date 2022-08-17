@@ -1,4 +1,4 @@
-% adapt original AGORA draft reconstructions to nomenclature to be tested
+% translate original AGORA draft models
 
 % AGORA 1.03
 inputFolder=[rootDir filesep 'original_AGORA_draft_Models' filesep];
@@ -15,7 +15,7 @@ replaceGPRs={'MicrobeID','PubSeedID';'Abiotrophia_defectiva_ATCC_49176','592010.
 
 for i=1:length(modelList)
     % two modelList removed and one replaced
-    if ~any(strcmp(modelList{i},{'Staphylococcus_intermedius_ATCC_27335.mat','Paenibacillus_graminis_C4D1M'}))
+    if ~any(strcmp(modelList{i},{'Staphylococcus_intermedius_ATCC_27335.mat','Paenibacillus_graminis_C4D1M.mat'}))
         try
             model=readCbModel([inputFolder modelList{i,1}]);
         catch
@@ -64,6 +64,6 @@ for i=1:length(modelList)
         if ~isempty(finderrs)
             error('problem')
         end
-        writeCbModel(model,'fileName',[translatedDraftdsFolder outputName],'format','mat');
+        save([matFolder outputName],'model');
     end
 end

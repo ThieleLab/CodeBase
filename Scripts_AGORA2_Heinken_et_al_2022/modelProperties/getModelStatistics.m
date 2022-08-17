@@ -1,10 +1,12 @@
 % Get reconstruction statistics for Figure 1
 
+mkdir('Data_Figure_1')
+
 % Get the taxonomy information
-taxonomy = readtable('AGORA2_infoFile.xlsx', 'ReadVariableNames', false);
-taxonomy = table2cell(taxonomy);
+taxonomy = readInputTableForPipeline('AGORA2_infoFile.xlsx');
 
 %% Curated reconstructions
+resultsFolder=[rootDir filesep 'Data_Figure_1'];
 dInfo = dir(refinedFolder);
 modelList={dInfo.name};
 modelList=modelList';
@@ -77,7 +79,7 @@ for i=1:length(modelList)
     stats{i+1,13}=length(model.mets);
     stats{i+1,14}=length(model.genes);
 end
-cell2csv([propertiesFolder filesep 'All_statistics_Curated.csv'],stats);
+cell2csv([resultsFolder filesep 'All_statistics_Curated.csv'],stats);
 
 %% separate the results by phylum
 
@@ -108,7 +110,7 @@ for i=2:size(stats,2)
     end
     statsByPhylum=flip(statsByPhylum);
     statsByPhylum=statsByPhylum';
-    cell2csv([propertiesFolder filesep stats{1,i} '.csv'],statsByPhylum);
+    cell2csv([resultsFolder filesep stats{1,i} '.csv'],statsByPhylum);
 end
 
 %% Draft reconstructions
@@ -176,4 +178,4 @@ for i=1:length(modelList)
     stats{i+1,13}=length(model.mets);
     stats{i+1,14}=length(model.genes);
 end
-cell2csv([propertiesFolder filesep 'All_statistics_Draft.csv'],stats);
+cell2csv([resultsFolder filesep 'All_statistics_Draft.csv'],stats);

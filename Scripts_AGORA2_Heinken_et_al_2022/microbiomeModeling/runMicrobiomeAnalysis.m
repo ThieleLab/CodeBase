@@ -1,4 +1,7 @@
-% start microbiome analysis
+% Simulates conversion potential of 16 drugs and metabolites influencing
+% drugs of each microbiome model on Japanese and Average European diet.
+% Each objective corresponds to one drug-metabolizing enzyme reconstructed
+% for AGORA2.
 
 objectiveList={
     'EX_sn38[fe]'   'Diet_EX_sn38g[d]'
@@ -26,10 +29,12 @@ solutionFolder=[rootDir filesep 'Modeling_CRC' filesep 'Solutions_ShadowPrices_J
 %% Run the computation
 [objectives,shadowPrices]=analyseObjectiveShadowPrices(modelFolder,objectiveList,'SPDef','Nonzero','numWorkers',numWorkers,'resultsFolder',solutionFolder);
 objectives=cell2table(objectives');
-writetable(objectives,[solutionFolder 'AGORA2_CRC_Objectives_JD'],'FileType','text','WriteVariableNames',false,'Delimiter','tab');
+writetable(objectives,[solutionFolder filesep 'AGORA2_CRC_Objectives_JD'],'FileType','text','WriteVariableNames',false,'Delimiter','tab');
+save([solutionFolder filesep 'AGORA2_CRC_Objectives_JD.mat'],'objectives')
 
 shadowPrices=cell2table(shadowPrices);
-writetable(shadowPrices,[solutionFolder 'AGORA2_CRC_ShadowPrices_JD'],'FileType','text','WriteVariableNames',false,'Delimiter','tab');
+writetable(shadowPrices,[solutionFolder filesep 'AGORA2_CRC_ShadowPrices_JD'],'FileType','text','WriteVariableNames',false,'Delimiter','tab');
+save([solutionFolder filesep 'AGORA2_CRC_ShadowPrices_JD.mat'],'shadowPrices')
 
 %% Average European diet
 modelFolder=[rootDir filesep 'Modeling_CRC' filesep 'AverageEuropeanDiet'];
@@ -38,7 +43,7 @@ solutionFolder=[rootDir filesep 'Modeling_CRC' filesep 'Solutions_ShadowPrices_A
 %% Run the computation
 [objectives,shadowPrices]=analyseObjectiveShadowPrices(modelFolder,objectiveList,'SPDef','Nonzero','numWorkers',numWorkers,'resultsFolder',solutionFolder);
 objectives=cell2table(objectives');
-writetable(objectives,[solutionFolder 'AGORA2_CRC_Objectives_AED'],'FileType','text','WriteVariableNames',false,'Delimiter','tab');
+writetable(objectives,[solutionFolder filesep 'AGORA2_CRC_Objectives_AED'],'FileType','text','WriteVariableNames',false,'Delimiter','tab');
 
 shadowPrices=cell2table(shadowPrices);
-writetable(shadowPrices,[solutionFolder 'AGORA2_CRC_ShadowPrices_AED'],'FileType','text','WriteVariableNames',false,'Delimiter','tab');
+writetable(shadowPrices,[solutionFolder filesep 'AGORA2_CRC_ShadowPrices_AED'],'FileType','text','WriteVariableNames',false,'Delimiter','tab');
