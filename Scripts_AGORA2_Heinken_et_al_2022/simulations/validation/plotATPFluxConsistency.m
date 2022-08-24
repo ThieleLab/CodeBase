@@ -63,21 +63,3 @@ legend
 title('Fraction of stoichiometrically and flux consistent reactions')
 set(gca,'FontSize',16)
 print('Flux_consistency_boxchart','-dpng','-r300')
-
-%% export flux and stoichiometric consistency for AGORA2 vs. KBase
-
-dInfo = dir(fullfile(refinedFolder, '**/*.*'));  %get list of files and folders in any subfolder
-dInfo = dInfo(~[dInfo.isdir]);
-models={dInfo.name};
-models=models';
-models(find(~contains(models,'.mat')),:)=[];
-models=strrep(models,'.mat','');
-
-table={'Model_ID','StoichConsist_KBase','FluxConsist_KBase','StoichConsist_AGORA2','FluxConsist_AGORA2'};
-table(2:length(models)+1,1)=models;
-table(2:length(models)+1,2)=cellstr(num2str(SFconsist.('KBase')(:,3)));
-table(2:length(models)+1,3)=cellstr(num2str(SFconsist.('KBase')(:,4)));
-table(2:length(models)+1,4)=cellstr(num2str(SFconsist.('AGORA2')(:,3)));
-table(2:length(models)+1,5)=cellstr(num2str(SFconsist.('AGORA2')(:,4)));
-
-cell2csv([rootDir filesep 'ValidationAgainstExperimentalData' filesep 'Stoich_Flux_Consistency_KBase_AGORA2.csv'],table)

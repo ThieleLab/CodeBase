@@ -26,12 +26,6 @@ WesternDiet=cellstr(string(WesternDiet));
 
 taxonomy = readInputTableForPipeline('AGORA2_infoFile.xlsx');
 
-for i = 2:size(taxonomy,1)
-    model=readCbModel([refinedFolder filesep taxonomy{i,1} '.mat']);
-    model.lb(find(strncmp(model.rxns,'sink_',5)))=-1;
-    models{i,1}=model;
-end
-
 %% compute conversion potential for Figure 4c)
 
 drugExchanges={'InputMet','InputExchange','OutputMet','OutputExchange','Reaction';'glcur','EX_glcur(e)',[],[],'Glucuronic acid';'sn38g','EX_sn38g(e)','sn38','EX_sn38(e)','beta-glucuronidase';'dfdcytd','EX_dfdcytd(e)','dfduri','EX_dfduri(e)','Cytidine deaminase';'fcsn','EX_fcsn(e)','5fura','EX_5fura(e)','Cytosine deaminase';'5fura','EX_5fura(e)','dh5fura','EX_dh5fura(e)','Dihydrouracil dehydrogenase';'4hphac','EX_4hphac(e)','pcresol','EX_pcresol(e)','4-hydroxyphenylacetate decarboxylase';'r788','EX_r788(e)','r406','EX_r406(e)','Alkaline phosphatase';'bzd','EX_bzd(e)','5asa','EX_5asa(e)','Azoreductase';'lactl','EX_lactl(e)','gal','EX_gal(e)','beta-galactosidase';'chlphncl','EX_chlphncl(e)','nchlphncl','EX_nchlphncl(e)','Nitroreductase';'5asa','EX_5asa(e)','ac5asa','EX_ac5asa(e)','Arylamine N-acetyltransferase';'digoxin','EX_digoxin(e)','dihydro_digoxin','EX_dihydro_digoxin(e)','Cardiac glycoside reductase';'srv','EX_srv(e)','bvu','EX_bvu(e)','Pyrimidine-nucleoside phosphorylase';'34dhphe','EX_34dhphe(e)','dopa','EX_dopa(e)','Tryptophan decarboxylase';'tchola','EX_tchola(e)','cholate','EX_cholate(e)','Bile salt hydrolase';'dopa','EX_dopa(e)','mtym','EX_mtym(e)','Dopamine dehydroxylase'};
@@ -48,7 +42,8 @@ for j = 2:length(drugExchanges)
         restoreEnvironment(environment);
         changeCobraSolver(solver, 'LP', 0, -1);
 
-        model=models{i,1};
+        model=readCbModel([refinedFolder filesep taxonomy{i,1} '.mat']);
+        model.lb(find(strncmp(model.rxns,'sink_',5)))=-1;
         model = useDiet(model,WesternDiet);
         model=changeRxnBounds(model,'EX_o2(e)',-10,'l');
         % model = useDiet(model,basicCompounds);

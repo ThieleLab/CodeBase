@@ -17,7 +17,7 @@ createTaxonomy(:,1:findTaxonLevel-1)=[];
 [C,IA,IC] = unique(createTaxonomy(:,1),'stable');
 createTaxonomy=createTaxonomy(IA,1:size(createTaxonomy,2));
 % find entries not in data
-[C,IA] = setdiff(createTaxonomy(:,1),correlations(2:end,1),'stable');
+[C,IA] = setdiff(createTaxonomy(:,1),FluxCorrelations.('Species')(2:end,1),'stable');
 createTaxonomy(IA(2:end),:)=[];
 createTaxonomy(:,10:end)=[];
 cell2csv([rootDir filesep 'Modeling_CRC' filesep 'Plots' filesep 'Taxonomy_JD_Species.csv'],createTaxonomy);

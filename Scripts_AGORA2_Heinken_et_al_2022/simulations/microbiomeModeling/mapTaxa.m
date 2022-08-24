@@ -101,8 +101,8 @@ for i=2:size(coverage,2)
     coverage{1,i} = ['sample' coverage{1,i}];
 end
 coverage(1,2:end)=strrep(coverage(1,2:end),'.','_');
-cell2csv([rootDir filesep 'input' filesep 'mappedCoverage_CRC.csv'],coverage)
+cell2csv([rootDir filesep 'mappedCoverage_CRC.csv'],coverage)
 
 % normalize coverage
-abunFilePath = [rootDir filesep 'input' filesep 'mappedCoverage_CRC.csv'];
+abunFilePath = [rootDir filesep 'mappedCoverage_CRC.csv'];
 [normalizedCoverage,normalizedCoveragePath] = normalizeCoverage(abunFilePath,0);

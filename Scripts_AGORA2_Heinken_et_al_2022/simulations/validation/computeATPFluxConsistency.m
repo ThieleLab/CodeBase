@@ -183,3 +183,20 @@ for i=1:size(resources_folders,1)
         save('Stoch_Flux_Consistency','SFconsist','-v7.3');
     end
 end
+
+
+%% export flux and stoichiometric consistency
+
+for i=1:size(resources_folders,1)
+    dInfo = dir(fullfile(resources_folders{i,1}, '**/*.*'));  %get list of files and folders in any subfolder
+    dInfo = dInfo(~[dInfo.isdir]);
+    models={dInfo.name};
+    models=models';
+
+    table={'Model_ID','Stoichiometric consistency','Flux consistency'};
+    table(2:length(models)+1,1)=models;
+    table(2:length(models)+1,2)=cellstr(num2str(SFconsist.(resources_folders{i,2})(:,2)));
+    table(2:length(models)+1,3)=cellstr(num2str(SFconsist.(resources_folders{i,2})(:,4)));
+
+    cell2csv([rootDir filesep 'ValidationAgainstExperimentalData' filesep 'Stoich_Flux_Consistency_' resources_folders{i,2} '.csv'],table)
+end

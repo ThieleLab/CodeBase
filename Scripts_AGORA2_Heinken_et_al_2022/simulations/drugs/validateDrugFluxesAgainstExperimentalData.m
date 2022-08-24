@@ -10,7 +10,7 @@ ComplexMedium=cellstr(string(ComplexMedium));
 
 taxonomy = readInputTableForPipeline('AGORA2_infoFile.xlsx');
 
-panFolder = [rootDir filesep 'panModelsAGORA2' filesep 'Species'];
+panFolder = [rootDir filesep 'Modeling_CRC' filesep 'Species'];
 
 inVitroData = readInputTableForPipeline('knownDrugMetabolizers.xlsx');
 

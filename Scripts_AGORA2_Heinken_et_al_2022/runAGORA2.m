@@ -4,9 +4,10 @@
 % initialize the COBRA Toolbox and solvers
 initCobraToolbox
 solverOK=changeCobraSolver('ibm_cplex','LP');
+% solverOK=changeCobraSolver('gurobi','LP');
 
 rootDir = pwd;
-addpath(genpath([rootDir filesep 'simulations']))
+addpath(genpath([rootDir filesep 'Scripts']))
 addpath(genpath([rootDir filesep 'input']))
 
 %% Define input variables
@@ -66,10 +67,7 @@ mkdir(propertiesFolder)
 % refined reconstructions
 getReactionMetabolitePresence(refinedFolder,propertiesFolder,'AGORA2_refined',numWorkers)
 producetSNEPlots(propertiesFolder,infoFilePath,'AGORA2_refined')
-
-% draft reconstructions
-getReactionMetabolitePresence(translatedDraftsFolder,propertiesFolder,'AGORA2_draft',numWorkers)
-producetSNEPlots(propertiesFolder,infoFilePath,'AGORA2_draft')
+computeUptakeSecretion(refinedFolder,propertiesFolder,'AGORA2_refined',{},numWorkers)
 
 % compute and plot reaction presences for subsets of AGORA2 reconstructions
 % for Figure 2

@@ -1,5 +1,6 @@
 %% plot reaction abundances vs. production potential
 
+solutionFolder = [rootDir filesep 'Modeling_CRC' filesep 'Solutions_ShadowPrices_JD'];
 plotsPath = [rootDir filesep 'Modeling_CRC' filesep 'Plots'];
 mkdir(plotsPath)
 
@@ -57,7 +58,7 @@ load([rootDir filesep 'Modeling_CRC' filesep 'Plots' filesep 'ReactionAbundances
 % pair fluxes and reactions
 toPlotWith={'EX_sn38[fe]','SN38G_GLCAASE';'EX_r406[fe]','ALKP_R788';'EX_5fura[fe]','FCSND';'EX_dh5fura[fe]','FURADH';'EX_dfduri[fe]','DFDCYTDD';'EX_dihydro_digoxin[fe]','DIHYDRO_DIGOXINc';'EX_5asa[fe]','BZD_AR_NADi';'EX_ac5asa[fe]','AC5ASA';'EX_nchlphncl[fe]','CZP_NR';'EX_bvu[fe]','PYNP_BRV';'EX_dopa[fe]','3HLYTCL';'EX_mtym[fe]','DOPADH';'EX_pcresol[fe]','4HPHACDC';'EX_cholate[fe]','TCHOLBHS'};
 
-%% plot fluxes against reactions abundances
+%% plot fluxes against reaction abundances
 f=figure;
 % the colors are created during the script plotDrugViolins!
 for i=2:size(fluxes,2)

@@ -27,7 +27,7 @@ ann_colors = list(
 
 data = read.csv("JD_Species.csv",header=T,row.names=1, check.names = FALSE)
 mycol <- c(brewer.pal(9,"Blues")[5:1],"white",brewer.pal(9,"Reds")[1:9])
-png("JD_SpeciesCorrelations.png", width = 10, height = 12, units = 'in', res = 300)
+png("JD_SpeciesCorrelations.png", width = 10, height = 14, units = 'in', res = 300)
 pheatmap(data,
          col=mycol,
          #cluster_rows=FALSE,
