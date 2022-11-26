@@ -1,4 +1,4 @@
-% generate summary tables of comparison by resource for Figure 2
+% generate summary tables of comparison by resource for Figure 3
 
 % overview table of general model statistics
 % load the relevant data
@@ -28,7 +28,7 @@ end
 load([rootDir filesep 'ValidationAgainstExperimentalData' filesep 'Stoch_Flux_Consistency.mat'])
 
 for i=1:length(resources)
-    TableStatsOverview{6,i+1}=mean(SFconsist.(resources{i})(:,3));
+    TableStatsOverview{6,i+1}=mean(SFconsist.(resources{i})(:,2));
     TableStatsOverview{7,i+1}=mean(SFconsist.(resources{i})(:,4));
 end
 
@@ -39,26 +39,26 @@ for i=1:length(resources)
     TableStatsOverview{9,i+1}=mean(atp.(resources{i})(:,2));
 end
 
-save([rootDir filesep 'ValidationAgainstExperimentalData' filesep 'Results' filesep 'OverViewTableStats.mat'],'TableStatsOverview');
+cell2csv([rootDir filesep 'ValidationAgainstExperimentalData' filesep 'Results' filesep 'OverViewTableStats.csv'],TableStatsOverview);
 
 % Table comparing results of the validation against experimental data
 
 TableValidation={
-    '','AGORA2','BiGG','CarveMe','gapseq','KBase','MAGMA'
-    '# models tested against NJC19','','','','','',''
-    'Accuracy against NJC19','','','','','',''
-    'Sensitivity against NJC19','','','','','',''
-    'Specificity against NJC19','','','','','',''
-    '# models tested against BacDive (metabolites)','','','','','',''
-    'Accuracy against BacDive (metabolites)','','','','','',''
-    'Sensitivity against BacDive (metabolites)','','','','','',''
-    'Specificity against BacDive (metabolites)','','','','','',''
-    '# models tested against BacDive (enzymes)','','','','','',''
-    'Accuracy against BacDive (enzymes)','','','','','',''
-    'Sensitivity against BacDive (enzymes)','','','','','',''
-    'Specificity against BacDive (enzymes)','','','','','',''
-    '# models tested against Madin','','','','','',''
-    'Sensitivity against Madin','','','','','',''
+    '','AGORA2','BiGG','CarveMe','gapseq_published','gapseq_this_study','KBase','MAGMA'
+    '# models tested against NJC19','','','','','','',''
+    'Accuracy against NJC19','','','','','','',''
+    'Sensitivity against NJC19','','','','','','',''
+    'Specificity against NJC19','','','','','','',''
+    '# models tested against BacDive (metabolites)','','','','','','',''
+    'Accuracy against BacDive (metabolites)','','','','','','',''
+    'Sensitivity against BacDive (metabolites)','','','','','','',''
+    'Specificity against BacDive (metabolites)','','','','','','',''
+    '# models tested against BacDive (enzymes)','','','','','','',''
+    'Accuracy against BacDive (enzymes)','','','','','','',''
+    'Sensitivity against BacDive (enzymes)','','','','','','',''
+    'Specificity against BacDive (enzymes)','','','','','','',''
+    '# models tested against Madin','','','','','','',''
+    'Sensitivity against Madin','','','','','','',''
     };
 
 % fill out results for resources one by one
@@ -67,8 +67,9 @@ data2Load={
     [rootDir filesep 'ValidationAgainstExperimentalData' filesep 'BiGG'],3,4
     [rootDir filesep 'ValidationAgainstExperimentalData' filesep 'CarveMe'],4,4
     [rootDir filesep 'ValidationAgainstExperimentalData' filesep 'gapseq'],5,4
-    [rootDir filesep 'ValidationAgainstExperimentalData' filesep 'AGORA2'],6,2
-    [rootDir filesep 'ValidationAgainstExperimentalData' filesep 'MAGMA'],7,4
+    [rootDir filesep 'ValidationAgainstExperimentalData' filesep 'gapseq_new'],6,4
+    [rootDir filesep 'ValidationAgainstExperimentalData' filesep 'AGORA2'],7,2
+    [rootDir filesep 'ValidationAgainstExperimentalData' filesep 'MAGMA'],8,4
     };
 
 for i=1:size(data2Load,1)
@@ -101,5 +102,5 @@ TableValidation{14,tabCol}=Results{5,resCol};
 TableValidation{15,tabCol}=Results{4,resCol};
 end
 
-save([rootDir filesep 'ValidationAgainstExperimentalData' filesep 'Results' filesep 'OverViewTableValidation.mat'],'TableValidation');
+cell2csv([rootDir filesep 'ValidationAgainstExperimentalData' filesep 'Results' filesep 'OverViewTableValidation.csv'],TableValidation);
 

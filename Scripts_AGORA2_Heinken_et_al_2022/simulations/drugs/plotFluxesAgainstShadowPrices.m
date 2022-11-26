@@ -1,4 +1,5 @@
 %% plot reaction abundances vs. production potential with shadow prices
+% for Figure S6
 
 % create folder for the plots
 spPlotsPath = [rootDir filesep 'Modeling_CRC' filesep 'Plots' filesep 'ShadowPrices'];

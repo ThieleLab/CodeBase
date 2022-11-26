@@ -1,4 +1,4 @@
-
+%% Get data for Figure S8, plot created in R
 abunFilePath = [rootDir filesep 'normalizedCoverage.csv'];
 fluxPath = [rootDir filesep 'Modeling_CRC' filesep 'Plots' filesep 'DrugFluxes_CRC_Microbiomes.csv'];
 infoFilePath = 'AGORA2_infoFile.xlsx';

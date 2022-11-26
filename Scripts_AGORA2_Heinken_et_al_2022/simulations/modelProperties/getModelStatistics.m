@@ -16,10 +16,6 @@ modelList(~contains(modelList(:,1),'.mat'),:)=[];
 westernDiet = table2cell(readtable('WesternDietAGORA2.txt', 'Delimiter', 'tab'));
 westernDiet=cellstr(string(westernDiet));
 
-% High fiber diet
-hfDiet = table2cell(readtable('HighFiberDietAGORA2.txt', 'Delimiter', 'tab'));
-hfDiet=cellstr(string(hfDiet));
-
 % get reconstruction statistics: stats, stats, production, number of
 % reactions, metabolites, and genes
 
@@ -31,13 +27,11 @@ stats{1,4}='Growth_aerobic_CM';
 stats{1,5}='Growth_anaerobic_CM';
 stats{1,6}='Growth_aerobic_WD';
 stats{1,7}='Growth_anaerobic_WD';
-stats{1,8}='Growth_aerobic_HFD';
-stats{1,9}='Growth_anaerobic_HFD';
-stats{1,10}='ATP_aerobic';
-stats{1,11}='ATP_anaerobic';
-stats{1,12}='Reactions';
-stats{1,13}='Metabolites';
-stats{1,14}='Genes';
+stats{1,8}='ATP_aerobic';
+stats{1,9}='ATP_anaerobic';
+stats{1,10}='Reactions';
+stats{1,11}='Metabolites';
+stats{1,12}='Genes';
 
 for i=1:length(modelList)
     i
@@ -60,24 +54,14 @@ for i=1:length(modelList)
     model = changeRxnBounds(model, 'EX_o2(e)', 0, 'l');
     FBA=optimizeCbModel(model,'max');
     stats{i+1,7}=FBA.f;
-    % High fiber diet
-    model = changeRxnBounds(model, model.rxns(strncmp('EX_', model.rxns, 3)), -1000, 'l');
-    model = changeRxnBounds(model, model.rxns(strncmp('EX_', model.rxns, 3)), 1000, 'u');
-    model = useDiet(model,hfDiet);
-    model = changeRxnBounds(model, 'EX_o2(e)', -10, 'l');
-    FBA=optimizeCbModel(model,'max');
-    stats{i+1,8}=FBA.f;
-    model = changeRxnBounds(model, 'EX_o2(e)', 0, 'l');
-    FBA=optimizeCbModel(model,'max');
-    stats{i+1,9}=FBA.f;
     % ATP
     [ATPFluxAerobic, ATPFluxAnaerobic] = testATP(model);
-    stats{i+1,10}=ATPFluxAerobic(1,1);
-    stats{i+1,11}=ATPFluxAnaerobic(1,1);
+    stats{i+1,8}=ATPFluxAerobic(1,1);
+    stats{i+1,9}=ATPFluxAnaerobic(1,1);
     % Number of reactions, metabolites, and genes
-    stats{i+1,12}=length(model.rxns);
-    stats{i+1,13}=length(model.mets);
-    stats{i+1,14}=length(model.genes);
+    stats{i+1,10}=length(model.rxns);
+    stats{i+1,11}=length(model.mets);
+    stats{i+1,12}=length(model.genes);
 end
 cell2csv([resultsFolder filesep 'All_statistics_Curated.csv'],stats);
 
@@ -130,13 +114,11 @@ stats{1,4}='Growth_aerobic_CM';
 stats{1,5}='Growth_anaerobic_CM';
 stats{1,6}='Growth_aerobic_WD';
 stats{1,7}='Growth_anaerobic_WD';
-stats{1,8}='Growth_aerobic_HFD';
-stats{1,9}='Growth_anaerobic_HFD';
-stats{1,10}='ATP_aerobic';
-stats{1,11}='ATP_anaerobic';
-stats{1,12}='Reactions';
-stats{1,13}='Metabolites';
-stats{1,14}='Genes';
+stats{1,8}='ATP_aerobic';
+stats{1,9}='ATP_anaerobic';
+stats{1,10}='Reactions';
+stats{1,11}='Metabolites';
+stats{1,12}='Genes';
 
 for i=1:length(modelList)
     i
@@ -159,23 +141,13 @@ for i=1:length(modelList)
     model = changeRxnBounds(model, 'EX_o2(e)', 0, 'l');
     FBA=optimizeCbModel(model,'max');
     stats{i+1,7}=FBA.f;
-    % High fiber diet
-    model = changeRxnBounds(model, model.rxns(strncmp('EX_', model.rxns, 3)), -1000, 'l');
-    model = changeRxnBounds(model, model.rxns(strncmp('EX_', model.rxns, 3)), 1000, 'u');
-    model = useDiet(model,hfDiet);
-    model = changeRxnBounds(model, 'EX_o2(e)', -10, 'l');
-    FBA=optimizeCbModel(model,'max');
-    stats{i+1,8}=FBA.f;
-    model = changeRxnBounds(model, 'EX_o2(e)', 0, 'l');
-    FBA=optimizeCbModel(model,'max');
-    stats{i+1,9}=FBA.f;
     % ATP
     [ATPFluxAerobic, ATPFluxAnaerobic] = testATP(model);
-    stats{i+1,10}=ATPFluxAerobic(1,1);
-    stats{i+1,11}=ATPFluxAnaerobic(1,1);
+    stats{i+1,8}=ATPFluxAerobic(1,1);
+    stats{i+1,9}=ATPFluxAnaerobic(1,1);
     % Number of reactions, metabolites, and genes
-    stats{i+1,12}=length(model.rxns);
-    stats{i+1,13}=length(model.mets);
-    stats{i+1,14}=length(model.genes);
+    stats{i+1,10}=length(model.rxns);
+    stats{i+1,11}=length(model.mets);
+    stats{i+1,12}=length(model.genes);
 end
 cell2csv([resultsFolder filesep 'All_statistics_Draft.csv'],stats);

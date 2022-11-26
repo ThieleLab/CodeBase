@@ -1,4 +1,5 @@
 %% plot reaction abundances vs. production potential
+% for Figure 5b
 
 solutionFolder = [rootDir filesep 'Modeling_CRC' filesep 'Solutions_ShadowPrices_JD'];
 plotsPath = [rootDir filesep 'Modeling_CRC' filesep 'Plots'];
