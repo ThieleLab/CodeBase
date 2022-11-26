@@ -1,5 +1,6 @@
 
 %% plot drug metabolism potential in each CRC model as violin plots
+% for Figure 5a
 
 % load fluxes
 data=load([solutionFolder filesep 'AGORA2_CRC_Objectives_JD.mat']);

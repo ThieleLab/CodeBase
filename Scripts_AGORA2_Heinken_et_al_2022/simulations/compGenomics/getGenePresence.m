@@ -1,5 +1,5 @@
 % Computes the presence of each gene in the >5,000 analyzed strains
-spreadsheetFolder=fileparts(which('B_Rib.tsv'));
+% Generates Table S3c
 
 dInfo = dir(spreadsheetFolder);
 fileList={dInfo.name};
@@ -8,8 +8,7 @@ fileList(find(strcmp(fileList(:,1),'.')),:)=[];
 fileList(find(strcmp(fileList(:,1),'..')),:)=[];
 
 % get AGORA2 IDs
-infoFile = readtable('AGORA2_infoFile.xlsx', 'ReadVariableNames', false);
-infoFile=table2cell(infoFile);
+infoFile = readInputTableForPipeline('AGORA2_infoFile.xlsx');
 
 genePresence={};
 geneSubsystem={'Gene','Subsystem'};
@@ -23,8 +22,7 @@ genePresence(2:length(strains)+1,1)=strains;
 cnt=2;
 for i=1:length(fileList)
     i
-    spreadsheet=readtable([spreadsheetFolder filesep fileList{i}], 'ReadVariableNames', false,'FileType','text','delimiter','tab');
-    spreadsheet = table2cell(spreadsheet);
+    spreadsheet=readInputTableForPipeline([spreadsheetFolder filesep fileList{i}]);
     % delete unreconstructed strains
     [C,IA]=setdiff(spreadsheet(:,1),infoFile(:,2),'stable');
     spreadsheet(IA(2:end),:)=[];
@@ -32,8 +30,8 @@ for i=1:length(fileList)
         genePresence{1,cnt}=spreadsheet{1,j};
         genePresence(2:end,cnt)={'0'};
         for k=2:size(spreadsheet,1)
-            findOrg=infoFile{find(strcmp(infoFile(:,2),spreadsheet{k,1})),1};
-            findInS=find(strcmp(genePresence(:,1),findOrg));
+            findOrg=find(strcmp(infoFile(:,2),spreadsheet{k,1}));
+            findInS=find(strcmp(genePresence(:,1),infoFile{findOrg,1}));
             if ~isempty(findInS)
                 if ~isempty(spreadsheet{k,j})
                     genePresence{findInS,cnt}='1';
@@ -73,5 +71,5 @@ if ~isempty(repeatedStr)
 end
 genePresence(:,delArray)=[];
 
-cell2csv([propertiesFolder 'AGORA2_GenePresence.csv'],genePresence);
+cell2csv([propertiesFolder filesep 'AGORA2_GenePresence.csv'],genePresence);
 

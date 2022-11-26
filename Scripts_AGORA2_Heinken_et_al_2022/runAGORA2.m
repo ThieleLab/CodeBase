@@ -4,13 +4,20 @@
 % initialize the COBRA Toolbox and solvers
 initCobraToolbox
 solverOK=changeCobraSolver('ibm_cplex','LP');
-% solverOK=changeCobraSolver('gurobi','LP');
 
 rootDir = pwd;
-addpath(genpath([rootDir filesep 'Scripts']))
+addpath(genpath([rootDir filesep 'simulations']))
 addpath(genpath([rootDir filesep 'input']))
 
 %% Define input variables
+
+% To download the draft reconstructions:
+websave('draftReconstructions.zip')
+unzip('draftReconstructions.zip')
+
+% To download the spreadsheets with comparative genomics data
+websave('spreadsheets.zip')
+unzip('spreadsheets.zip')
 
 infoFilePath = 'AGORA2_infoFile.xlsx';
 spreadsheetFolder = [rootDir filesep 'spreadsheets'];
@@ -21,6 +28,8 @@ inputDataFolder = [rootDir filesep 'InputData'];
 refinedFolder = [rootDir filesep 'refinedReconstructions'];
 translatedDraftsFolder = [rootDir filesep 'translatedDraftReconstructions'];
 testResultsFolder = [rootDir filesep 'TestResults'];
+propertiesFolder = [rootDir filesep 'modelProperties'];
+mkdir(propertiesFolder)
 
 %% Creaction, refinement, testing, and debugging of AGORA2 reconstructions
 
@@ -50,6 +59,10 @@ createSBMLFiles
 % reconstructions, however, the input variables (see above) still need to
 % be set.
 
+% To download the AGORA2 reconstructions:
+websave('refinedReconstructions.zip')
+unzip('refinedReconstructions.zip')
+
 %% Compute and plot properties of AGORA2 models
 
 % get overview of AGORA2 statistics for Figure 1
@@ -61,9 +74,6 @@ getTaxonStats
 calculateGenesReactionsRemovedAdded
 
 % compute and plot reaction presences for all AGORA2 reconstructions for Figure 2
-propertiesFolder = [rootDir filesep 'modelProperties'];
-mkdir(propertiesFolder)
-
 % refined reconstructions
 getReactionMetabolitePresence(refinedFolder,propertiesFolder,'AGORA2_refined',numWorkers)
 producetSNEPlots(propertiesFolder,infoFilePath,'AGORA2_refined')
