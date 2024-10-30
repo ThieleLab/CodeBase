@@ -1,0 +1,1083 @@
+	Subsystem
+12dgr180_secretion	Cell wall biosynthesis
+12dgr180_uptake	Cell wall biosynthesis
+12ppd_S_secretion	Glyoxylate and dicarboxylate metabolism
+12ppd_S_uptake	Glyoxylate and dicarboxylate metabolism
+13ppd_secretion	Glycerophospholipid metabolism
+13ppd_uptake	Glycerophospholipid metabolism
+15dap_secretion	Arginine and proline metabolism
+15dap_uptake	Arginine and proline metabolism
+26dap_M_secretion	Cell wall biosynthesis
+26dap_M_uptake	Cell wall biosynthesis
+2ddglcn_secretion	Pentose and glucuronate interconversions
+2ddglcn_uptake	Pentose and glucuronate interconversions
+2dmmq8_secretion	Citric acid cycle
+2dmmq8_uptake	Citric acid cycle
+2hyoxplac_secretion	Phenylalanine metabolism
+2hyoxplac_uptake	Phenylalanine metabolism
+2mbut_secretion	Stickland reaction
+2mbut_uptake	Stickland reaction
+2obut_secretion	C5-branched dibasic acid metabolism
+2obut_uptake	C5-branched dibasic acid metabolism
+2omfuc_secretion	Plant polysaccharide degradation
+2omfuc_uptake	Plant polysaccharide degradation
+2omxyl_secretion	Plant polysaccharide degradation
+2omxyl_uptake	Plant polysaccharide degradation
+34dhpha_secretion	Tyrosine metabolism
+34dhpha_uptake	Tyrosine metabolism
+35cgmp_secretion	Nucleotide interconversion
+35cgmp_uptake	Nucleotide interconversion
+3ddlhept_secretion	Plant polysaccharide degradation
+3ddlhept_uptake	Plant polysaccharide degradation
+3dhcdchol_secretion	Bile acid metabolism
+3dhcdchol_uptake	Bile acid metabolism
+3hcinnm_secretion	Phenylalanine metabolism
+3hcinnm_uptake	Phenylalanine metabolism
+3hphac_secretion	Tyrosine metabolism
+3hphac_uptake	Tyrosine metabolism
+3hpppn_secretion	Phenylalanine metabolism
+3hpppn_uptake	Phenylalanine metabolism
+3mop_secretion	Miscellaneous
+3mop_uptake	Miscellaneous
+4abut_secretion	Arginine and proline metabolism
+4abut_uptake	Arginine and proline metabolism
+4abz_secretion	Aminobenzoate degradation
+4abz_uptake	Aminobenzoate degradation
+4hbz_secretion	Aminobenzoate degradation
+4hbz_uptake	Aminobenzoate degradation
+4hoxpacd_secretion	Primary amine metabolism
+4hoxpacd_uptake	Primary amine metabolism
+4hphac_secretion	Phenylalanine metabolism
+4hphac_uptake	Phenylalanine metabolism
+4hpro_LT_secretion	Arginine and proline metabolism
+4hpro_LT_uptake	Arginine and proline metabolism
+5aop_secretion	Glycine, serine, alanine, and threonine metabolism
+5aop_uptake	Glycine, serine, alanine, and threonine metabolism
+5aptn_secretion	Arginine and proline metabolism
+5aptn_uptake	Arginine and proline metabolism
+5fthf_secretion	Folate metabolism
+5fthf_uptake	Folate metabolism
+5mta_secretion	Arginine and proline metabolism
+5mta_uptake	Arginine and proline metabolism
+5mthf_secretion	Folate metabolism
+5mthf_uptake	Folate metabolism
+6pgc_secretion	Pentose and glucuronate interconversions
+6pgc_uptake	Pentose and glucuronate interconversions
+7dhcdchol_secretion	Bile acid metabolism
+7dhcdchol_uptake	Bile acid metabolism
+abt_secretion	Pentose and glucuronate interconversions
+abt_uptake	Pentose and glucuronate interconversions
+ac_secretion	Alanine and aspartate metabolism
+ac_uptake	Alanine and aspartate metabolism
+acac_secretion	Butanoate metabolism
+acac_uptake	Butanoate metabolism
+acald_secretion	Aminophosphonate metabolism
+acald_uptake	Aminophosphonate metabolism
+acerA_secretion	Plant polysaccharide degradation
+acerA_uptake	Plant polysaccharide degradation
+acgal_secretion	Aminosugar metabolism
+acgal_uptake	Aminosugar metabolism
+acgalglcur_secretion	Chondroitin sulfate degradation
+acgalglcur_uptake	Chondroitin sulfate degradation
+acgalidour_secretion	Chondroitin sulfate degradation
+acgalidour_uptake	Chondroitin sulfate degradation
+acgalidour2s_secretion	Chondroitin sulfate degradation
+acgalidour2s_uptake	Chondroitin sulfate degradation
+acgam_secretion	Aminosugar metabolism
+acgam_uptake	Aminosugar metabolism
+acmana_secretion	Aminosugar metabolism
+acmana_uptake	Aminosugar metabolism
+acnam_secretion	Aminosugar metabolism
+acnam_uptake	Aminosugar metabolism
+acon_C_secretion	Citric acid cycle
+acon_C_uptake	Citric acid cycle
+actn_R_secretion	Butanoate metabolism
+actn_R_uptake	Butanoate metabolism
+ade_secretion	Arginine and proline metabolism
+ade_uptake	Arginine and proline metabolism
+adn_secretion	Methionine and cysteine metabolism
+adn_uptake	Methionine and cysteine metabolism
+adocbl_secretion	Vitamin B12 metabolism
+adocbl_uptake	Vitamin B12 metabolism
+adprib_secretion	NAD metabolism
+adprib_uptake	NAD metabolism
+ahcys_secretion	Androgen and estrogen synthesis and metabolism
+ahcys_uptake	Androgen and estrogen synthesis and metabolism
+ahdt_secretion	Folate metabolism
+ahdt_uptake	Folate metabolism
+aicar_secretion	Histidine metabolism
+aicar_uptake	Histidine metabolism
+akg_secretion	Alanine and aspartate metabolism
+akg_uptake	Alanine and aspartate metabolism
+ala_D_secretion	Alanine and aspartate metabolism
+ala_D_uptake	Alanine and aspartate metabolism
+ala_L_secretion	Alanine and aspartate metabolism
+ala_L_uptake	Alanine and aspartate metabolism
+alaala_secretion	Alanine and aspartate metabolism
+alaala_uptake	Alanine and aspartate metabolism
+alaasp_secretion	Peptide metabolism
+alaasp_uptake	Peptide metabolism
+alagln_secretion	Others
+alagln_uptake	Others
+alaglu_secretion	Peptide metabolism
+alaglu_uptake	Peptide metabolism
+alagly_secretion	Others
+alagly_uptake	Others
+alahis_secretion	Peptide metabolism
+alahis_uptake	Peptide metabolism
+alaleu_secretion	Peptide metabolism
+alaleu_uptake	Peptide metabolism
+alathr_secretion	Peptide metabolism
+alathr_uptake	Peptide metabolism
+algin_secretion	Plant polysaccharide degradation
+algin_uptake	Plant polysaccharide degradation
+all_D_secretion	Fructose and mannose metabolism
+all_D_uptake	Fructose and mannose metabolism
+alltn_secretion	Purine catabolism
+alltn_uptake	Purine catabolism
+amet_secretion	Androgen and estrogen synthesis and metabolism
+amet_uptake	Androgen and estrogen synthesis and metabolism
+ametam_secretion	Arginine and proline metabolism
+ametam_uptake	Arginine and proline metabolism
+amp_secretion	Alanine and aspartate metabolism
+amp_uptake	Alanine and aspartate metabolism
+amylopect900_secretion	Starch and sucrose metabolism
+amylopect900_uptake	Starch and sucrose metabolism
+amylose300_secretion	Starch and sucrose metabolism
+amylose300_uptake	Starch and sucrose metabolism
+apio-D_secretion	#N/A
+apio-D_uptake	#N/A
+arab_D_secretion	Lipopolysaccharide biosynthesis
+arab_D_uptake	Lipopolysaccharide biosynthesis
+arab_L_secretion	Ascorbate and aldarate metabolism
+arab_L_uptake	Ascorbate and aldarate metabolism
+arabinan101_secretion	Plant polysaccharide degradation
+arabinan101_uptake	Plant polysaccharide degradation
+arabinogal_secretion	Plant polysaccharide degradation
+arabinogal_uptake	Plant polysaccharide degradation
+arabinoxyl_secretion	Plant polysaccharide degradation
+arabinoxyl_uptake	Plant polysaccharide degradation
+arabttr_secretion	Plant polysaccharide degradation
+arabttr_uptake	Plant polysaccharide degradation
+arachcoa_secretion	Fatty acid oxidation
+arachcoa_uptake	Fatty acid oxidation
+arbt_secretion	Histone phosphorylation
+arbt_uptake	Histone phosphorylation
+arg_L_secretion	Alanine and aspartate metabolism
+arg_L_uptake	Alanine and aspartate metabolism
+arsenb_secretion	Small molecules
+arsenb_uptake	Small molecules
+asn_L_secretion	Alanine and aspartate metabolism
+asn_L_uptake	Alanine and aspartate metabolism
+asnasnarg_secretion	Peptide metabolism
+asnasnarg_uptake	Peptide metabolism
+aso3_secretion	Respiration
+aso3_uptake	Respiration
+aso4_secretion	Respiration
+aso4_uptake	Respiration
+asp_L_secretion	Alanine and aspartate metabolism
+asp_L_uptake	Alanine and aspartate metabolism
+atp_secretion	Alanine and aspartate metabolism
+atp_uptake	Alanine and aspartate metabolism
+bglc_secretion	Dietary fiber binding
+bglc_uptake	Dietary fiber binding
+bhb_secretion	Butanoate metabolism
+bhb_uptake	Butanoate metabolism
+biocyt_secretion	Biotin metabolism
+biocyt_uptake	Biotin metabolism
+biomass_secretion	Others
+biomass_uptake	Others
+btd_RR_secretion	Butanoate metabolism
+btd_RR_uptake	Butanoate metabolism
+btn_secretion	Biotin metabolism
+btn_uptake	Biotin metabolism
+btoh_secretion	Pyruvate metabolism
+btoh_uptake	Pyruvate metabolism
+but_secretion	Butanoate metabolism
+but_uptake	Butanoate metabolism
+butam_secretion	Valine, leucine, and isoleucine metabolism
+butam_uptake	Valine, leucine, and isoleucine metabolism
+butso3_secretion	Respiration
+butso3_uptake	Respiration
+bz_secretion	Alkaloid synthesis
+bz_uptake	Alkaloid synthesis
+bzam_secretion	Aminobenzoate degradation
+bzam_uptake	Aminobenzoate degradation
+C02356_secretion	Urea cycle
+C02356_uptake	Urea cycle
+C02528_secretion	Bile acid metabolism
+C02528_uptake	Bile acid metabolism
+C05767_secretion	Heme synthesis
+C05767_uptake	Heme synthesis
+C05770_secretion	Heme synthesis
+C05770_uptake	Heme synthesis
+c6crn_secretion	#N/A
+c6crn_uptake	#N/A
+ca2_secretion	Small molecules
+ca2_uptake	Small molecules
+cbl1_secretion	Vitamin B12 metabolism
+cbl1_uptake	Vitamin B12 metabolism
+cbl2_secretion	Vitamin B12 metabolism
+cbl2_uptake	Vitamin B12 metabolism
+cd2_secretion	Small molecules
+cd2_uptake	Small molecules
+cdp_secretion	Cholesterol metabolism
+cdp_uptake	Cholesterol metabolism
+CE2250_secretion	Fatty acid synthesis
+CE2250_uptake	Fatty acid synthesis
+cellb_secretion	Starch and sucrose metabolism
+cellb_uptake	Starch and sucrose metabolism
+cellttr_secretion	Plant polysaccharide degradation
+cellttr_uptake	Plant polysaccharide degradation
+cellul_secretion	Plant polysaccharide degradation
+cellul_uptake	Plant polysaccharide degradation
+cgly_secretion	Alanine and aspartate metabolism
+cgly_uptake	Alanine and aspartate metabolism
+ch4s_secretion	Methionine and cysteine metabolism
+ch4s_uptake	Methionine and cysteine metabolism
+chitin_secretion	Plant polysaccharide degradation
+chitin_uptake	Plant polysaccharide degradation
+chol_secretion	Glycerophospholipid metabolism
+chol_uptake	Glycerophospholipid metabolism
+cholate_secretion	Bile acid metabolism
+cholate_uptake	Bile acid metabolism
+cholp_secretion	Glycerophospholipid metabolism
+cholp_uptake	Glycerophospholipid metabolism
+chols_secretion	Glycine, serine, alanine, and threonine metabolism
+chols_uptake	Glycine, serine, alanine, and threonine metabolism
+chor_secretion	Folate metabolism
+chor_uptake	Folate metabolism
+chsterol_secretion	Bile acid metabolism
+chsterol_uptake	Bile acid metabolism
+chtbs_secretion	Aminosugar metabolism
+chtbs_uptake	Aminosugar metabolism
+chtn_secretion	Aminosugar metabolism
+chtn_uptake	Aminosugar metabolism
+Cit_Mg_secretion	Small molecules
+Cit_Mg_uptake	Small molecules
+cit_secretion	Citric acid cycle
+cit_uptake	Citric acid cycle
+cl_secretion	Drug metabolism
+cl_uptake	Drug metabolism
+cmp_secretion	Blood group synthesis
+cmp_uptake	Blood group synthesis
+co2_secretion	Alanine and aspartate metabolism
+co2_uptake	Alanine and aspartate metabolism
+coa_secretion	Alanine and aspartate metabolism
+coa_uptake	Alanine and aspartate metabolism
+cobalt2_secretion	Vitamin B12 metabolism
+cobalt2_uptake	Vitamin B12 metabolism
+core2_secretion	Keratan sulfate synthesis
+core2_uptake	Keratan sulfate synthesis
+core3_secretion	Mucin O-glycan biosynthesis
+core3_uptake	Mucin O-glycan biosynthesis
+core4_secretion	Keratan sulfate synthesis
+core4_uptake	Keratan sulfate synthesis
+core5_secretion	O-glycan degradation
+core5_uptake	O-glycan degradation
+core6_secretion	Keratan sulfate degradation
+core6_uptake	Keratan sulfate degradation
+core7_secretion	O-glycan degradation
+core7_uptake	O-glycan degradation
+core8_secretion	O-glycan degradation
+core8_uptake	O-glycan degradation
+cps_fp_secretion	Cell wall biosynthesis
+cps_fp_uptake	Cell wall biosynthesis
+crm_hs_secretion	Glycerophospholipid metabolism
+crm_hs_uptake	Glycerophospholipid metabolism
+crn_secretion	Fatty acid oxidation
+crn_uptake	Fatty acid oxidation
+cro4_secretion	Small molecules
+cro4_uptake	Small molecules
+csn_secretion	Methionine and cysteine metabolism
+csn_uptake	Methionine and cysteine metabolism
+cspg_a_degr_secretion	Chondroitin sulfate degradation
+cspg_a_degr_uptake	Chondroitin sulfate degradation
+cspg_a_secretion	Chondroitin sulfate degradation
+cspg_a_uptake	Chondroitin sulfate degradation
+cspg_ab_rest_secretion	Chondroitin sulfate degradation
+cspg_ab_rest_uptake	Chondroitin sulfate degradation
+cspg_b_degr_secretion	Chondroitin sulfate degradation
+cspg_b_degr_uptake	Chondroitin sulfate degradation
+cspg_b_secretion	Chondroitin sulfate degradation
+cspg_b_uptake	Chondroitin sulfate degradation
+cspg_c_degr_secretion	Chondroitin sulfate degradation
+cspg_c_degr_uptake	Chondroitin sulfate degradation
+cspg_c_rest_secretion	Chondroitin sulfate degradation
+cspg_c_rest_uptake	Chondroitin sulfate degradation
+cspg_c_secretion	Chondroitin sulfate degradation
+cspg_c_uptake	Chondroitin sulfate degradation
+ctbt_secretion	Fatty acid oxidation
+ctbt_uptake	Fatty acid oxidation
+ctp_secretion	Aminosugar metabolism
+ctp_uptake	Aminosugar metabolism
+cu2_secretion	Small molecules
+cu2_uptake	Small molecules
+cynt_secretion	Miscellaneous
+cynt_uptake	Miscellaneous
+cys_L_secretion	Alanine and aspartate metabolism
+cys_L_uptake	Alanine and aspartate metabolism
+cytd_secretion	Nucleotide interconversion
+cytd_uptake	Nucleotide interconversion
+dad_2_secretion	Nucleotide interconversion
+dad_2_uptake	Nucleotide interconversion
+datp_secretion	Aminosugar metabolism
+datp_uptake	Aminosugar metabolism
+db4p_secretion	Vitamin B2 metabolism
+db4p_uptake	Vitamin B2 metabolism
+dchac_secretion	Bile acid metabolism
+dchac_uptake	Bile acid metabolism
+dcmp_secretion	Nucleotide interconversion
+dcmp_uptake	Nucleotide interconversion
+dcyt_secretion	Nucleotide interconversion
+dcyt_uptake	Nucleotide interconversion
+ddca_secretion	Cytochrome metabolism
+ddca_uptake	Cytochrome metabolism
+dextran40_secretion	Plant polysaccharide degradation
+dextran40_uptake	Plant polysaccharide degradation
+dextrin_secretion	Starch and sucrose metabolism
+dextrin_uptake	Starch and sucrose metabolism
+dgchol_secretion	Bile acid metabolism
+dgchol_uptake	Bile acid metabolism
+dgmp_secretion	Nucleotide interconversion
+dgmp_uptake	Nucleotide interconversion
+dgsn_secretion	Nucleotide interconversion
+dgsn_uptake	Nucleotide interconversion
+dgtp_secretion	Glycolysis/gluconeogenesis
+dgtp_uptake	Glycolysis/gluconeogenesis
+dhcinnm_secretion	Phenylalanine metabolism
+dhcinnm_uptake	Phenylalanine metabolism
+dhna_secretion	Ubiquinone and other terpenoid-quinone biosynthesis
+dhna_uptake	Ubiquinone and other terpenoid-quinone biosynthesis
+dhnacoa_secretion	Ubiquinone and other terpenoid-quinone biosynthesis
+dhnacoa_uptake	Ubiquinone and other terpenoid-quinone biosynthesis
+dhpppn_secretion	Phenylalanine metabolism
+dhpppn_uptake	Phenylalanine metabolism
+diact_secretion	Pyruvate metabolism
+diact_uptake	Pyruvate metabolism
+din_secretion	Nucleotide interconversion
+din_uptake	Nucleotide interconversion
+dma_secretion	Glyoxylate and dicarboxylate metabolism
+dma_uptake	Glyoxylate and dicarboxylate metabolism
+dpcoa_secretion	CoA catabolism
+dpcoa_uptake	CoA catabolism
+drib_secretion	Pentose phosphate pathway
+drib_uptake	Pentose phosphate pathway
+dsT_antigen_secretion	O-glycan degradation
+dsT_antigen_uptake	O-glycan degradation
+dtdp_secretion	Biosynthesis of 12-, 14- and 16-membered macrolides
+dtdp_uptake	Biosynthesis of 12-, 14- and 16-membered macrolides
+dtmp_secretion	Nucleotide interconversion
+dtmp_uptake	Nucleotide interconversion
+dttp_secretion	NAD metabolism
+dttp_uptake	NAD metabolism
+duri_secretion	Nucleotide interconversion
+duri_uptake	Nucleotide interconversion
+dxtrn_secretion	Miscellaneous
+dxtrn_uptake	Miscellaneous
+eltr_m3_secretion	Drug metabolism
+eltr_m3_uptake	Drug metabolism
+etha_secretion	Cell wall biosynthesis
+etha_uptake	Cell wall biosynthesis
+ethamp_secretion	Cell wall biosynthesis
+ethamp_uptake	Cell wall biosynthesis
+ethrtl_secretion	Fructose and mannose metabolism
+ethrtl_uptake	Fructose and mannose metabolism
+ethso3_secretion	Respiration
+ethso3_uptake	Respiration
+etoh_secretion	Glycolysis/gluconeogenesis
+etoh_uptake	Glycolysis/gluconeogenesis
+f1a_secretion	Keratan sulfate degradation
+f1a_uptake	Keratan sulfate degradation
+fad_secretion	Alanine and aspartate metabolism
+fad_uptake	Alanine and aspartate metabolism
+fald_secretion	Aminobenzoate degradation
+fald_uptake	Aminobenzoate degradation
+fdp_secretion	Fructose and mannose metabolism
+fdp_uptake	Fructose and mannose metabolism
+fe2_secretion	Heme degradation
+fe2_uptake	Heme degradation
+fe3_secretion	Heme synthesis
+fe3_uptake	Heme synthesis
+fe3dcit_secretion	Small molecules
+fe3dcit_uptake	Small molecules
+fecrm_secretion	Small molecules
+fecrm_uptake	Small molecules
+fol_secretion	Folate metabolism
+fol_uptake	Folate metabolism
+for_secretion	Arginine and proline metabolism
+for_uptake	Arginine and proline metabolism
+fru_secretion	Drug metabolism
+fru_uptake	Drug metabolism
+fuc_L_secretion	Drug metabolism
+fuc_L_uptake	Drug metabolism
+fuc1p_L_secretion	Fructose and mannose metabolism
+fuc1p_L_uptake	Fructose and mannose metabolism
+fum_secretion	Alanine and aspartate metabolism
+fum_uptake	Alanine and aspartate metabolism
+g1p_secretion	Galactose metabolism
+g1p_uptake	Galactose metabolism
+g3pc_secretion	Glycerophospholipid metabolism
+g3pc_uptake	Glycerophospholipid metabolism
+g6p_secretion	Glycerophospholipid metabolism
+g6p_uptake	Glycerophospholipid metabolism
+gal_secretion	Chondroitin sulfate degradation
+gal_uptake	Chondroitin sulfate degradation
+galactan_secretion	Plant polysaccharide degradation
+galactan_uptake	Plant polysaccharide degradation
+galam_secretion	Aminosugar metabolism
+galam_uptake	Aminosugar metabolism
+galct_D_secretion	Ascorbate and aldarate metabolism
+galct_D_uptake	Ascorbate and aldarate metabolism
+galctn_D_secretion	Galactose metabolism
+galctn_D_uptake	Galactose metabolism
+galmannan_secretion	Plant polysaccharide degradation
+galmannan_uptake	Plant polysaccharide degradation
+galside_hs_secretion	Glycosphingolipid metabolism
+galside_hs_uptake	Glycosphingolipid metabolism
+galt_secretion	Galactose metabolism
+galt_uptake	Galactose metabolism
+galur_secretion	Pentose and glucuronate interconversions
+galur_uptake	Pentose and glucuronate interconversions
+gam_secretion	Aminosugar metabolism
+gam_uptake	Aminosugar metabolism
+gam26s_secretion	Drug metabolism
+gam26s_uptake	Drug metabolism
+gam6p_secretion	Aminosugar metabolism
+gam6p_uptake	Aminosugar metabolism
+gbbtn_secretion	Fatty acid oxidation
+gbbtn_uptake	Fatty acid oxidation
+gcald_secretion	Cell wall biosynthesis
+gcald_uptake	Cell wall biosynthesis
+gchola_secretion	Bile acid metabolism
+gchola_uptake	Bile acid metabolism
+gdp_secretion	Blood group synthesis
+gdp_uptake	Blood group synthesis
+glc_D_secretion	Cyanoamino acid metabolism
+glc_D_uptake	Cyanoamino acid metabolism
+glcmannan_secretion	Plant polysaccharide degradation
+glcmannan_uptake	Plant polysaccharide degradation
+glcn_secretion	Pentose and glucuronate interconversions
+glcn_uptake	Pentose and glucuronate interconversions
+glcr_secretion	Ascorbate and aldarate metabolism
+glcr_uptake	Ascorbate and aldarate metabolism
+glcur_secretion	Chondroitin sulfate degradation
+glcur_uptake	Chondroitin sulfate degradation
+gln_L_secretion	Alanine and aspartate metabolism
+gln_L_uptake	Alanine and aspartate metabolism
+glnasngln_secretion	Peptide metabolism
+glnasngln_uptake	Peptide metabolism
+glnlyslys_secretion	Peptide metabolism
+glnlyslys_uptake	Peptide metabolism
+glu_D_secretion	Cell wall biosynthesis
+glu_D_uptake	Cell wall biosynthesis
+glu_L_secretion	Alanine and aspartate metabolism
+glu_L_uptake	Alanine and aspartate metabolism
+glutar_secretion	Butanoate metabolism
+glutar_uptake	Butanoate metabolism
+gly_secretion	Alanine and aspartate metabolism
+gly_uptake	Alanine and aspartate metabolism
+glyasn_secretion	Peptide metabolism
+glyasn_uptake	Peptide metabolism
+glyasp_secretion	Peptide metabolism
+glyasp_uptake	Peptide metabolism
+glyb_secretion	Glycine, serine and threonine metabolism
+glyb_uptake	Glycine, serine and threonine metabolism
+glyc_secretion	Arachidonic acid metabolism
+glyc_uptake	Arachidonic acid metabolism
+glyc3p_secretion	Cell wall biosynthesis
+glyc3p_uptake	Cell wall biosynthesis
+glyclt_secretion	Glyoxylate and dicarboxylate metabolism
+glyclt_uptake	Glyoxylate and dicarboxylate metabolism
+glycogen1500_secretion	Starch and sucrose metabolism
+glycogen1500_uptake	Starch and sucrose metabolism
+glycys_secretion	Peptide metabolism
+glycys_uptake	Peptide metabolism
+glygln_secretion	Peptide metabolism
+glygln_uptake	Peptide metabolism
+glyglu_secretion	Peptide metabolism
+glyglu_uptake	Peptide metabolism
+glygn2_secretion	Starch and sucrose metabolism
+glygn2_uptake	Starch and sucrose metabolism
+glygn4_secretion	Starch and sucrose metabolism
+glygn4_uptake	Starch and sucrose metabolism
+glygn5_secretion	Starch and sucrose metabolism
+glygn5_uptake	Starch and sucrose metabolism
+glyleu_secretion	Peptide metabolism
+glyleu_uptake	Peptide metabolism
+glymet_secretion	Others
+glymet_uptake	Others
+glyphe_secretion	Peptide metabolism
+glyphe_uptake	Peptide metabolism
+glypro_secretion	Peptide metabolism
+glypro_uptake	Peptide metabolism
+glytyr_secretion	Peptide metabolism
+glytyr_uptake	Peptide metabolism
+gm1_hs_secretion	N-glycan degradation
+gm1_hs_uptake	N-glycan degradation
+gmp_secretion	Bile acid synthesis
+gmp_uptake	Bile acid synthesis
+gncore1_secretion	O-glycan degradation
+gncore1_uptake	O-glycan degradation
+gncore2_secretion	O-glycan degradation
+gncore2_uptake	O-glycan degradation
+gq1b_hs_secretion	Sphingolipid metabolism
+gq1b_hs_uptake	Sphingolipid metabolism
+gsn_secretion	Nucleotide interconversion
+gsn_uptake	Nucleotide interconversion
+gthox_secretion	Arachidonic acid metabolism
+gthox_uptake	Arachidonic acid metabolism
+gthrd_secretion	Alanine and aspartate metabolism
+gthrd_uptake	Alanine and aspartate metabolism
+gtp_secretion	C5-branched dibasic acid metabolism
+gtp_uptake	C5-branched dibasic acid metabolism
+gua_secretion	Nucleotide interconversion
+gua_uptake	Nucleotide interconversion
+gulur_secretion	Plant polysaccharide degradation
+gulur_uptake	Plant polysaccharide degradation
+h_secretion	2-Oxocarboxylic acid metabolism
+h_uptake	2-Oxocarboxylic acid metabolism
+h2_secretion	Benzoate degradation
+h2_uptake	Benzoate degradation
+h2o_secretion	Alanine and aspartate metabolism
+h2o_uptake	Alanine and aspartate metabolism
+h2o2_secretion	Alanine and aspartate metabolism
+h2o2_uptake	Alanine and aspartate metabolism
+h2s_secretion	Biotin metabolism
+h2s_uptake	Biotin metabolism
+ha_deg1_secretion	Hyaluronan metabolism
+ha_deg1_uptake	Hyaluronan metabolism
+ha_pre1_secretion	Hyaluronan metabolism
+ha_pre1_uptake	Hyaluronan metabolism
+ha_secretion	Hyaluronan metabolism
+ha_uptake	Hyaluronan metabolism
+HC00001_secretion	Others
+HC00001_uptake	Others
+HC00004_secretion	Glycerophospholipid metabolism
+HC00004_uptake	Glycerophospholipid metabolism
+HC00005_secretion	Glycerophospholipid metabolism
+HC00005_uptake	Glycerophospholipid metabolism
+HC00006_secretion	Glycerophospholipid metabolism
+HC00006_uptake	Glycerophospholipid metabolism
+HC00007_secretion	Glycerophospholipid metabolism
+HC00007_uptake	Glycerophospholipid metabolism
+HC00008_secretion	Glycerophospholipid metabolism
+HC00008_uptake	Glycerophospholipid metabolism
+HC00009_secretion	Glycerophospholipid metabolism
+HC00009_uptake	Glycerophospholipid metabolism
+HC00319_secretion	Beta-alanine metabolism
+HC00319_uptake	Beta-alanine metabolism
+HC01361_secretion	Miscellaneous
+HC01361_uptake	Miscellaneous
+HC01852_secretion	Others
+HC01852_uptake	Others
+HC01939_secretion	Others
+HC01939_uptake	Others
+HC01942_secretion	Others
+HC01942_uptake	Others
+HC01943_secretion	Others
+HC01943_uptake	Others
+HC02191_secretion	Bile acid metabolism
+HC02191_uptake	Bile acid metabolism
+HC02192_secretion	Bile acid metabolism
+HC02192_uptake	Bile acid metabolism
+HC02193_secretion	Bile acid metabolism
+HC02193_uptake	Bile acid metabolism
+hco3_secretion	Arginine and proline metabolism
+hco3_uptake	Arginine and proline metabolism
+hdca_secretion	Cytochrome metabolism
+hdca_uptake	Cytochrome metabolism
+hdcea_secretion	Fatty acid oxidation
+hdcea_uptake	Fatty acid oxidation
+hexa_secretion	Fatty acid oxidation
+hexa_uptake	Fatty acid oxidation
+hexs_secretion	Respiration
+hexs_uptake	Respiration
+hg2_secretion	Inorganic ion metabolism
+hg2_uptake	Inorganic ion metabolism
+his_L_secretion	Beta-alanine metabolism
+his_L_uptake	Beta-alanine metabolism
+hishislys_secretion	Peptide metabolism
+hishislys_uptake	Peptide metabolism
+hista_secretion	Histidine metabolism
+hista_uptake	Histidine metabolism
+hom_L_secretion	Glycine, serine, alanine, and threonine metabolism
+hom_L_uptake	Glycine, serine, alanine, and threonine metabolism
+homogal_secretion	Plant polysaccharide degradation
+homogal_uptake	Plant polysaccharide degradation
+hspg_degr_1_secretion	Drug metabolism
+hspg_degr_1_uptake	Drug metabolism
+hspg_degr_10_secretion	Heparan sulfate degradation
+hspg_degr_10_uptake	Heparan sulfate degradation
+hspg_degr_11_secretion	Heparan sulfate degradation
+hspg_degr_11_uptake	Heparan sulfate degradation
+hspg_degr_12_secretion	Drug metabolism
+hspg_degr_12_uptake	Drug metabolism
+hspg_degr_13_secretion	Drug metabolism
+hspg_degr_13_uptake	Drug metabolism
+hspg_degr_14_secretion	Heparan sulfate degradation
+hspg_degr_14_uptake	Heparan sulfate degradation
+hspg_degr_15_secretion	Heparan sulfate degradation
+hspg_degr_15_uptake	Heparan sulfate degradation
+hspg_degr_2_secretion	Drug metabolism
+hspg_degr_2_uptake	Drug metabolism
+hspg_degr_3_secretion	Heparan sulfate degradation
+hspg_degr_3_uptake	Heparan sulfate degradation
+hspg_degr_4_secretion	Heparan sulfate degradation
+hspg_degr_4_uptake	Heparan sulfate degradation
+hspg_degr_5_secretion	Heparan sulfate degradation
+hspg_degr_5_uptake	Heparan sulfate degradation
+hspg_degr_6_secretion	Heparan sulfate degradation
+hspg_degr_6_uptake	Heparan sulfate degradation
+hspg_degr_7_secretion	Heparan sulfate degradation
+hspg_degr_7_uptake	Heparan sulfate degradation
+hspg_degr_8_secretion	Heparan sulfate degradation
+hspg_degr_8_uptake	Heparan sulfate degradation
+hspg_degr_9_secretion	Heparan sulfate degradation
+hspg_degr_9_uptake	Heparan sulfate degradation
+hspg_rest_secretion	Heparan sulfate degradation
+hspg_rest_uptake	Heparan sulfate degradation
+hspg_secretion	Chondroitin synthesis
+hspg_uptake	Chondroitin synthesis
+hxa_secretion	Fatty acid oxidation
+hxa_uptake	Fatty acid oxidation
+hxan_secretion	Nucleotide interconversion
+hxan_uptake	Nucleotide interconversion
+hxcoa_secretion	Butanoate metabolism
+hxcoa_uptake	Butanoate metabolism
+idon_L_secretion	Pentose and glucuronate interconversions
+idon_L_uptake	Pentose and glucuronate interconversions
+idour_secretion	Chondroitin sulfate degradation
+idour_uptake	Chondroitin sulfate degradation
+ile_L_secretion	Miscellaneous
+ile_L_uptake	Miscellaneous
+imp_secretion	Nucleotide interconversion
+imp_uptake	Nucleotide interconversion
+ind3ac_secretion	Histidine metabolism
+ind3ac_uptake	Histidine metabolism
+ind3ppa_secretion	Tryptophan metabolism
+ind3ppa_uptake	Tryptophan metabolism
+indole_secretion	Miscellaneous
+indole_uptake	Miscellaneous
+inost_secretion	Glycerophospholipid metabolism
+inost_uptake	Glycerophospholipid metabolism
+ins_secretion	Nucleotide interconversion
+ins_uptake	Nucleotide interconversion
+inulin_secretion	Plant polysaccharide degradation
+inulin_uptake	Plant polysaccharide degradation
+isetac_secretion	Respiration
+isetac_uptake	Respiration
+isobut_secretion	Fatty acid synthesis
+isobut_uptake	Fatty acid synthesis
+isocapr_secretion	Valine, leucine, and isoleucine metabolism
+isocapr_uptake	Valine, leucine, and isoleucine metabolism
+isomal_secretion	Miscellaneous
+isomal_uptake	Miscellaneous
+isoval_secretion	Fatty acid synthesis
+isoval_uptake	Fatty acid synthesis
+itp_secretion	Aminosugar metabolism
+itp_uptake	Aminosugar metabolism
+k_secretion	Drug metabolism
+k_uptake	Drug metabolism
+kdo_secretion	Lipopolysaccharide biosynthesis
+kdo_uptake	Lipopolysaccharide biosynthesis
+kesto_secretion	Drug metabolism
+kesto_uptake	Drug metabolism
+kestopt_secretion	Drug metabolism
+kestopt_uptake	Drug metabolism
+kestottr_secretion	Drug metabolism
+kestottr_uptake	Drug metabolism
+lac_D_secretion	Cell wall biosynthesis
+lac_D_uptake	Cell wall biosynthesis
+lac_L_secretion	Cell wall biosynthesis
+lac_L_uptake	Cell wall biosynthesis
+lanost_secretion	Cholesterol metabolism
+lanost_uptake	Cholesterol metabolism
+lcts_secretion	Galactose metabolism
+lcts_uptake	Galactose metabolism
+Lcyst_secretion	Methionine and cysteine metabolism
+Lcyst_uptake	Methionine and cysteine metabolism
+ldl_hs_secretion	Glycerophospholipid metabolism
+ldl_hs_uptake	Glycerophospholipid metabolism
+leu_L_secretion	Glycerophospholipid metabolism
+leu_L_uptake	Glycerophospholipid metabolism
+levan1000_secretion	Plant polysaccharide degradation
+levan1000_uptake	Plant polysaccharide degradation
+levanb_secretion	Plant polysaccharide degradation
+levanb_uptake	Plant polysaccharide degradation
+levanttr_secretion	Plant polysaccharide degradation
+levanttr_uptake	Plant polysaccharide degradation
+levantttr_secretion	Plant polysaccharide degradation
+levantttr_uptake	Plant polysaccharide degradation
+Lhcystin_secretion	Methionine and cysteine metabolism
+Lhcystin_uptake	Methionine and cysteine metabolism
+lichn_secretion	Plant polysaccharide degradation
+lichn_uptake	Plant polysaccharide degradation
+lmn2_secretion	Plant polysaccharide degradation
+lmn2_uptake	Plant polysaccharide degradation
+lmn30_secretion	Plant polysaccharide degradation
+lmn30_uptake	Plant polysaccharide degradation
+lnlc_secretion	Cholesterol metabolism
+lnlc_uptake	Cholesterol metabolism
+lys_L_secretion	Biotin metabolism
+lys_L_uptake	Biotin metabolism
+lyslyslys_secretion	Peptide metabolism
+lyslyslys_uptake	Peptide metabolism
+lyx_L_secretion	Pentose and glucuronate interconversions
+lyx_L_uptake	Pentose and glucuronate interconversions
+M01989_secretion	Bile acid metabolism
+M01989_uptake	Bile acid metabolism
+M03134_secretion	Valerate metabolism
+M03134_uptake	Valerate metabolism
+mal_L_secretion	Carbon fixation pathways in prokaryotes
+mal_L_uptake	Carbon fixation pathways in prokaryotes
+malcoa_secretion	Biotin metabolism
+malcoa_uptake	Biotin metabolism
+malt_secretion	Histone phosphorylation
+malt_uptake	Histone phosphorylation
+malthp_secretion	Starch and sucrose metabolism
+malthp_uptake	Starch and sucrose metabolism
+malthx_secretion	Starch and sucrose metabolism
+malthx_uptake	Starch and sucrose metabolism
+malttr_secretion	Starch and sucrose metabolism
+malttr_uptake	Starch and sucrose metabolism
+man_secretion	Drug metabolism
+man_uptake	Drug metabolism
+man6p_secretion	Aminosugar metabolism
+man6p_uptake	Aminosugar metabolism
+mannan_secretion	Drug metabolism
+mannan_uptake	Drug metabolism
+mannur_secretion	Fructose and mannose metabolism
+mannur_uptake	Fructose and mannose metabolism
+mantr_secretion	Fructose and mannose metabolism
+mantr_uptake	Fructose and mannose metabolism
+melib_secretion	Fructose and mannose metabolism
+melib_uptake	Fructose and mannose metabolism
+meoh_secretion	Alkaloid synthesis
+meoh_uptake	Alkaloid synthesis
+met_D_secretion	Small molecules
+met_D_uptake	Small molecules
+met_L_secretion	Arginine and proline metabolism
+met_L_uptake	Arginine and proline metabolism
+metala_secretion	Peptide metabolism
+metala_uptake	Peptide metabolism
+metsox_R_L_secretion	Methionine and cysteine metabolism
+metsox_R_L_uptake	Methionine and cysteine metabolism
+metsox_S_L_secretion	Methionine and cysteine metabolism
+metsox_S_L_uptake	Methionine and cysteine metabolism
+mev_R_secretion	Cholesterol metabolism
+mev_R_uptake	Cholesterol metabolism
+mg2_secretion	Vitamin B12 metabolism
+mg2_uptake	Vitamin B12 metabolism
+mlthf_secretion	CoA synthesis
+mlthf_uptake	CoA synthesis
+mma_secretion	Glycine, serine, alanine, and threonine metabolism
+mma_uptake	Glycine, serine, alanine, and threonine metabolism
+mmet_secretion	Methionine and cysteine metabolism
+mmet_uptake	Methionine and cysteine metabolism
+mn2_secretion	Small molecules
+mn2_uptake	Small molecules
+mnl_secretion	Fructose and mannose metabolism
+mnl_uptake	Fructose and mannose metabolism
+mobd_secretion	Small molecules
+mobd_uptake	Small molecules
+mops_secretion	Small molecules
+mops_uptake	Small molecules
+mqn7_secretion	Citric acid cycle
+mqn7_uptake	Citric acid cycle
+mqn8_secretion	Citric acid cycle
+mqn8_uptake	Citric acid cycle
+mso3_secretion	Respiration
+mso3_uptake	Respiration
+n2_secretion	Nitrogen metabolism
+n2_uptake	Nitrogen metabolism
+n2o_secretion	Drug metabolism
+n2o_uptake	Drug metabolism
+na1_secretion	Butanoate metabolism
+na1_uptake	Butanoate metabolism
+nac_secretion	NAD metabolism
+nac_uptake	NAD metabolism
+nad_secretion	2-Oxocarboxylic acid metabolism
+nad_uptake	2-Oxocarboxylic acid metabolism
+nadp_secretion	Alanine and aspartate metabolism
+nadp_uptake	Alanine and aspartate metabolism
+ncam_secretion	Miscellaneous
+ncam_uptake	Miscellaneous
+nh4_secretion	Alanine and aspartate metabolism
+nh4_uptake	Alanine and aspartate metabolism
+ni2_secretion	Small molecules
+ni2_uptake	Small molecules
+nicrnt_secretion	NAD metabolism
+nicrnt_uptake	NAD metabolism
+nmn_secretion	NAD metabolism
+nmn_uptake	NAD metabolism
+no_secretion	Arginine and proline metabolism
+no_uptake	Arginine and proline metabolism
+no2_secretion	Miscellaneous
+no2_uptake	Miscellaneous
+no3_secretion	Nitrogen metabolism
+no3_uptake	Nitrogen metabolism
+norval_L_secretion	Valine, leucine, and isoleucine metabolism
+norval_L_uptake	Valine, leucine, and isoleucine metabolism
+o2_secretion	Alanine and aspartate metabolism
+o2_uptake	Alanine and aspartate metabolism
+oaa_secretion	Alanine and aspartate metabolism
+oaa_uptake	Alanine and aspartate metabolism
+ocdca_secretion	Fatty acid oxidation
+ocdca_uptake	Fatty acid oxidation
+ocdcea_secretion	Fatty acid oxidation
+ocdcea_uptake	Fatty acid oxidation
+odecrn_secretion	Fatty acid oxidation
+odecrn_uptake	Fatty acid oxidation
+oligofru4_secretion	Plant polysaccharide degradation
+oligofru4_uptake	Plant polysaccharide degradation
+orn_secretion	Arginine and proline metabolism
+orn_uptake	Arginine and proline metabolism
+orot_secretion	Pyrimidine catabolism
+orot_uptake	Pyrimidine catabolism
+orot5p_secretion	Pyrimidine synthesis
+orot5p_uptake	Pyrimidine synthesis
+oxa_secretion	Glyoxylate and dicarboxylate metabolism
+oxa_uptake	Glyoxylate and dicarboxylate metabolism
+pac_secretion	Arginine and proline metabolism
+pac_uptake	Arginine and proline metabolism
+pan4p_secretion	CoA catabolism
+pan4p_uptake	CoA catabolism
+pap_secretion	Bile acid synthesis
+pap_uptake	Bile acid synthesis
+pb_secretion	Small molecules
+pb_uptake	Small molecules
+pchol_hs_secretion	Cholesterol metabolism
+pchol_hs_uptake	Cholesterol metabolism
+peamn_secretion	Phenylalanine metabolism
+peamn_uptake	Phenylalanine metabolism
+pect_secretion	Dietary fiber binding
+pect_uptake	Dietary fiber binding
+pecticgal_secretion	Plant polysaccharide degradation
+pecticgal_uptake	Plant polysaccharide degradation
+phe_L_secretion	Miscellaneous
+phe_L_uptake	Miscellaneous
+pheme_secretion	Heme degradation
+pheme_uptake	Heme degradation
+phepheasn_secretion	Peptide metabolism
+phepheasn_uptake	Peptide metabolism
+phpyr_secretion	Phenylalanine metabolism
+phpyr_uptake	Phenylalanine metabolism
+pi_secretion	Alanine and aspartate metabolism
+pi_uptake	Alanine and aspartate metabolism
+pime_secretion	Glycerophospholipid metabolism
+pime_uptake	Glycerophospholipid metabolism
+pnto_R_secretion	CoA catabolism
+pnto_R_uptake	CoA catabolism
+ppa_secretion	Bile acid synthesis
+ppa_uptake	Bile acid synthesis
+ppal_secretion	Glycolysis/gluconeogenesis
+ppal_uptake	Glycolysis/gluconeogenesis
+ppbng_secretion	Heme synthesis
+ppbng_uptake	Heme synthesis
+ppi_secretion	Alanine and aspartate metabolism
+ppi_uptake	Alanine and aspartate metabolism
+ppoh_secretion	Glycolysis/gluconeogenesis
+ppoh_uptake	Glycolysis/gluconeogenesis
+pppi_secretion	Glycolysis/gluconeogenesis
+pppi_uptake	Glycolysis/gluconeogenesis
+pppn_secretion	Phenylalanine metabolism
+pppn_uptake	Phenylalanine metabolism
+ppt_secretion	Small molecules
+ppt_uptake	Small molecules
+pro_L_secretion	Arginine and proline metabolism
+pro_L_uptake	Arginine and proline metabolism
+prolyspro_secretion	Peptide metabolism
+prolyspro_uptake	Peptide metabolism
+propropro_secretion	Peptide metabolism
+propropro_uptake	Peptide metabolism
+psics_D_secretion	Fructose and mannose metabolism
+psics_D_uptake	Fructose and mannose metabolism
+ptrc_secretion	Arginine and proline metabolism
+ptrc_uptake	Arginine and proline metabolism
+pullulan1200_secretion	Starch and sucrose metabolism
+pullulan1200_uptake	Starch and sucrose metabolism
+pydam_secretion	Vitamin B6 metabolism
+pydam_uptake	Vitamin B6 metabolism
+pydx_secretion	Vitamin B6 metabolism
+pydx_uptake	Vitamin B6 metabolism
+pydx5p_secretion	Selenoamino acid metabolism
+pydx5p_uptake	Selenoamino acid metabolism
+pydxn_secretion	Vitamin B6 metabolism
+pydxn_uptake	Vitamin B6 metabolism
+pyr_secretion	Alanine and aspartate metabolism
+pyr_uptake	Alanine and aspartate metabolism
+q8_secretion	Citric acid cycle
+q8_uptake	Citric acid cycle
+raffin_secretion	Fructose and mannose metabolism
+raffin_uptake	Fructose and mannose metabolism
+rbflvrd_secretion	Respiration
+rbflvrd_uptake	Respiration
+rhamnogalurI_secretion	Plant polysaccharide degradation
+rhamnogalurI_uptake	Plant polysaccharide degradation
+rhamnogalurII_secretion	Plant polysaccharide degradation
+rhamnogalurII_uptake	Plant polysaccharide degradation
+rib_D_secretion	Methionine and cysteine metabolism
+rib_D_uptake	Methionine and cysteine metabolism
+ribflv_secretion	Respiration
+ribflv_uptake	Respiration
+rmn_secretion	Fructose and mannose metabolism
+rmn_uptake	Fructose and mannose metabolism
+Rtotal_secretion	Fatty acid oxidation
+Rtotal_uptake	Fatty acid oxidation
+Rtotal2_secretion	Fatty acid oxidation
+Rtotal2_uptake	Fatty acid oxidation
+Rtotal3_secretion	Glycerophospholipid metabolism
+Rtotal3_uptake	Glycerophospholipid metabolism
+salc_secretion	Biosynthesis of siderophore group nonribosomal peptides
+salc_uptake	Biosynthesis of siderophore group nonribosomal peptides
+salcn_secretion	Histone phosphorylation
+salcn_uptake	Histone phosphorylation
+sb_611855_secretion	Drug metabolism
+sb_611855_uptake	Drug metabolism
+sbt_D_secretion	Fructose and mannose metabolism
+sbt_D_uptake	Fructose and mannose metabolism
+sbzcoa_secretion	Ubiquinone and other terpenoid-quinone biosynthesis
+sbzcoa_uptake	Ubiquinone and other terpenoid-quinone biosynthesis
+ser_D_secretion	Glycine, serine, alanine, and threonine metabolism
+ser_D_uptake	Glycine, serine, alanine, and threonine metabolism
+ser_L_secretion	Glycerophospholipid metabolism
+ser_L_uptake	Glycerophospholipid metabolism
+Ser_Thr_secretion	Keratan sulfate degradation
+Ser_Thr_uptake	Keratan sulfate degradation
+sheme_secretion	Vitamin B12 metabolism
+sheme_uptake	Vitamin B12 metabolism
+skm_secretion	Phenylalanine metabolism
+skm_uptake	Phenylalanine metabolism
+so3_secretion	Aminosugar metabolism
+so3_uptake	Aminosugar metabolism
+so4_secretion	Androgen and estrogen synthesis and metabolism
+so4_uptake	Androgen and estrogen synthesis and metabolism
+spmd_secretion	Arginine and proline metabolism
+spmd_uptake	Arginine and proline metabolism
+sql_secretion	Cholesterol metabolism
+sql_uptake	Cholesterol metabolism
+srb_L_secretion	Fructose and mannose metabolism
+srb_L_uptake	Fructose and mannose metabolism
+sT_antigen_secretion	Mucin O-glycan biosynthesis
+sT_antigen_uptake	Mucin O-glycan biosynthesis
+starch1200_secretion	Starch and sucrose metabolism
+starch1200_uptake	Starch and sucrose metabolism
+sTn_antigen_secretion	Mucin O-glycan biosynthesis
+sTn_antigen_uptake	Mucin O-glycan biosynthesis
+strch1_secretion	Starch and sucrose metabolism
+strch1_uptake	Starch and sucrose metabolism
+strch2_secretion	Starch and sucrose metabolism
+strch2_uptake	Starch and sucrose metabolism
+stys_secretion	Fructose and mannose metabolism
+stys_uptake	Fructose and mannose metabolism
+succ_secretion	Arginine and proline metabolism
+succ_uptake	Arginine and proline metabolism
+sucr_secretion	Fructose and mannose metabolism
+sucr_uptake	Fructose and mannose metabolism
+sulfac_secretion	Respiration
+sulfac_uptake	Respiration
+T_antigen_secretion	Mucin O-glycan biosynthesis
+T_antigen_uptake	Mucin O-glycan biosynthesis
+tag_hs_secretion	Glycerophospholipid metabolism
+tag_hs_uptake	Glycerophospholipid metabolism
+tagat_D_secretion	Galactose metabolism
+tagat_D_uptake	Galactose metabolism
+taur_secretion	Bile acid metabolism
+taur_uptake	Bile acid metabolism
+tchola_secretion	Bile acid metabolism
+tchola_uptake	Bile acid metabolism
+tdchola_secretion	Bile acid metabolism
+tdchola_uptake	Bile acid metabolism
+tdechola_secretion	Bile acid metabolism
+tdechola_uptake	Bile acid metabolism
+tet_secretion	Respiration
+tet_uptake	Respiration
+thf_secretion	CoA synthesis
+thf_uptake	CoA synthesis
+thm_secretion	Thiamine metabolism
+thm_uptake	Thiamine metabolism
+thmmp_secretion	Thiamine metabolism
+thmmp_uptake	Thiamine metabolism
+thr_L_secretion	Glycine, serine, alanine, and threonine metabolism
+thr_L_uptake	Glycine, serine, alanine, and threonine metabolism
+thym_secretion	Pyrimidine catabolism
+thym_uptake	Pyrimidine catabolism
+thymd_secretion	Nucleotide interconversion
+thymd_uptake	Nucleotide interconversion
+tma_secretion	Others
+tma_uptake	Others
+tmao_secretion	Primary amine metabolism
+tmao_uptake	Primary amine metabolism
+tmphp_secretion	Others
+tmphp_uptake	Others
+Tn_antigen_secretion	Keratan sulfate degradation
+Tn_antigen_uptake	Keratan sulfate degradation
+tre_secretion	Histone phosphorylation
+tre_uptake	Histone phosphorylation
+trp_L_secretion	Peptide metabolism
+trp_L_uptake	Peptide metabolism
+trpglngln_secretion	Peptide metabolism
+trpglngln_uptake	Peptide metabolism
+trypta_secretion	Tryptophan metabolism
+trypta_uptake	Tryptophan metabolism
+tsul_secretion	Methionine and cysteine metabolism
+tsul_uptake	Methionine and cysteine metabolism
+ttdca_secretion	Cytochrome metabolism
+ttdca_uptake	Cytochrome metabolism
+ttdcea_secretion	Fatty acid oxidation
+ttdcea_uptake	Fatty acid oxidation
+tton_secretion	Respiration
+tton_uptake	Respiration
+turan_D_secretion	Fructose and mannose metabolism
+turan_D_uptake	Fructose and mannose metabolism
+tym_secretion	Tyrosine metabolism
+tym_uptake	Tyrosine metabolism
+Tyr_ggn_secretion	Starch and sucrose metabolism
+Tyr_ggn_uptake	Starch and sucrose metabolism
+tyr_L_secretion	Folate metabolism
+tyr_L_uptake	Folate metabolism
+tyrphetyr_secretion	Peptide metabolism
+tyrphetyr_uptake	Peptide metabolism
+udcpdp_secretion	Cell wall biosynthesis
+udcpdp_uptake	Cell wall biosynthesis
+udp_secretion	Aminosugar metabolism
+udp_uptake	Aminosugar metabolism
+udpg_secretion	Aminosugar metabolism
+udpg_uptake	Aminosugar metabolism
+udpgal_secretion	Aminosugar metabolism
+udpgal_uptake	Aminosugar metabolism
+udpglcur_secretion	Bile acid synthesis
+udpglcur_uptake	Bile acid synthesis
+ump_secretion	Cell wall biosynthesis
+ump_uptake	Cell wall biosynthesis
+ura_secretion	Glycine, serine, alanine, and threonine metabolism
+ura_uptake	Glycine, serine, alanine, and threonine metabolism
+urea_secretion	Alanine and aspartate metabolism
+urea_uptake	Alanine and aspartate metabolism
+uri_secretion	Nucleotide interconversion
+uri_uptake	Nucleotide interconversion
+utp_secretion	Aminosugar metabolism
+utp_uptake	Aminosugar metabolism
+val_L_secretion	Peptide metabolism
+val_L_uptake	Peptide metabolism
+vldl_hs_secretion	Glycerophospholipid metabolism
+vldl_hs_uptake	Glycerophospholipid metabolism
+xan_secretion	Caffeine metabolism
+xan_uptake	Caffeine metabolism
+xmp_secretion	Bile acid synthesis
+xmp_uptake	Bile acid synthesis
+xtsn_secretion	Caffeine metabolism
+xtsn_uptake	Caffeine metabolism
+xyl_D_secretion	Chondroitin sulfate degradation
+xyl_D_uptake	Chondroitin sulfate degradation
+xylan_secretion	Drug metabolism
+xylan_uptake	Drug metabolism
+xylottr_secretion	Plant polysaccharide degradation
+xylottr_uptake	Plant polysaccharide degradation
+xylt_secretion	Fructose and mannose metabolism
+xylt_uptake	Fructose and mannose metabolism
+xyluglc_secretion	Drug metabolism
+xyluglc_uptake	Drug metabolism
+zn2_secretion	Small molecules
+zn2_uptake	Small molecules
