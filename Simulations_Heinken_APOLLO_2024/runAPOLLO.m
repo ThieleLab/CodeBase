@@ -7,10 +7,16 @@
 % simulation data will be provided to enable reproducing the analyses.
 
 addpath('Scripts')
+rootDir = pwd;
+
+%% MODEL BUILDING AND DATA GENERATION %%
+% Run the following scripts to reproduce simulations (time-consuming)
 
 %% Refinement of draft genome-scale reconstructions and computation of model properties
 % Draft genome-scale reconstructions created through KBase will be refined
-% in the following steps (time scale: ~4-8 weeks)
+% in the following steps (time scale: ~8 weeks)
+
+% download and extract draft reconstructions
 
 % Pasolli genomes
 runDemeter_Pasolli
@@ -18,18 +24,12 @@ runDemeter_Pasolli
 % Almeida genomes
 runDemeter_Almeida
 
-%% Retrieval of taxonomic composition
-
-plotTaxonomicComposition
-getAPOLLOAGORA2Overlap
-
 %% Analysis of model properties
 
-% compute and plot various reconstruction statistics for Figure 2
+% compute various reconstruction statistics for Figure 2
 getReconstructionStatistics
-getMetaboliteStats
-makeReconstructionSizeBoxplots
-plotCorePanReactome
+% compute model properties for machine learning analysis
+computeModelProperties
 
 %% Creation and interrogation of microbiome models
 % Personalized microbiome models will be created from relative strain-level 
@@ -55,35 +55,59 @@ combineDatasets
 % The data for 11 defined datasets of microbiome samples will be extracted.
 % For a subset of models, the production potential for some metabolites
 % will also be computed (time scale: ~1 day).
+analyseMicrobiomes
 
-analyseSubsets
+%% DATA ANALYSIS %%
+% Run the following scripts to analyse the raw simulation data
 
-%% Generation of summary tables on model properties
-% From the computed model properties, summary tables and panels for Figure
-% 2 will be generated. The taxonomic distribution will also be plotted for
-% Figure 2.
+mkdir([rootDir filesep 'results'])
+
+%% Retrieval of taxonomic distribution for Figure 2
+plotTaxonomicComposition
+getAPOLLOAGORA2Overlap
+
+%% plot various reconstruction statistics for Figure 2 and S1-3
+combineAllStrainData
+analyseReconstructionStatistics
+getMetaboliteStatistics
+makeReconstructionSizeBoxplots
+plotCorePanReactome
+getUniqueReactionsMetabolites
 
 %% Results from the machine learning classifier on strain level
 % Extracts the results form the machine learning classifier on the
 % strain-level reconstruction data. Creates a summary table and the input
 % data for the panels in Figure 3.
-
 extractRandomForestsResultsStrains
 extractClassifyingFeatures
+
+%% Extraction of properties for microbiome models
+getMicrobiomeModelStatistics
 
 %% Results from the machine learning classifier on microbiome level
 % Extracts the results from the machine learning classifier on the
 % personalised microbiome modeling reconstruction data. Creates a summary 
 % table and the input data for figures.
-
 extractRandomForestsResultsMicrobiomes
 extractClassifyingFeaturesMicrobiomes
+exportFeatureDataForHeatmapMicrobiomes
+
+% Afterwards, the top stratifying features can be plotted using the R
+% script "plotTopFeaturesMicrobiome.R".
 
 %% Plotting of statistical analysis results for the 11 microbiome datasets
 % Extracts the results from statistical analyses and creates a summary
-% table and panels for Figure 5.
-
+% table and panels for Figure 6, and input for figures.
 plotStatisticalAnalysisResults
 extractSignificantData
 plotSignificantSubsystems
 extractStatisticalAnalysisResults
+
+% Afterwards, the most significant reaction abundances can be plotted using the R
+% script "plotSignificantReactionsMicrobiome.R".
+
+%% Plotting of statistically significant microbiome fluxes
+% Plots statistically significant metabolite fluxes predicted for
+% microbiome scenarios for Figure 7.
+plotMicrobiomeFluxes
+
