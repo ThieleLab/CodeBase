@@ -5,7 +5,7 @@
 clear all
 rootDir = pwd;
 
-infoFileAPOLLO = readInputTableForPipeline([rootDir filesep 'input' filesep 'Combined_taxonomy_info.xlsx']);
+infoFileAPOLLO = readInputTableForPipeline([rootDir filesep 'input' filesep 'Combined_taxonomy_info.txt']);
 infoFileAGORA2 = readInputTableForPipeline('AGORA2_infoFile.xlsx');
 
 mkdir([rootDir filesep 'results'])

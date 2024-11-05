@@ -4,7 +4,6 @@
 
 library(RColorBrewer)
 library(pheatmap)
-library(bigmemory)
 
 currPath <- dirname(rstudioapi::getSourceEditorContext()$path)
 setwd(currPath)

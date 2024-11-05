@@ -6,11 +6,9 @@ rootDir = pwd;
 
 infoFilePasolli = readInputTableForPipeline([rootDir filesep 'input' filesep 'Pasolli_genomes_taxonomy_info.txt']);
 infoFileAlmeida = readInputTableForPipeline([rootDir filesep 'input' filesep 'Almeida_genomes_taxonomy_info.txt']);
-infoFileAGORA2 = readInputTableForPipeline([rootDir filesep 'input' filesep 'AGORA2_infoFile.xlsx']);
+infoFileAGORA2 = readInputTableForPipeline('AGORA2_infoFile.xlsx');
 
 taxLevels = {'Phylum','Class','Order','Family','Genus','Species'};
-
-mkdir('plot_ModelStatistics')
 
 for i=1:length(taxLevels)
     overlap={'Almeida','Pasolli','AGORA2'};
@@ -33,14 +31,14 @@ for i=1:length(taxLevels)
     taxaAGORA2(strcmp(taxaAGORA2, '')) = [];
     overlap(2:length(taxaAGORA2)+1,3) = taxaAGORA2;
     % export overlap
-    writetable(cell2table(overlap),[rootDir filesep 'plot_ModelStatistics' filesep taxLevels{i} '_overlap.csv'],'writeVariableNames',false)
+    writetable(cell2table(overlap),[rootDir filesep 'results' filesep 'strains' filesep taxLevels{i} '_overlap.csv'],'writeVariableNames',false)
 end
 
 % afterwards, the plot is generated in https://bioinformatics.psb.ugent.be/webtools/Venn/
 
 % then get number of unique taxa
 
-infoFileAPOLLO = readInputTableForPipeline(['input' filesep 'Combined_taxonomy_info.xlsx']);
+infoFileAPOLLO = readInputTableForPipeline(['input' filesep 'Combined_taxonomy_info.txt']);
 
 taxStats={'','Almeida','Pasolli','APOLLO','AGORA2','APOLLO + AGORA2'};
 

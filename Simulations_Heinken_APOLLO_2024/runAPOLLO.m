@@ -29,7 +29,8 @@ runDemeter_Almeida
 getReconstructionStatistics
 % compute model properties for machine learning analysis
 computeModelProperties
-combineAllStrainData
+% compute core-and pan-reactome
+computeCorePanReactome
 
 %% Creation and interrogation of microbiome models
 % Personalized microbiome models will be created from relative strain-level 
@@ -66,7 +67,7 @@ mkdir([rootDir filesep 'results'])
 plotTaxonomicComposition
 getAPOLLOAGORA2Overlap
 
-%% plot various reconstruction statistics for Figure 2 and S1-3
+%% plot various reconstruction statistics for Figure 2 and S1-4
 analyseReconstructionStatistics
 getMetaboliteStatistics
 makeReconstructionSizeBoxplots
