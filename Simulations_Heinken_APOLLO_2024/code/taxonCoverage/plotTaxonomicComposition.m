@@ -8,9 +8,6 @@ rootDir = pwd;
 infoFileAPOLLO = readInputTableForPipeline([rootDir filesep 'input' filesep 'Combined_taxonomy_info.txt']);
 infoFileAGORA2 = readInputTableForPipeline('AGORA2_infoFile.xlsx');
 
-mkdir([rootDir filesep 'results'])
-mkdir([rootDir filesep 'results' filesep 'Computation_Figure_2'])
-
 taxCol=find(strcmp(infoFileAPOLLO(1,:),'Class'));
 [taxa, ~, J] = unique(infoFileAPOLLO(2:end,taxCol));
 cnt = histc(J, 1:numel(taxa));
@@ -83,5 +80,3 @@ legend(taxaNew,'Location','EastOutside')
 title('Class')
 set(gca, 'FontSize', 12)
 axis off
-
-print([rootDir filesep 'results' filesep 'Computation_Figure_2' filesep 'TaxonComposition_' 'Class'],'-dpng','-r300')

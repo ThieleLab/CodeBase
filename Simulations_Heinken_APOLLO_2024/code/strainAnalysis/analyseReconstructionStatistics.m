@@ -25,6 +25,7 @@ versions = {
     '_refined','refinedReconstructions'
     };
 
+mkdir([rootDir filesep 'results'])
 mkdir([rootDir filesep 'results' filesep 'strains'])
 mkdir([rootDir filesep 'results' filesep 'strains' filesep 'StatsByPhylum'])
 
