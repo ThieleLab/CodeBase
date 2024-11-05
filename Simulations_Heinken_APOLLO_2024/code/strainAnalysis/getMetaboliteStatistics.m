@@ -1,4 +1,7 @@
 
+clear all
+rootDir = pwd;
+
 % get statistics on the number of produced and secreted metabolites
 
 resources={

@@ -1,4 +1,7 @@
 
+clear all
+rootDir = pwd;
+
 % define path to microbe models
 mkdir([rootDir filesep 'Data' filesep 'BodySiteMicrobiomes'])
 mkdir(modPath)

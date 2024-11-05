@@ -1,5 +1,8 @@
 
+% plot core-and pan-reactome 
+
 clear all
+rootDir = pwd;
 
 loadedData = parquetread([rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'Pasolli_Almeida_parquet_files' filesep 'reactionPresence_combined_refined.parquet']);
 

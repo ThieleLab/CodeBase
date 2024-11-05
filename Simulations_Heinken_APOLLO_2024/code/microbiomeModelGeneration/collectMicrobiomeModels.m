@@ -1,5 +1,8 @@
 % collect all created models in one folder
 
+clear all
+rootDir = pwd;
+
 modPath = [rootDir filesep 'data' filesep 'GutMicrobiomes' filesep 'MicrobiomeModels'];
 mkdir(modPath)
 for i=1:14

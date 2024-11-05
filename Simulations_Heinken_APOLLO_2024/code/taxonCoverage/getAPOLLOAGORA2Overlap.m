@@ -1,4 +1,8 @@
+
 % get overlap in number of taxa between APOLLO/AGORA2
+
+clear all
+rootDir = pwd;
 
 infoFilePasolli = readInputTableForPipeline([rootDir filesep 'input' filesep 'Pasolli_genomes_taxonomy_info.txt']);
 infoFileAlmeida = readInputTableForPipeline([rootDir filesep 'input' filesep 'Almeida_genomes_taxonomy_info.txt']);

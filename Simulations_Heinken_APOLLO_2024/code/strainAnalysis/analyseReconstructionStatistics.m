@@ -1,4 +1,9 @@
 
+% create data for Figure 2
+
+clear all
+rootDir = pwd;
+
 %% export some statistics on taxa in the resource
 % get statistics for taxon presence
 taxa={'Phylum','Class','Order','Family','Genus'};
@@ -22,61 +27,6 @@ versions = {
 
 mkdir([rootDir filesep 'results' filesep 'strains'])
 mkdir([rootDir filesep 'results' filesep 'strains' filesep 'StatsByPhylum'])
-
-for p=1:size(resources,1)
-taxonomy = readInputTableForPipeline([rootDir filesep 'input' filesep resources{p,1} '_genomes_taxonomy_info.txt']);
-    taxonStats{2,p+1}=length(unique(taxonomy(2:end,1)));
-    for i=1:length(taxa)
-        taxCol=find(strcmp(taxonomy(1,:),taxa{i}));
-        getTax=unique(taxonomy(2:end,taxCol));
-        getTax(find(strncmp(getTax,'unclassified',length('unclassified'))),:)=[];
-        taxonStats{i+2,p+1}=length(getTax);
-    end
-    % get number of named species
-    taxCol=find(strcmp(taxonomy(1,:),'Species'));
-    getTax=unique(taxonomy(2:end,taxCol));
-    getTax(find(strncmp(getTax,'unclassified',length('unclassified'))),:)=[];
-    chrTax=getTax;
-    chrTax(find(strcmp(chrTax,'')),:)=[];
-    chrTax(find(contains(chrTax,'sp.')),:)=[];
-    chrTax(find(contains(chrTax,'nov.')),:)=[];
-    chrTax(find(contains(chrTax,'cf')),:)=[];
-    chrTax(find(contains(chrTax,'iales')),:)=[];
-    chrTax(find(contains(chrTax,'aceae')),:)=[];
-    chrTax(find(contains(chrTax,'uncultured')),:)=[];
-    chrTax(find(contains(chrTax,'taxon')),:)=[];
-    chrTax(find(strncmp(chrTax,'bacterium',9)),:)=[];
-    chrTax(find(contains(chrTax,' sp')),:)=[];
-    taxonStats{8,p+1}=length(chrTax);
-
-    %% separate the results by phylum
-    % define path to the taxonomy information
-    taxonomy = readInputTableForPipeline([rootDir filesep 'input' filesep resources{p,1} '_genomes_taxonomy_info.txt']);
-    [phyla,~,J]=unique(taxonomy(2:end,find(strcmp(taxonomy(1,:),'Phylum'))));
-    % remove the phyla with only few entries and unclassified bacteria
-    cnt = histc(J, 1:numel(phyla));
-    phyla(cnt<3)=[];
-    phyla(strncmp(phyla,'unclassified',length('unclassified')))=[];
-    phyla(strncmp(phyla,'Unclassified',length('Unclassified')))=[];
-    phyla(strncmp(phyla,'N/A',3))=[];
-    phyla(strcmp(phyla,''))=[];
-
-    % get the statistics by phylum
-    stats = readInputTableForPipeline(['All_statistics_' resources{p,1} '_refined.csv']);
-    for i=2:size(stats,2)
-        statsByPhylum={};
-        for j=1:length(phyla)
-            statsByPhylum{j,1}=phyla{j};
-            allbacs=taxonomy(find(strcmp(taxonomy(:,find(strcmp(taxonomy(1,:),'Phylum'))),phyla{j})),1);
-            for k=1:length(allbacs)
-                statsByPhylum{j,k+1}=stats{find(strcmp(stats(:,1),allbacs{k})),i};
-            end
-        end
-        statsByPhylum=flip(statsByPhylum);
-        statsByPhylum=statsByPhylum';
-        cell2csv([rootDir filesep 'results' filesep 'strains' filesep 'StatsByPhylum' filesep stats{1,i} '_' resources{p,1} '.csv'],statsByPhylum);
-    end
-end
 
 % get taxon stats for all reconstructions taken together
 taxonomyAll = readInputTableForPipeline([rootDir filesep 'input' filesep 'Combined_taxonomy_info.txt']);
@@ -122,12 +72,15 @@ table={'','Almeida','Pasolli','APOLLO','AGORA2'
     };
 
 % load data
-data_Pasolli = readInputTableForPipeline([rootDir filesep 'data' filesep 'plot_ModelStatistics' filesep 'All_statistics_' resources{1,1} '_refined.csv']);
+load([rootDir filesep 'data' filesep 'plot_ModelStatistics' filesep 'All_statistics_' resources{1,1} '_refined.mat']);
+data_Pasolli = stats;
 data_Pasolli(1,:) = [];
-data_Almeida = readInputTableForPipeline([rootDir filesep 'data' filesep 'plot_ModelStatistics' filesep 'All_statistics_' resources{2,1} '_refined.csv']);
+load([rootDir filesep 'data' filesep 'plot_ModelStatistics' filesep 'All_statistics_' resources{2,1} '_refined.mat']);
+data_Almeida = stats;
 data_Almeida(1,:) = [];
 data_combined=vertcat(data_Pasolli,data_Almeida(1:end,:));
-data_AGORA2 = readInputTableForPipeline([rootDir filesep 'data' filesep 'plot_ModelStatistics' filesep 'All_statistics_AGORA2.csv']);
+load([rootDir filesep 'data' filesep 'plot_ModelStatistics' filesep 'All_statistics_AGORA2.mat']);
+data_AGORA2 = stats;
 data_AGORA2(1,:) = [];
 data_Pasolli = cell2mat(data_Pasolli(:,2:end));
 data_Almeida = cell2mat(data_Almeida(:,2:end));
@@ -200,8 +153,8 @@ taxTable={'','Almeida','Pasolli','APOLLO','AGORA2'
 taxa={'Phylum','Class','Order','Family','Genus','Species'};
 
 infoFiles = {
-    [rootDir filesep 'Pasolli_genomes_taxonomy_info.txt']
-    [rootDir filesep 'Almeida_genomes_taxonomy_info.txt']
+    [rootDir filesep 'input' filesep 'Pasolli_genomes_taxonomy_info.txt']
+    [rootDir filesep 'input' filesep 'Almeida_genomes_taxonomy_info.txt']
     [rootDir filesep 'input' filesep 'Combined_taxonomy_info.txt']
     'AGORA2_infoFile.xlsx'
     };
@@ -232,7 +185,7 @@ for i=1:length(infoFiles)
 end
 cell2csv([rootDir filesep 'results' filesep 'strains' filesep 'Summary_TaxStats.csv'],table);
 
-%% separate the results by phylum
+%% separate the results by phylum for Figure 2g-h
 taxonomyAll = readInputTableForPipeline([rootDir filesep 'input' filesep 'Combined_taxonomy_info.txt']);
 
 [phyla,~,J]=unique(taxonomyAll(2:end,find(strcmp(taxonomyAll(1,:),'Phylum'))));
@@ -246,22 +199,27 @@ phyla(strcmp(phyla,''))=[];
 
 % get the statistics by phylum
 % load data
-data_Pasolli = readInputTableForPipeline(['All_statistics_' resources{1,1} '_refined.csv']);
-data_Almeida = readInputTableForPipeline(['All_statistics_' resources{2,1} '_refined.csv']);
-data_combined=vertcat(data_Pasolli,data_Almeida(2:end,:));
+load([rootDir filesep 'data' filesep 'plot_ModelStatistics' filesep 'All_statistics_' resources{1,1} '_refined.mat']);
+data_Pasolli = stats;
+load([rootDir filesep 'data' filesep 'plot_ModelStatistics' filesep 'All_statistics_' resources{2,1} '_refined.mat']);
+data_Almeida = stats;
+data_combined=vertcat(data_Pasolli,data_Almeida(1:end,:));
 
 for i=2:size(data_combined,2)
-    statsByPhylum={};
-    for j=1:length(phyla)
-        statsByPhylum{j,1}=phyla{j};
-        allbacs=taxonomyAll(find(strcmp(taxonomyAll(:,find(strcmp(taxonomyAll(1,:),'Phylum'))),phyla{j})),1);
-        for k=1:length(allbacs)
-            statsByPhylum{j,k+1}=data_combined{find(strcmp(data_combined(:,1),allbacs{k})),i};
+    if strcmp(data_combined{1,i},'Growth_aerobic_CM') || strcmp(data_combined{1,i},'Reactions')
+        statsByPhylum={};
+        for j=1:length(phyla)
+            statsByPhylum{j,1}=phyla{j};
+            allbacs=taxonomyAll(find(strcmp(taxonomyAll(:,find(strcmp(taxonomyAll(1,:),'Phylum'))),phyla{j})),1);
+            for k=1:length(allbacs)
+                statsByPhylum{j,k+1}=data_combined{find(strcmp(data_combined(:,1),allbacs{k})),i};
+            end
         end
+        statsByPhylum=flip(statsByPhylum);
+        statsByPhylum=statsByPhylum';
+        writetable(cell2table(statsByPhylum),[rootDir filesep 'results' filesep 'strains' filesep 'StatsByPhylum' filesep data_combined{1,i} '_combined.csv'],'writeVariableNames',false);
     end
-    statsByPhylum=flip(statsByPhylum);
-    statsByPhylum=statsByPhylum';
-    cell2csv([rootDir filesep 'results' filesep 'strains' filesep 'StatsByPhylum' filesep data_combined{1,i} '_combined.csv'],statsByPhylum);
 end
 
-cd(rootDir)
+% The plots can subsequently be generated by uploading the generated files
+% at http://shiny.chemgrid.org/boxplotr/.

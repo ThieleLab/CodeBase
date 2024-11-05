@@ -1,5 +1,9 @@
 
 % Get reconstruction statistics
+
+clear all
+rootDir = pwd;
+
 mkdir([rootDir filesep 'data' filesep 'plot_ModelStatistics'])
 cd([rootDir filesep 'data' filesep 'plot_ModelStatistics'])
 

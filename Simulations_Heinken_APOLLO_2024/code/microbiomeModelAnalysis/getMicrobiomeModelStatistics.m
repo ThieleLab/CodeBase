@@ -1,12 +1,15 @@
 
 % get the statistics of all microbiome models
 
+clear all
+rootDir = pwd;
+
 mkdir([rootDir filesep 'results' filesep 'microbiomes'])
 
-statistics = readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Combined_data' filesep 'ModelStatisticsCombined.csv']);
+statistics = readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Combined_data' filesep 'ModelStatistics.csv']);
 statistics{1,4} = 'Microbes';
 
-normCoverage = readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Combined_data' filesep 'normalizedAbundanceCombined.csv']);
+normCoverage = readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Combined_data' filesep 'normalizedAbundance.csv']);
 
 for i=2:size(normCoverage,2)
     findMod = find(strcmp(statistics(:,1),normCoverage{1,i}));

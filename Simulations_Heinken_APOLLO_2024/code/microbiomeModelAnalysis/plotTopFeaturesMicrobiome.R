@@ -11,7 +11,7 @@ setwd(currPath)
 setwd("..")
 setwd("..")
 
-dir.create("Heatmaps")
+dir.create("results/heatmaps")
 
 ## define the data sets to loop through
 
@@ -81,7 +81,7 @@ for (i in 1:length(scenarios)) {
         Stratification=infoReduced.cols,
         Subsystem=subsReduced.cols
       ) 
-      imagePath =  paste("Heatmaps/TopFeatures_",datasets[j],scenarios[i],".png",sep="")
+      imagePath =  paste("results/heatmaps/TopFeatures_",datasets[j],scenarios[i],".png",sep="")
       if (nrow(x) > 51) {
         png(imagePath, width = 14, height = 16, units = 'in', res = 300)
         pheatmap(x,
@@ -127,7 +127,7 @@ for (i in 1:length(scenarios)) {
       }
       else
       if (nrow(x) > 3) {
-      imagePath =  paste("Heatmaps/TopFeatures_",datasets[j],scenarios[i],".png",sep="")
+      imagePath =  paste("results/heatmaps/TopFeatures_",datasets[j],scenarios[i],".png",sep="")
       png(imagePath, width = 12, height = 8, units = 'in', res = 300)
       pheatmap(x,
                 scale="row",

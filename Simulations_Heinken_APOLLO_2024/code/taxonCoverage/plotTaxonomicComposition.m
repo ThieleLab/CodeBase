@@ -2,6 +2,9 @@
 % create pie charts/donut charts of taxonomic composition of
 % APOLLO/AGORA2
 
+clear all
+rootDir = pwd;
+
 infoFileAPOLLO = readInputTableForPipeline([rootDir filesep 'input' filesep 'Combined_taxonomy_info.xlsx']);
 infoFileAGORA2 = readInputTableForPipeline('AGORA2_infoFile.xlsx');
 

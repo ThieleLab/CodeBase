@@ -1,5 +1,8 @@
 
-%% combine the microbiome model datasets from body sites and gut into one file
+% combine the microbiome model datasets from body sites and gut into one file
+
+clear all
+rootDir = pwd;
 
 mkdir([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels'])
 
@@ -37,7 +40,7 @@ for i=1:length(filePaths)
     end
 end
 stats(:,1)=strrep(stats(:,1),',',' ');
-writetable(cell2table(stats),[rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'ModelStatistics.csv'],'writeVariableNames',false)
+writetable(cell2table(stats),[rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Combined_data' filesep 'ModelStatistics.csv'],'writeVariableNames',false)
 
 % combine reaction abundances
 reactions={''};
@@ -64,12 +67,12 @@ reactions(:,1)=strrep(reactions(:,1),',',' ');
 % remove biomass objective functions
 bio=find(strncmp(reactions(:,1),'bio',3));
 reactions(bio,:)=[];
-writetable(cell2table(reactions),[rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'ReactionAbundance.csv'],'writeVariableNames',false)
+writetable(cell2table(reactions),[rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Combined_data' filesep 'ReactionAbundance.csv'],'writeVariableNames',false)
 
 % calculate the combined subsystem abundance
 subsystemAbundance = calculateSubsystemAbundance([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'ReactionAbundance.csv']);
 subsystemAbundance(:,1)=strrep(subsystemAbundance(:,1),',',' ');
-writetable(cell2table(subsystemAbundance),[rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'SubsystemAbundance.csv'],'writeVariableNames',false)
+writetable(cell2table(subsystemAbundance),[rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Combined_data' filesep 'SubsystemAbundance.csv'],'writeVariableNames',false)
 
 % calculate reaction presence
 reactions=readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'ReactionAbundance.csv']);
@@ -85,7 +88,7 @@ for i=2:size(reactions,1)
         end
     end
 end
-writetable(cell2table(reactions),[rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'ReactionPresence.csv'],'writeVariableNames',false)
+writetable(cell2table(reactions),[rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Combined_data' filesep 'ReactionPresence.csv'],'writeVariableNames',false)
 
 % combine organism abundances
 
@@ -116,5 +119,5 @@ for i=1:length(filePaths)
         cnt=cnt+1;
     end
 end
-writetable(cell2table(abundance),[rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'normalizedAbundance.csv'],'writeVariableNames',false)
+writetable(cell2table(abundance),[rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Combined_data' filesep 'normalizedAbundance.csv'],'writeVariableNames',false)
 

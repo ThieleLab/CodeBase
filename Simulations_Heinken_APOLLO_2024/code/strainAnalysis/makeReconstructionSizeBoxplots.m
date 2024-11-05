@@ -1,6 +1,9 @@
 
 % make boxplots with reaction and metabolite numbers for Figure 2b
 
+clear all
+rootDir = pwd;
+
 resources={
     'All_statistics_Pasolli_refined.mat','Pasolli'
     'All_statistics_Almeida_refined.mat','Almeida'

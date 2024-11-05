@@ -1,5 +1,9 @@
+
 % combine model properties for Pasolli and Almeida reconstructions into one
 % file
+
+clear all
+rootDir = pwd;
 
 mkdir([rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'CombinedProperties' filesep 'ReactionMetabolitePresence'])
 mkdir([rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'CombinedProperties' filesep 'ComputedFluxes'])

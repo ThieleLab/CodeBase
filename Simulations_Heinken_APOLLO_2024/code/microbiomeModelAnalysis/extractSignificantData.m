@@ -1,8 +1,11 @@
 
 % plot significant reactions in microbiome scenarios by subsystem
 
-mkdir([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Summary_for_figures'])
-mkdir([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Summary_for_figures' filesep 'SignificantData'])
+clear all
+rootDir = pwd;
+
+mkdir([rootDir filesep 'results' filesep 'microbiomes' filesep 'Summary_for_figures'])
+mkdir([rootDir filesep 'results' filesep 'microbiomes' filesep 'Summary_for_figures' filesep 'SignificantData'])
 
 defineScenarios
 
@@ -14,7 +17,7 @@ stats = {
 
 results = {
     'Reaction_abundance_'
-    'Reactions_presence_'
+    'Reaction_presence_'
     'Subsystem_abundance_'
     };
 

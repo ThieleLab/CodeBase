@@ -1,3 +1,7 @@
+
+clear all
+rootDir = pwd;
+
 % initialize the COBRA Toolbox and solvers
 initCobraToolbox
 solverOK=changeCobraSolver('ibm_cplex','LP');

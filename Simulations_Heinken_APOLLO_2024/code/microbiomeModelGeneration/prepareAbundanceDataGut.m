@@ -1,4 +1,7 @@
 
+clear all
+rootDir = pwd;
+
 mkdir([rootDir filesep 'data' filesep 'GutMicrobiomes'])
 mkdir(modPath)
 

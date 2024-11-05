@@ -6,8 +6,7 @@
 % simulations is extremely time-consuming (multiple weeks to months). Hence, the raw 
 % simulation data will be provided to enable reproducing the analyses.
 
-addpath('Scripts')
-rootDir = pwd;
+addpath(genpath('code'))
 
 %% MODEL BUILDING AND DATA GENERATION %%
 % Run the following scripts to reproduce simulations (time-consuming)
@@ -30,6 +29,7 @@ runDemeter_Almeida
 getReconstructionStatistics
 % compute model properties for machine learning analysis
 computeModelProperties
+combineAllStrainData
 
 %% Creation and interrogation of microbiome models
 % Personalized microbiome models will be created from relative strain-level 
@@ -67,7 +67,6 @@ plotTaxonomicComposition
 getAPOLLOAGORA2Overlap
 
 %% plot various reconstruction statistics for Figure 2 and S1-3
-combineAllStrainData
 analyseReconstructionStatistics
 getMetaboliteStatistics
 makeReconstructionSizeBoxplots
@@ -76,32 +75,32 @@ getUniqueReactionsMetabolites
 
 %% Results from the machine learning classifier on strain level
 % Extracts the results form the machine learning classifier on the
-% strain-level reconstruction data. Creates a summary table and the input
-% data for the panels in Figure 3.
-extractRandomForestsResultsStrains
-extractClassifyingFeatures
+% strain-level reconstruction data. Creates Table 1 and Table S6.
+create_Table_1
+create_Table_S6
 
 %% Extraction of properties for microbiome models
 getMicrobiomeModelStatistics
 
 %% Results from the machine learning classifier on microbiome level
 % Extracts the results from the machine learning classifier on the
-% personalised microbiome modeling reconstruction data. Creates a summary 
-% table and the input data for figures.
-extractRandomForestsResultsMicrobiomes
-extractClassifyingFeaturesMicrobiomes
-exportFeatureDataForHeatmapMicrobiomes
+% personalised microbiome modeling reconstruction data. Creates Table 2 and
+% Table S10. Also exports the top stratifying features to be plotted as a
+% heatmap.
+create_Table_2
+create_Table_S10
+exportFeatureDataForHeatmap
 
 % Afterwards, the top stratifying features can be plotted using the R
 % script "plotTopFeaturesMicrobiome.R".
 
-%% Plotting of statistical analysis results for the 11 microbiome datasets
+%% Plotting of statistical analysis results for the 11 microbiome scenarios
 % Extracts the results from statistical analyses and creates a summary
 % table and panels for Figure 6, and input for figures.
-plotStatisticalAnalysisResults
+createTable_StatisticalAnalysisResults
 extractSignificantData
 plotSignificantSubsystems
-extractStatisticalAnalysisResults
+create_Table_S11
 
 % Afterwards, the most significant reaction abundances can be plotted using the R
 % script "plotSignificantReactionsMicrobiome.R".
@@ -110,4 +109,3 @@ extractStatisticalAnalysisResults
 % Plots statistically significant metabolite fluxes predicted for
 % microbiome scenarios for Figure 7.
 plotMicrobiomeFluxes
-
