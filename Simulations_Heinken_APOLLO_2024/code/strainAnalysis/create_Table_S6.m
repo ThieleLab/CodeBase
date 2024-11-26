@@ -1,5 +1,8 @@
 
-% extract classifying features for Table 1
+% extract classifying features for Table S6
+
+clear all
+rootDir = pwd;
 
 table = {};
 cnt=1;
@@ -7,17 +10,17 @@ cnt=1;
 % define the three types of data
 datatypes={
     'Internal metabolite production','internal_production'
-    'Reaction presence','reaction'
     'Metabolite uptake and secretion','uptake_secretion'
+    'Reaction presence','reaction'
     };
 
 % define the different datasets to extract
 datasets={
-    'Almeida',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'refinedModelProperties_Almeida' filesep 'Almeida_rf_analysis_latest'];
-    'Pasolli',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'refinedModelProperties_Pasolli' filesep 'Pasolli_rf_analysis_latest'];
-    'Almeida on Pasolli',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'refinedModelProperties_Almeida' filesep 'Almeida_on_Pasolli_latest'];
-    'Pasolli on Almeida',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'refinedModelProperties_Pasolli' filesep 'Pasolli_on_Almeida_latest'];
-    'All strains',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'Pasolli_Almeida_combined'];
+    'Pasolli',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'RandomForests_Results' filesep 'Pasolli'];
+    'Almeida',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'RandomForests_Results' filesep 'Almeida'];
+    'All strains',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'RandomForests_Results' filesep 'Pasolli_Almeida_combined'];
+    'Pasolli on Almeida',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'RandomForests_Results' filesep 'Pasolli_on_Almeida'];
+    'Almeida on Pasolli',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'RandomForests_Results' filesep 'Almeida_on_Pasolli'];
     };
 
 for i=1:size(datatypes,1)
@@ -47,8 +50,8 @@ for i=1:size(datatypes,1)
                 cnt=cnt+2;
             end
         end
-        cd(currentDir)
+        cd(rootDir)
     end
 end
-writetable(cell2table(table),[rootDir filesep 'results' filesep 'strains' filesep 'Table_1_Feature_Summary.csv'],'WriteVariableNames',false);
+writetable(cell2table(table),[rootDir filesep 'results' filesep 'strains' filesep 'Table_S6.csv'],'WriteVariableNames',false);
 

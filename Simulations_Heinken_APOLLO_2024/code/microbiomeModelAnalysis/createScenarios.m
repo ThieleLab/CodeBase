@@ -14,7 +14,8 @@ cd([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Scenario
 for i=1:length(scenarios)
     mkdir(scenarios{i})
     cd(scenarios{i})
-    members = unique(scenarioDefinition(2:end,i));
+    findCol = find(strcmp(scenarioDefinition(1,:),scenarios{i}));
+    members = unique(scenarioDefinition(2:end,findCol));
     metadataRed = metadata;
     [C,I] = setdiff(metadataRed(:,1),members,'stable');
     metadataRed(I(2:end),:)=[];

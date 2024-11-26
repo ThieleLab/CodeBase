@@ -4,14 +4,13 @@
 
 library(RColorBrewer)
 library(pheatmap)
-library(bigmemory)
 
 currPath <- dirname(rstudioapi::getSourceEditorContext()$path)
 setwd(currPath)
 setwd("..")
 setwd("..")
 
-dir.create("Heatmaps")
+dir.create("results/heatmaps")
 
 ## define the scenarios to loop through
 
@@ -32,7 +31,7 @@ scenarios <-
 
 datasets <-
   c("Reaction_abundance_",
-    "Reactions_presence_",
+    "Reaction_presence_",
     "Subsystem_abundance_")
 
 for (i in 1:length(scenarios)) {
@@ -91,7 +90,7 @@ for (i in 1:length(scenarios)) {
     dataFile = paste(
       "results/microbiomes/Summary_for_figures/SignificantData/",
       datasets[j],
-      subsets[i],
+      scenarios[i],
       ".csv",
       sep = ""
     )
@@ -148,9 +147,9 @@ for (i in 1:length(scenarios)) {
         ann_colors = list(Stratification = infoReduced.cols,
                           Subsystem_general = subsReduced.cols)
         imagePath =  paste(
-          "Heatmaps/SignificantFeatures_",
+          "results/heatmaps/SignificantFeatures_",
           datasets[j],
-          subsets[i],
+          scenarios[i],
           ".png",
           sep = ""
         )
@@ -192,9 +191,9 @@ for (i in 1:length(scenarios)) {
                           Subsystem_general = subsReduced.cols)
         
         imagePath =  paste(
-          "Heatmaps/SignificantFeatures_",
+          "results/heatmaps/SignificantFeatures_",
           datasets[j],
-          subsets[i],
+          scenarios[i],
           ".png",
           sep = ""
         )
@@ -230,9 +229,9 @@ for (i in 1:length(scenarios)) {
         ann_colors = list(Stratification = infoReduced.cols)
         
         imagePath =  paste(
-          "Heatmaps/SignificantFeatures_",
+          "results/heatmaps/SignificantFeatures_",
           datasets[j],
-          subsets[i],
+          scenarios[i],
           ".png",
           sep = ""
         )

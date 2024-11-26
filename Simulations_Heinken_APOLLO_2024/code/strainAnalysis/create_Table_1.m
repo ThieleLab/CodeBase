@@ -2,21 +2,23 @@
 % extract the results from random forests classifiers and summarize in a
 % table
 
+clear all
+rootDir = pwd;
+
 % define the three types of data
 datatypes={
-    'All data combined','all_data'
     'Internal metabolite production','internal_production'
-    'Reaction presence','reaction'
     'Metabolite uptake and secretion','uptake_secretion'
+    'Reaction presence','reaction'
     };
 
 % define the different datasets to extract
 datasets={
-    'Almeida',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'refinedModelProperties_Almeida' filesep 'Almeida_rf_analysis_latest'];
-    'Pasolli',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'refinedModelProperties_Pasolli' filesep 'Pasolli_rf_analysis_latest'];
-    'Almeida on Pasolli',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'refinedModelProperties_Almeida' filesep 'Almeida_on_Pasolli_latest'];
-    'Pasolli on Almeida',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'refinedModelProperties_Pasolli' filesep 'Pasolli_on_Almeida_latest'];
-    'All strains',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'Pasolli_Almeida_combined'];
+    'Pasolli',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'MachineLearning_Results' filesep 'Pasolli'];
+    'Almeida',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'MachineLearning_Results' filesep 'Almeida'];
+    'All strains',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'MachineLearning_Results' filesep 'Pasolli_Almeida_combined'];
+    'Pasolli on Almeida',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'MachineLearning_Results' filesep 'Pasolli_on_Almeida'];
+    'Almeida on Pasolli',[rootDir filesep 'data' filesep 'analysis_ModelProperties' filesep 'MachineLearning_Results' filesep 'Almeida_on_Pasolli'];
     };
 
 % define the files with the results
@@ -30,14 +32,14 @@ files={
 %% extract a table summarizing the predictive scores of each analysis
 % prepare the table
 scoreTable = {
-    '','Model metrics, all features','','','','','','Model metrics, reduced features','','','','',''
-    'Dataset','Phylum','Class','Order','Family','Genus','Species','Phylum','Class','Order','Family','Genus','Species'
+    '','Model metrics, reduced features','','','','',''
+    'Dataset','Phylum','Class','Order','Family','Genus','Species'
     };
 cnt=3;
 
-for i=1:size(datatypes,1)
-    % first get all features in each data type analysis
-    for j=1:size(datasets,1)
+for j=1:size(datasets,1)
+    for i=1:size(datatypes,1)
+        % first get all features in each data type analysis
         % navigate to the folders
         cd(datasets{j,2})
         % get the content of the folder
@@ -59,17 +61,6 @@ for i=1:size(datatypes,1)
             for k=2:7
                 getFolder=find(strcmp(folders,scoreTable{2,k}));
                 data=readInputTableForPipeline([folders{getFolder} filesep 'summary.txt']);
-                mmAllFeat = find(strcmp(data(:,1),'Model Metrics w/ all features'));
-                scoreTable{cnt,k} = strrep(data{mmAllFeat(1)+3,1},'Accuracy: ','');
-                scoreTable{cnt,k} = round(str2double(scoreTable{cnt,k}),2,'significant');
-                scoreTable{cnt,k} = num2str(scoreTable{cnt,k});
-                if strcmp(scoreTable{cnt,k},'1')
-                    scoreTable{cnt,k} = '>0.99';
-                end
-            end
-            for k=8:13
-                getFolder=find(strcmp(folders,scoreTable{2,k}));
-                data=readInputTableForPipeline([folders{getFolder} filesep 'summary.txt']);
                 mmRedFeat = find(strcmp(data(:,1),'Model Metrics Final'));
                 scoreTable{cnt,k} = strrep(data{mmRedFeat(1)+4,1},'Accuracy: ','');
                 scoreTable{cnt,k} = round(str2double(scoreTable{cnt,k}),2,'significant');
@@ -82,7 +73,7 @@ for i=1:size(datatypes,1)
             end
             cnt=cnt+1;
         end
-        cd(currentDir)
+        cd(rootDir)
     end
 end
-writetable(cell2table(scoreTable),[rootDir filesep 'results' filesep 'strains' filesep 'PredictionScoresCombined.csv'],'writeVariableNames',false)
+writetable(cell2table(scoreTable),[rootDir filesep 'results' filesep 'strains' filesep 'Table_1.csv'],'writeVariableNames',false)

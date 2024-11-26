@@ -2,6 +2,9 @@
 % plot significant reactions in microbiome scenarios by subsystem
 % by importing the resulting tables into Circos.
 
+clear all
+rootDir = pwd;
+
 defineScenarios
 
 stats = {

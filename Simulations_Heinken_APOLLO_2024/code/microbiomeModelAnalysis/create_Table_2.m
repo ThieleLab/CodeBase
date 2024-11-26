@@ -1,6 +1,9 @@
 % extract the results from random forests classifiers and summarize in a
 % table
 
+clear all
+rootDir = pwd;
+
 % define the four types of data
 datatypes={
     'Strain-level abundance','Organism Abundance'
@@ -15,17 +18,17 @@ defineScenarios
 
 % define the four types of data
 % prepare the table
-scoreTable = {'Dataset',''};
+scoreTable = {'Scenario',''};
 cnt=2;
 
 for i=1:size(datatypes,1)
     scoreTable{1,cnt} = datatypes{i};
 
-    for j=1:size(datasets,1)
+    for j=1:size(scenarios,1)
           % get the summary file from each analysis
         % then fill out the table with the relevant data
-        scoreTable{j+1,1} = datasets{j,1};
-        data=readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Subgroup_analysis' filesep 'RF_Results' filesep datasets{j,1} filesep 'summary.txt']);
+        scoreTable{j+1,1} = scenarios{j,1};
+        data=readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'MachineLearning_Results' filesep scenarios{j,1} filesep 'summary.txt']);
         feat = find(strcmp(data(:,1),'Model Metrics Final'));
         % cut off data above the final score
         data(1:feat(end),:) = [];
@@ -42,4 +45,4 @@ for i=1:size(datatypes,1)
     end
     cnt=cnt+1;
 end
-writetable(cell2table(scoreTable),[rootDir filesep 'results' filesep 'microbiomes' filesep 'PredictionScoresCombined.csv'],'writeVariableNames',false)
+writetable(cell2table(scoreTable),[rootDir filesep 'results' filesep 'microbiomes' filesep 'Table_2.csv'],'writeVariableNames',false)

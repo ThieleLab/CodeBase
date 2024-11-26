@@ -4,18 +4,17 @@
 
 library(RColorBrewer)
 library(pheatmap)
-library(bigmemory)
 
 currPath <- dirname(rstudioapi::getSourceEditorContext()$path)
 setwd(currPath)
 setwd("..")
 setwd("..")
 
-dir.create("Heatmaps")
+dir.create("results/heatmaps")
 
 ## define the data sets to loop through
 
-scenarios <- c("Adults_body_sites_healthy","Adults_healthy_by_country","Adults_vs_infants_healthy","IBD_vs_healthy","Infants_premature_vs_healthy","Infants_undernourished_vs_healthy","Infection_antibiotics_vs_no_antibiotics","Infection_resistant_vs_susceptible","Infection_vs_healthy","Obesity_vs_normalweight","PD_vs_healthy","T2D_vs_healthy")
+scenarios <- c("Adults_body_sites_healthy","Adults_healthy_by_country","Adults_vs_infants_healthy","IBD_vs_healthy","Infants_premature_vs_healthy","Infants_undernourished_vs_healthy","Infection_antibiotics_vs_no_antibiotics","Infection_vs_healthy","Obesity_vs_normalweight","PD_vs_healthy","T2D_vs_healthy")
 
 datasets <- c("Reaction_abundance_")
 
@@ -32,9 +31,6 @@ for (i in 1:length(scenarios)) {
   }
   else if (i==7) {
     info=read.csv(infoPath,header=T,row.names=1, check.names =FALSE)[c("Antibiotics")]
-  }
-  else if (i==8) {
-    info=read.csv(infoPath,header=T,row.names=1, check.names =FALSE)[c("Stratification")]
   }
   else {
     info=read.csv(infoPath,header=T,row.names=1, check.names =FALSE)[c("Disease name")]
@@ -81,7 +77,7 @@ for (i in 1:length(scenarios)) {
         Stratification=infoReduced.cols,
         Subsystem=subsReduced.cols
       ) 
-      imagePath =  paste("Heatmaps/TopFeatures_",datasets[j],scenarios[i],".png",sep="")
+      imagePath =  paste("results/heatmaps/TopFeatures_",datasets[j],scenarios[i],".png",sep="")
       if (nrow(x) > 51) {
         png(imagePath, width = 14, height = 16, units = 'in', res = 300)
         pheatmap(x,
@@ -127,7 +123,7 @@ for (i in 1:length(scenarios)) {
       }
       else
       if (nrow(x) > 3) {
-      imagePath =  paste("Heatmaps/TopFeatures_",datasets[j],scenarios[i],".png",sep="")
+      imagePath =  paste("results/heatmaps/TopFeatures_",datasets[j],scenarios[i],".png",sep="")
       png(imagePath, width = 12, height = 8, units = 'in', res = 300)
       pheatmap(x,
                 scale="row",

@@ -1,5 +1,9 @@
 
-% extract the results from statistical analysis for microbiome models
+% extract the results from statistical analysis for microbiome models for
+% Table S11a-d
+
+clear all
+rootDir = pwd;
 
 mkdir([rootDir filesep 'results' filesep 'microbiomes' filesep 'Statistical_results'])
 
@@ -19,14 +23,14 @@ stats = {
     '_stat_flux.csv'
     };
 
-mkdir('Statistical_results')
+mkdir([rootDir filesep 'results' filesep 'microbiomes' filesep 'Statistical_results'])
 
 % create a summary table
 for i=1:length(stats)
     if i<4
         feats = {};
-        for j=1:length(datasets)
-            statResults = readInputTableForPipeline(['analysis_MicrobiomeModels' filesep 'Scenarios' filesep datasets{j} filesep datasets{j} stats{i}]);
+        for j=1:length(scenarios)
+            statResults = readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Scenarios' filesep scenarios{j} filesep scenarios{j} stats{i}]);
             feats = union(feats,statResults(2:end,1));
         end
         if i<3
@@ -38,12 +42,12 @@ for i=1:length(stats)
         end
         table(2:length(feats)+1,1)=feats;
 
-        for j=1:length(datasets)
-            statResults = readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Scenarios' filesep datasets{j} filesep datasets{j} stats{i}]);
-            table{1,cnt+1} = ['Skewness ' datasets{j}];
-            table{1,cnt+2} = ['Kurtosis ' datasets{j}];
-            table{1,cnt+3} = ['p-value ' datasets{j}];
-            table{1,cnt+4} = ['After FDR correction ' datasets{j}];
+        for j=1:length(scenarios)
+            statResults = readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Scenarios' filesep scenarios{j} filesep scenarios{j} stats{i}]);
+            table{1,cnt+1} = ['Skewness ' scenarios{j}];
+            table{1,cnt+2} = ['Kurtosis ' scenarios{j}];
+            table{1,cnt+3} = ['p-value ' scenarios{j}];
+            table{1,cnt+4} = ['After FDR correction ' scenarios{j}];
             for k=2:size(statResults,1)
                 findRxn = find(strcmp(table(:,1),statResults{k,1}));
                 table{findRxn,2} = statResults{k,2};
@@ -71,7 +75,7 @@ for i=1:length(stats)
             table{1,cnt+1} = ['Skewness ' fluxSubsets{j}];
             table{1,cnt+2} = ['Kurtosis ' fluxSubsets{j}];
             table{1,cnt+3} = ['p-value ' fluxSubsets{j}];
-            table{1,cnt+4} = ['After FDR correction ' fluxSubsets {j}];
+            table{1,cnt+4} = ['After FDR correction ' fluxSubsets{j}];
             for k=2:size(statResults,1)
                 findRxn = find(strcmp(table(:,1),statResults{k,1}));
                 table{findRxn,2} = statResults{k,2};

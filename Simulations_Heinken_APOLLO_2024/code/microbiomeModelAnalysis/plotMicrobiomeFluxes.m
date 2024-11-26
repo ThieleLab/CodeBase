@@ -1,4 +1,10 @@
 
+% plot predicted produced metabolites by microbiomes that were
+% significantly different between groups for Figure 7 and Figure S29
+
+clear all
+rootDir = pwd;
+
 metNames = {'EX_ac[fe]','Acetate';'EX_ppa[fe]','Propionate';'EX_but[fe]','Butyrate';'EX_isobut[fe]','Isobutyrate';'EX_isoval[fe]','Isovalerate';'EX_lac_D[fe]','D-lactate';'EX_lac_L[fe]','L-lactate';'EX_for[fe]','Formate';'EX_etoh[fe]','Ethanol';'EX_h2s[fe]','Hydrogen sulfide';'EX_tma[fe]','Trimethylamine';'EX_phe_L[fe]','Phenylalanine';'EX_tyr_L[fe]','Tyrosine';'EX_trp_L[fe]','Tryptophan';'EX_dopa[fe]','Dopamine';'EX_taur[fe]','Taurine';'EX_hcys_L[fe]','Homocysteine';'EX_pcresol[fe]','p-cresol';'EX_ind3ac[fe]','Indoleacetate';'EX_indole[fe]','Indole';'EX_4abut[fe]','GABA';'EX_leu_L[fe]','Leucine';'EX_ile_L[fe]','Isoleucine';'EX_val_L[fe]','Valine';'EX_cholate[fe]','Cholate';'EX_dchac[fe]','Deoxycholate';'EX_HC02191[fe]','Lithocholate';'EX_HC02194[fe]','Ursodeoxycholate';'EX_12dhchol[fe]','12-dehydrocholate';'EX_7ocholate[fe]','7-dehydrocholate'};
 
 mkdir([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Summary_for_figures' filesep 'FluxPlots'])
@@ -12,11 +18,11 @@ scenarios={
 
 % create boxplots for fluxes where it applies
 
-for d=1:length(datasets)
-    fluxes = readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep scenarios{d} filesep 'Objectives.txt']);
+for d=1:length(scenarios)
+    fluxes = readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Scenarios' filesep scenarios{d} filesep 'Objectives_AED.txt']);
     fluxes(1,:) = strrep(fluxes(1,:),'microbiota_model_samp_','');
     % remove nonsignificant fluxes
-    statResults = readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep scenarios{d} filesep scenarios{d} '_stat_flux.csv']);
+    statResults = readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Scenarios' filesep scenarios{d} filesep scenarios{d} '_stat_flux.csv']);
     statResults(1,:) = [];
     findNS = find(cell2mat(statResults(:,end))>=0.05);
     statResults(findNS,:) = [];
@@ -38,9 +44,8 @@ for d=1:length(datasets)
             fluxes(J(14:end),:) = [];
         end
 
-    samples = readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep scenarios{d} filesep datasets{d} filesep datasets{d} '_samples.csv']);
+    samples = readInputTableForPipeline([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'Scenarios' filesep scenarios{d} filesep scenarios{d} '_samples.csv']);
     stratCol = find(strcmp(samples(1,:),'Disease name'));
-    samples(:,stratCol) = strrep(samples(:,stratCol),'Parkinson','PD');
     if d==1
         stratGroups = {'Healthy','CD','UC'};
         cols = [1 1 0

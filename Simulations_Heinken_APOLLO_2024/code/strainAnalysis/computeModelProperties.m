@@ -1,5 +1,8 @@
 
-%% compute model properties for APOLLO
+% compute model properties for APOLLO
+
+clear all
+rootDir = pwd;
 
 % initialize the COBRA Toolbox and solvers
 initCobraToolbox

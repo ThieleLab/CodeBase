@@ -1,5 +1,5 @@
 
-% extract classifying features for microbiomes for Table 2
+% extract classifying features for microbiomes for Table S10
 table = {};
 cnt=1;
 
@@ -7,7 +7,7 @@ cnt=1;
 datatypes={
     'Organism abundance_','organism_abundance','Organism_abundance_'
     'Reaction abundance_','reaction_abundance','Reaction_abundance_'
-    'Reaction presence','reaction_presence','Reactions_presence_'
+    'Reaction presence','reaction_presence','Reaction_presence_'
     'Subsystem abundance','subsystem_abundance','Subsystem_abundance_'
     };
 
@@ -30,7 +30,7 @@ for i=1:length(scenarios)
         end
         
         % read the data and the main classifying features
-        feats = table2cell(readtable([rootDir filesep 'data' filesep 'RF_Results_Microbiome' filesep scenarios{i} filesep 'feature_importance' filesep 'final_feature_importance_' datatypes{j,2} '.csv']));
+        feats = table2cell(readtable([rootDir filesep 'data' filesep 'analysis_MicrobiomeModels' filesep 'MachineLearning_Results' filesep scenarios{i} filesep 'feature_importance' filesep 'final_feature_importance_' datatypes{j,2} '.csv']));
         if size(feats,2)>2
             % work around for tables not read properly
             for k=1:size(feats,1)
@@ -54,4 +54,4 @@ for i=1:length(scenarios)
     end
 end
 
-writetable(cell2table(table),[rootDir filesep 'results' filesep 'microbiomes' filesep 'Table_2_Feature_Summary.csv'],'WriteVariableNames',false);
+writetable(cell2table(table),[rootDir filesep 'results' filesep 'microbiomes' filesep 'Table_S10_Feature_Summary.csv'],'WriteVariableNames',false);

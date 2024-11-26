@@ -1,4 +1,7 @@
 
+clear all
+rootDir = pwd;
+
 % normalize abundance data
 files={
     [rootDir filesep 'input' filesep 'nasal_cavity_abundances.csv'];

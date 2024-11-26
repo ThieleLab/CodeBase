@@ -4,8 +4,8 @@
 scenarios={
     'Adults_body_sites_healthy' % nasal cavity, skin, and vagina samples
     'Adults_healthy_by_country' % healthy adult gut microbiomes where the country is known
-    'Adults_vs_infants_healthy' % all healthy adults and infants
     'IBD_vs_healthy' % from PMID:24629344
+    'Adults_vs_infants_healthy' % all healthy adults and infants
     'Infants_premature_vs_healthy' % all healthy and premature infants
     'Infants_undernourished_vs_healthy' % undernourished and normal infants from Bangladesh
     'Infection_antibiotics_vs_no_antibiotics' % Cholera study, no REF
