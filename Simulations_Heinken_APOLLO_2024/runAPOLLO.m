@@ -61,6 +61,12 @@ analyseMicrobiomes
 %% DATA ANALYSIS %%
 % Run the following scripts to analyse the raw simulation data
 
+% Please download the data to reproduce the results from the following
+% link:
+% https://dataverse.harvard.edu/file.xhtml?fileId=10731563&version=1.0
+% Please the zip file in the present folder.
+unzip('data_APOLLO')
+
 mkdir([rootDir filesep 'results'])
 
 %% Retrieval of taxonomic distribution for Figure 2
