@@ -1,0 +1,1766 @@
+---
+title: "Analysis pipeline for article: In silico Modelling links microbiome-derived metabolites to risk factors for Alzheimer’s disease"
+output:
+  html_document:
+    df_print: paged
+---
+
+Before running this script, make sure that following files are in the *inputs* folder:
+
+All inputs with an (\*) are not included in the github repository, but are available through a request to Erasmus University, Dr. Arfan Ikram.
+
+**metadata.csv \***\
+This file contains all samples metadata, including age in years, APOE genotype information, and cognitive test scores.
+
+**microbiome_annotations.csv\
+**This file contains the microbial species names present in the microbiomes
+
+**microbiome_abundances_and_taxonomy.csv \*\
+**This file contains the gut microbial read counts and associated taxonomies.
+
+**MARS_species.csv \***\
+This file is generated from gut microbiome abundance data by running the MARS pipeline (Microbial Abundances Retrieved from Sequencing data—automated NCBI Taxonomy) by Hulsholf et al. (2024, <https://doi.org/10.1093/bioadv/vbae068>). The raw gut microbiome data is available through a request to Erasmus University, Dr. Arfan Ikram.
+
+**flux_results.csv \*\
+**This file contains the predicted flux results in blood from demand reactions, e.g., dchac[bc] → Ø for deoxycholate in blood. The file includes sample IDs and Sex information. The flux results are obtained by running [INSERT SCRIPT] from the generated WBMs for this study. The generated WBMs are available through a request to Erasmus University, Dr. Arfan Ikram.
+
+**gf_fluxes.csv \*\
+**This file contains the flux results obtained from unpersonalised Harvey/Harvetta WBMs version 1.04b.
+
+**Bile_acids_Corrected_table.csv**: This file is obtained from running ADD SCRIPT HERE
+
+**metaboliteList.xlsx**:\
+This file maps the metabolite VMH IDs in the flux_results.csv table to metabolite names.
+
+**metaboliteMicrobeLinks.xlsx\
+**This file contains for each metabolite in flux_results.csv which microbial pan models contain exchange reactions for the investigated metabolites. This file is obtained by running the findPotentialMicrobialLinksToFluxes.m matlab function.
+
+**KNN_imputed_metabolon_data_3rdMarch.csv \*\
+**This file contains serum metabolomic concentrations and includes imputed values from k-nearest neighbours imputation (see methods).
+
+**metabolon_named.xlsx\
+**This file contains the identified metabolite names from serum metabolomics.
+
+After having placed these files in the *inputs* folder, this script can be run.
+
+Set up the R environment
+
+```{r, setup, include=FALSE, message=FALSE,echo = FALSE}
+# - Disable printing of function output 
+# - Set the root directory for the project
+knitr::opts_knit$set(echo = T, results = "hide")
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
+Load required packages
+
+```{r,echo = F, results='hide',message=FALSE}
+
+# - Define a helper function 'using' to load and install packages if needed
+using<-function(...) {
+    libs<-unlist(list(...))
+    req<-unlist(lapply(libs,require,character.only=TRUE))
+    need<-libs[req==FALSE]
+    if(length(need)>0){ 
+        install.packages(need)
+        lapply(need,require,character.only=TRUE)
+    }
+}
+
+# - Load key packages like tidyverse, ggplot2, and other data analysis tools
+using('tidyverse','RColorBrewer','ggrepel','cowplot','readxl','writexl','visreg','corrplot','scales','patchwork','rstatix','ggpmisc','here','ggpubr','igraph','rmarkdown','glue','xtable','berryFunctions','xlsx','r2excel','forestplot','svglite','viridis','gridExtra','xlsx')
+```
+
+Process the flux data
+
+1.  Load the flux results
+2.  Add corrected flux results for various bile acids
+3.  Remove fluxes from samples with mismatched gender of the models
+4.  Round the fluxes to six decimals
+5.  Filter the fluxes on a list of metabolites of interest (metaboliteList.xlsx)
+6.  Calculate the net microbiome influences on metabolite productions
+7.  Rename the VMH IDs to metabolite names
+
+```{r, message=FALSE}
+source(here('scripts','prepareFluxes.R'))
+fluxes <- prepareFluxes('NET',6)
+```
+
+After preparing the flux results, fluxes were removed where no net microbiome flux was predicted, i.e., a net flux of zero. This step was taken as the absence of microbes that produce a given metabolite could bias correlation and regression analyses.
+
+```{r, message=FALSE}
+fluxes <- fluxes %>% mutate_at(vars(-c('ID','Sex')),function(x){if_else(x==0,NA,x)})
+```
+
+Sometimes the microbiome influences could not be calculated due to host and dietary constraints. For example, the host productions of the bile acids cholate and chenodeoxycholate limited the maximal bacterial transformation rates of these compounds. These fluxes constrained by the host and diet were identified by finding multiple identical flux values that were the maximum values in a stratified sample by sex. After identifying these fluxes, they were removed.
+
+```{r, message=FALSE}
+# Identify and remove fluxes that reached a maximum bound
+fluxes <- fluxes %>%
+  # Reshape data from wide format (columns = metabolites) to long format (columns = 'metabolite', 'Flux')
+  pivot_longer(cols = -c('ID', 'Sex'), names_to = 'metabolite', values_to = 'Flux') %>%
+  
+  # Group data by 'metabolite' and 'Sex' to process fluxes within each combination
+  group_by(metabolite, Sex) %>% 
+  
+  # Create a flag 'MAX' to identify rows where the flux equals the maximum value for each group
+  mutate(MAX = Flux == max(Flux, na.rm = TRUE),
+         
+         # Replace fluxes that hit the maximum bound with NA
+         Flux = if_else(MAX == TRUE, NA, Flux)) %>%
+  
+  # Remove the temporary 'MAX' column as it is no longer needed
+  select(-MAX) %>%
+  
+  # Reshape data back to wide format (columns = metabolites)
+  pivot_wider(names_from = 'metabolite', values_from = 'Flux') %>% 
+  
+  # Remove grouping structure to return the dataset to an ungrouped state
+  ungroup()
+
+```
+
+An extra processing step was performed for deoxycholate fluxe. This compound could be created due to an erroneous reaction in the liver where lithcholate was converted to deoxycholate. The real microbialdeoxycholate flux was calculated by subtracting the lithocholate flux from the deoxycholate flux. The maximal dietary flux was 12, so all fluxes where deoxycholate flux minus the lithocholate flux was exactly 12, were removed. fluxes of deoxycholate were identical to those of lithocholate.
+
+```{r, message=FALSE}
+fluxes <- fluxes %>% 
+  # Modify the 'Deoxycholate' column based on a condition
+  mutate(Deoxycholate = if_else(
+    # Condition: The difference between 'Deoxycholate' and 'Lithocholate' equals 12
+    # AND 'Lithocholate' is 0
+    Deoxycholate - Lithocholate == 12 & Lithocholate == 0,
+    
+    # Action: Replace 'Deoxycholate' with NA if the condition is true
+    NA,
+    
+    # Otherwise, keep the original value of 'Deoxycholate'
+    Deoxycholate
+  ))
+```
+
+After having removed all samples for which no accurate flux value could be calculated, a summary of the samples per metabolite was obtained and saved.
+
+```{r, message=FALSE}
+# Obtain metabolites to drop
+fluxSamples <- fluxes %>%
+  # Reshape the data from wide format to long format, with columns 'metabolite' and 'Flux'
+  pivot_longer(cols = -c(ID, Sex), names_to = 'metabolite', values_to = 'Flux') %>% 
+  
+  # Group data by 'metabolite' to perform aggregate calculations for each metabolite
+  group_by(metabolite) %>% 
+  
+  # Summarize each metabolite group
+  summarise(
+    # Count the number of unique flux values and add 1
+    Samples = length(unique(Flux)) + 1,
+    
+    # Determine whether the metabolite should be removed based on the number of samples
+    Removed = Samples / nrow(fluxes) < 0.1,
+    
+    # Convert the logical 'Removed' flag to a categorical variable ('Yes' or 'No')
+    Removed = if_else(Removed == TRUE, 'Yes', 'No')
+  ) %>%
+  
+  # Arrange the data in ascending order by the number of samples
+  arrange(Samples) %>%
+  
+  # Merge the summarized data with additional metadata from the metabolite list
+  left_join(
+    read_excel(here('inputs', 'metaboliteList.xlsx'))
+  ) %>% 
+  
+  # Relocate columns 'VMHID' and 'Pathway' to immediately follow 'metabolite'
+  relocate(c('VMHID', 'Pathway'), .after = 'metabolite') %>% 
+  
+  # Rename columns for better clarity
+  rename(
+    Classification = Pathway, # Rename 'Pathway' to 'Classification'
+    Metabolite = metabolite   # Rename 'metabolite' to 'Metabolite'
+  )
+
+```
+
+### Filtering metabolites
+
+To ensure sufficient data quality for statistical analysis, we filtered metabolites based on the number of unique flux results. A cutoff threshold of 10% of the total sample size was applied. Metabolites with fewer than 10% unique flux values were excluded from further analysis.
+
+```{r, message=FALSE}
+# Identify metabolites with less than 10% of samples having unique flux values
+dropMets <- fluxSamples %>%
+  filter(Removed == 'Yes') %>%  # Select metabolites flagged for removal
+  rename(metabolite = Metabolite) %>%  # Rename for compatibility with other datasets
+  select(metabolite)  # Retain only the metabolite names to drop
+
+# Remove flagged metabolites from the flux dataset
+fluxesPruned <- fluxes %>%
+  select(-all_of(dropMets$metabolite))  # Exclude columns corresponding to metabolites to be dropped
+
+```
+
+### Grouping metabolites with identical flux distributions
+
+In the next step, metabolites with identical flux distributions were identified and grouped as some metabolites had identical flux distributions to other metabolites. This can be explained by shared microbes that influence these metabolites or by host reactions that can birectionally convert two metabolites into each other. These flux groups were identified by finding perfectly correlating groups of flux distributions and were subsequently grouped.
+
+```{r, message=FALSE,warning=FALSE}
+# Load custom function for identifying groups of metabolites with identical flux distributions
+source(here('scripts', 'groupFluxes.R'))
+
+# Apply the grouping function to the pruned flux data
+results <- groupFluxes(fluxesPruned)
+
+# Extract the grouped flux data from the results
+fluxes2 <- results$flux
+```
+
+### Describe metadata
+
+After processing the flux data, the metadata is loaded and filtered to retain only the samples corresponding to the available flux data. The script calculates summary statistics for key demographic and cognitive variables, as well as genotype distributions, grouped by sex. The results are stored in both Excel and LaTeX formats for reporting.
+
+```{r, message=FALSE}
+source(here('scripts','participantStatistics.R'))
+```
+
+### Add metadata to the flux results
+
+Relevant metadata, including age, global cognition scores (g), and APOE genotypes, is merged with the flux data to create a comprehensive dataset for regression analysis. The prepareFluxforRegressions script performs this merging and returns the combined dataset.
+
+```{r, message=FALSE}
+source(here('scripts','prepareFluxforRegressions.R'))
+
+# Merge metadata with flux data
+fluxAll <- prepareFluxforRegressions(fluxes2,FALSE)
+```
+
+### Prepare serum metabolomics
+
+The processed serum metabolomics dataset, which has been imputed using the KNN algorithm, is loaded and integrated with the metadata. This allows for mapping of metabolomic features to fluxes and pathways. The resulting dataset provides a detailed overview of serum metabolites, including their respective super-pathways and sub-pathways.
+
+```{r, message=FALSE}
+source(here('scripts','mapMetabolomes.R'))
+
+# Map metabolomics data to flux data
+metabolome <- mapMetabolomes(fluxAll)
+
+# Extract unique serum metabolites with pathway information
+serum_metabolites <- metabolome %>% select(metabolite, SUPER_PATHWAY, SUB_PATHWAY) %>% unique()
+```
+
+### Prepare microbiome data and regress against fluxes
+
+In this step, we process and prepare the microbiome dataset, ensuring it is compatible with the flux data for subsequent regression analysis. The following steps are performed:
+
+-   The relative species abundances are loaded from the microbiome dataset.
+-   Any samples not present in the fluxAll dataframe are removed to ensure compatibility with the flux data.
+-   Species that appear in fewer than 10% of the samples are excluded to improve the robustness of the analysis.
+-   The dataset is transformed into a long format, allowing for efficient merging with the existing metadata table.
+
+```{r, message=FALSE}
+source(here('scripts','loadMicrobiomeDataForPipeline.R'))
+
+# Load and process microbiome data to match the flux data structure
+microbiome <- loadMicrobiomeDataForPipeline(fluxAll)
+```
+
+After loading the microbiome data, we proceed to explore the relative abundances at both the phylum and species levels. This step helps to summarize and visualize the microbiome composition within the samples.
+
+## Relative Phylum Abundances
+
+We calculate the mean and standard deviation of relative abundances for each phylum across all samples. This is done by summing the abundances of each phylum per sample, followed by calculating the mean and standard deviation of these summed values.
+
+```{r}
+# Calculate and summarize the mean and standard deviation of phylum abundances
+
+phylumAbun <- microbiome %>% 
+  # Select Relevant Columns
+  select(ID, Sex, Phylum, Abundance) %>% 
+  mutate(Abundance = Abundance) %>%  # Redundant line; no transformation is applied here
+  
+  # Group by Phylum and ID, Then Aggregate Abundance
+  group_by(Phylum, ID) %>% 
+  summarise(
+    Abundance = sum(Abundance, na.rm = TRUE)  # Sum abundance values for each Phylum-Individual (ID) pair, handling NA values
+  ) %>% 
+  
+  # Add Sex Information by Joining with Unique Metadata
+  left_join(
+    microbiome %>% 
+      select(ID, Sex) %>%  # Select only ID and Sex columns from microbiome data
+      unique()  # Ensure rows are unique to avoid duplications
+  ) %>% 
+  
+  # Calculate Mean and Standard Deviation of Abundance by Phylum
+  group_by(Phylum) %>% 
+  summarise(
+    `Mean relative abundance` = mean(Abundance, na.rm = TRUE) * 100,  # Calculate mean abundance for each phylum, scaled to percentage
+    `SD of abundance` = sd(Abundance, na.rm = TRUE) * 100  # Calculate standard deviation of abundance, scaled to percentage
+  ) %>% 
+  
+  # Order by Mean Relative Abundance
+  arrange(desc(`Mean relative abundance`))  # Sort the results in descending order of mean abundance
+
+```
+
+## Relative Species Abundances
+
+```{r}
+# Calculate and summarize the mean and standard deviation of species abundances
+
+speciesAbun <- microbiome %>% 
+  # Select Relevant Columns
+  select(ID, Sex, Species, Abundance) %>% 
+  
+  # Group by Species and ID
+  group_by(Species, ID) %>% 
+  
+  # Regroup by Species for Summary Statistics
+  group_by(Species) %>% 
+  
+  # Calculate Mean and Standard Deviation of Abundance by Species
+  summarise(
+    `Mean relative abundance` = mean(Abundance, na.rm = TRUE) * 100,  # Mean abundance as a percentage
+    `SD of abundance` = sd(Abundance, na.rm = TRUE) * 100  # Standard deviation as a percentage
+  ) %>% 
+  
+  # Order by Mean Relative Abundance
+  arrange(desc(`Mean relative abundance`))  # Sort in descending order of mean abundance
+
+```
+
+Next, we regress the microbe abundances against the fluxes. These results will later be used to consult for interpreting the regressions against AD risk factors.
+
+In this step, we perform a regression analysis of microbiome species abundances against the pruned metabolic flux data. The resulting regression coefficients will be later used for interpreting the regressions against AD risk factors.
+
+```{r, message=FALSE}
+# Load the function for regressing fluxes against microbiome data
+source(here('scripts','regressFluxesAgainstMicrobes.R'))
+
+# Perform regression of pruned fluxes against microbiome species abundances
+# The results will provide insight into potential relationships between microbiome and fluxes,
+# specifically for metabolites that may be involved in AD risk factors.
+fluxMicrobeReg <- regressFluxesAgainstMicrobes(fluxesPruned, microbiome)
+
+# Investigate relationships between metabolites and microbiome species
+# Load data on metabolite-microbe associations and process species names
+metMicrobeLinks <- read_excel(here('inputs', 'metaboliteMicrobeLinks.xlsx')) %>% 
+  rename(Species = Row) %>%  # Rename the 'Row' column to 'Species' for clarity
+  mutate(
+    Species = gsub('pan', '', Species),  # Remove the substring 'pan' from species names
+    Species = gsub('_', ' ', Species)   # Replace underscores with spaces for readability
+  ) %>% 
+  pivot_longer(
+    cols = -Species,  # Reshape data to long format, retaining 'Species' as an identifier
+    names_to = 'VMHID'  # New column for variable names
+  ) %>%
+  left_join( # Link VMHIDs to metabolite names
+    read_excel(here('inputs', 'metaboliteList.xlsx')) %>% 
+      select(metabolite, VMHID)  # Retain only 'metabolite' and 'VMHID' columns for joining
+  ) %>% 
+  filter(!is.na(metabolite)) %>%  # Exclude rows where 'metabolite' is missing
+  select(-VMHID) %>%  # Remove 'VMHID' column after merging
+  pivot_wider(
+    names_from = metabolite  # Reshape data back to wide format with metabolites as column names
+  )
+
+
+```
+
+## Perform regressions on age and cognition
+
+In this section, we perform regression analyses on the fluxes, microbiome, and serum metabolomics data against age and cognition. The regressions are conducted for fluxes, each microbe, and each metabolite of interest in the serum metabolomics data. The results will primarily be analyzed for flux-related insights. However, the microbiome and metabolomics results will also provide additional context to these analyses.
+
+```{r, message=FALSE}
+# Run metabolome regression analyses
+# We start by sourcing the script that contains the function for performing the regression analyses.
+
+source(here('scripts','runRegressionAnalyses.R'))  # Load the function for regression analyses
+
+# Perform regressions for fluxes
+# The file path for saving the results of the flux regressions is specified. These regressions will investigate the relationship
+# between flux data and age/cognition, with a focus on AD risk and sex interactions.
+
+file <- here('results', str_c('flux_regressions_age_cognition_', Sys.Date(), '.xlsx'))
+fluxreg <- runRegressionAnalyses(fluxAll, 'AD_risk', 'Sex_moderation', '', '', file, '')  # Run regressions on flux data
+
+# Perform regressions for microbes
+# Similarly, the file path for saving the regression results for the microbiome data is specified. 
+# These regressions focus on the relationship between microbiome composition and age/cognition, also accounting for AD risk and sex.
+
+file <- here('results', str_c('microbe_regressions_age_cognition_', Sys.Date(), '.xlsx'))
+microbereg <- runRegressionAnalyses(microbiome, 'AD_risk', 'Sex_moderation', '', '', file, 'microbiome')  # Run regressions on microbiome data
+
+# Perform regressions for metabolomics
+# Here, we filter the metabolomics data to include only metabolites of interest (e.g., bile acids, amino acids, urea cycle intermediates).
+# We then run the regression analyses for these selected metabolites, focusing on their relationship with age/cognition.
+
+# Filter the metabolome data to include relevant metabolites of interest for cognition and age-related analyses. These metabolites are hand-picked based on the flux results.
+metabolomeFiltered <- metabolome %>% 
+  filter(grepl('bile', SUB_PATHWAY, ignore.case = TRUE) | 
+         grepl('acetate|arginine|ornithine|citrulline|fumarate|nitrite|urea|aspartate|ammonia|nh4|nitrite|nitrogen|creatine|ornithine|glycine', metabolite, ignore.case = TRUE) |
+         grepl('cholesterol', metabolite, ignore.case = TRUE) | 
+         grepl('4-cholesten-3-one', metabolite, ignore.case = TRUE) |
+         grepl('7-alpha-hydroxy-3-oxo-4-cholestenoate', metabolite, ignore.case = TRUE))
+
+# Define the file path for saving the metabolomics regression results
+file <- here('results', str_c('Metabolome_regressions_age_cognition_', Sys.Date(), '.xlsx'))
+
+# Run the regression analyses for the filtered metabolomics data
+metabolomereg <- runRegressionAnalyses(metabolomeFiltered, 'AD_risk', 'Sex_moderation', '', '', file, 'metabolome')  # Run regressions on filtered metabolomics data
+```
+
+## Regression results on age
+
+In this section, we investigate the regression results that examine the relationship between fluxes (and related metabolites) and age. The first part filters the results to focus on the 'AgeERGO5' term, providing insights into the influence of age on various metabolites and their fluxes.
+
+```{r, message=FALSE}
+# Extract and display regression results for the 'AgeERGO5' term, focusing on the relevant columns for interpreting the results
+fluxreg$AD_risk %>% 
+  filter(term == 'AgeERGO5') %>%  # Filter for the regression results related to 'AgeERGO5' (age)
+  select(metabolite, estimate, std.error, p.value, FDR, adj.R2, Formula) %>%  # Select relevant statistics
+  print()  # Display the regression output for age
+```
+
+Next, we investigate the correlation between specific metabolites (L-arginine and 3-Dehydrocholate) and microbial fluxes. We will identify which microbes show the strongest correlations with the fluxes of these metabolites and print the top results.
+
+```{r, message=FALSE}
+# Define metabolites of interest (L-arginine and 3-Dehydrocholate) for further investigation
+met <- c('L-arginine', '3-Dehydrocholate')
+
+# Initialize an empty list to store the R-squared values for each metabolite
+MicrobeR2 <- list()
+
+# Loop through each metabolite to obtain the R-squared values and identify microbes with the strongest correlations
+for (i in 1:length(met)) {
+  # Extract the microbial correlation data for the current metabolite, sorted by the R-squared value
+  MicrobeR2[[met[i]]] <- fluxMicrobeReg %>% 
+    select(Species, glue(met[i])) %>%  # Select species and the R-squared column for the metabolite
+    arrange(desc(pick(met[i])))  # Sort by the R-squared value in descending order
+  
+  # Print the top 5 species with the strongest correlations for each metabolite
+  MicrobeR2[[met[i]]] %>% head() %>% print()  # Show the top 5 microbes for the current metabolite
+}
+```
+
+Butyrivibrio_crossotus and Parabacteroides_distasonis are among the most influential microbes for arginine. Collinsella_aerofaciens and eggerthella lenta highly correlate with the 3-OH primary bile acids.
+
+Now that we've identified key microbes that correlate with L-arginine and 3-Dehydrocholate, we investigate whether these microbes also positively associate with age. We check the regression results for these microbes in the context of the 'AgeERGO5' term.
+
+```{r, message=FALSE}
+# Loop through each metabolite to analyze the top 5 microbes identified earlier
+for (i in 1:length(met)) {
+  # Extract the names of the top 5 microbes for the current metabolite
+  microbeNames <- MicrobeR2[[i]]$Species[1:5]
+  
+  # Filter the regression results for the 'AgeERGO5' term and the selected microbes
+  microbereg$AD_risk %>% 
+    filter(term == 'AgeERGO5') %>%  # Filter for results related to the 'AgeERGO5' (age)
+    filter(metabolite %in% microbeNames) %>%  # Select only the top microbes
+    select(metabolite, estimate, p.value, FDR, adj.R2, Formula) %>%  # Display relevant regression results
+    arrange(p.value) %>%  # Arrange by p-value for significance
+    print()  # Display the results
+}
+```
+
+Interestingly, the L-arginine producing microbes themselves do not associate with age, meaning that only the combination of microbes and the host produced this association.
+
+How about the 3-OH PBAs? Collinsella aerofaciens also decreased with age, which is expected based on the high correlation betweeen its abundance and the 3-OH PBA fluxes.
+
+There are three metabolites that seem to associate with age. Do they also associate with age in the serum metabolomics data?
+
+```{r, message=FALSE}
+# Obtain the results for arginine and related metabolites. 3-OH primary bile acid conjugates and formaldehyde were not present in the metabolomics.
+metabolomereg$AD_risk %>% 
+  filter(term == 'AgeERGO5') %>%
+  select(metabolite, estimate, p.value, FDR, adj.R2, Formula) %>% 
+  filter(grepl('arginine|ornithine|citrulline|fumarate|nitrite|urea|aspartate|ammonia|nh4|nitrite|nitrogen|creatine|ornithine|glycine',metabolite,ignore.case = TRUE)) %>% print() 
+```
+
+The serum metabolomics show a small decrease in arginine concentration. This result could mean that more arginine is used up during ageing. Arginine plays a major role in the urea cycle. To check if more arginine is used up, we can check if the products of the urea cycle increase. Urea indeed increased. Aspartate, another substrate of the urea cycle also decreased.
+
+## Regressions on cognition
+
+Now lets investigate the regression results with cognition.
+
+```{r, message=FALSE}
+cogresults <- fluxreg$AD_risk %>% 
+  # Filter results to include only terms related to "Flux".
+  filter(term == 'Flux') %>% 
+  
+  # Select relevant columns from the regression results.
+  select(metabolite, estimate, std.error, p.value, FDR, adj.R2, Formula)
+
+# Display the first 7 rows of the cognitive regression results.
+head(cogresults, n = 7)
+```
+
+### Microbial associations with cognition
+
+Several bile acids negatively associate with cognition scores. Which microbes are most influential for these associations?
+
+```{r, message=FALSE}
+# Define metabolites of interest for investigation.
+met <- c('Deoxycholate', 'Lithocholate', '7-Dehydrocholate')
+
+# Create an empty list to store R-squared values for microbial associations with each metabolite.
+MicrobeR2 <- list()
+
+# Loop through each metabolite.
+for (i in 1:length(met)) {
+  MicrobeR2[[met[i]]] <- fluxMicrobeReg %>% 
+    # Select the species and metabolite columns, then sort by metabolite association strength.
+    select(Species, glue(met[i])) %>% 
+    arrange(desc(pick(met[i])))  
+  
+  # Display the top rows of microbial associations for each metabolite.
+  MicrobeR2[[met[i]]] %>% head() %>% print()
+}
+```
+
+Observations: - Eggerthella lenta is the main microbe influencing the flux of lithocholate, deoxycholate, and 3-dehydro-deoxycholate. - Bacteroides are significant producers of 7-dehydro bile acids.
+
+Next, we investigate how the top 5 microbes associated with these metabolites relate to cognition scores.
+
+```{r, message=FALSE}
+# Loop through each metabolite of interest.
+for (i in 1:length(met)) {
+  # Extract the names of the top 5 microbes associated with each metabolite.
+  microbeNames <- MicrobeR2[[i]]$Species[1:5]
+  
+  # Filter the regression results for cognition scores to include these microbes.
+  microbereg$AD_risk %>% 
+    filter(term == 'Flux') %>% 
+    filter(metabolite %in% microbeNames) %>% 
+  
+    # Select relevant columns from the regression results for reporting.
+    select(metabolite, estimate, std.error, p.value, FDR, adj.R2, Formula) %>% 
+    arrange(p.value) %>%  # Sort results by p-value.
+    print()  # Display the results.
+}
+```
+
+### Serum metabolome associations with cognition
+
+Are these results confirmed by the serum metabolomics?
+
+```{r, message=FALSE}
+# Investigating whether serum metabolomics confirms the flux data findings regarding cognition.
+
+cogmetresults <- metabolomereg$AD_risk %>% 
+  # Filter results for terms related to "Flux".
+  filter(term == 'Flux') %>% 
+  
+  # Focus on metabolites containing "cholic" or "cholate" in their names.
+  filter(grepl('cholic|cholate', metabolite)) %>% 
+  
+  # Select relevant columns for further analysis.
+  select(metabolite, estimate, std.error, p.value, FDR, adj.R2, Formula) %>%
+  
+  # Rename column headers to remove dots in their names for cleaner formatting.
+  rename_with(~ gsub(".", "", .x, fixed = TRUE)) %>%
+  
+  # Remove the Formula column for clarity.
+  select(-Formula) %>% 
+  
+  # Display the filtered results.
+  print()
+
+# Investigate results for metabolites containing "acetate".
+metabolomereg$AD_risk %>% 
+  filter(term == 'Flux') %>% 
+  filter(grepl('acetate', metabolite))
+```
+
+No significant negative association with the cognition scores was found for the metabolites that associated in the flux data. A slight negative association was further found for two GDCA conjugates. An interesting observation is however that the serum concentrations of all investigated bile acids decreased as cognition increased.
+
+## Influence of sex on the associations with age and cognition
+
+### Sex differences with age and cognition
+
+Next, we explored if sex influenced the relationship between the fluxes and age/cognition.
+
+First, we check differences in age and cognition with sex.
+
+```{r, message=FALSE}
+# Load metadata.
+metadata <- read.csv(here('inputs','metadata.csv'))
+
+# Test for differences in age and cognition between sexes.
+sexdiff <- 
+  metadata %>% 
+  # Select relevant columns: Sex, cognition (g), and age.
+  select(Sex, g, AgeERGO5) %>% 
+  
+  # Reshape the data for grouped analysis.
+  pivot_longer(cols = -Sex, names_to = 'term') %>% 
+  
+  # Perform t-tests for each term against Sex.
+  group_by(term) %>% 
+  t_test(value ~ Sex) %>% 
+  
+  # Select relevant columns for reporting.
+  select(c('term', 'p')) %>% 
+  
+  # Add results for interaction of age and sex on cognition.
+  add_row(
+    lm('g ~ AgeERGO5 * Sex', metadata) %>% 
+    tidy() %>%
+    filter(term == 'AgeERGO5:SexMale') %>% 
+    rename(p = p.value) %>% 
+    select(term, p)
+  ) %>% 
+  
+  # Display results.
+  print()
+
+
+# Visualize cognition scores against age, stratified by sex.
+# Load 'metadata.csv' file from the 'Data' folder.
+read.csv(here('inputs','metadata.csv')) %>% 
+
+  # Create a scatter plot with 'AgeCollect' on the x-axis and 'g' (cognition scores) on the y-axis, colored by 'Sex'.
+  ggplot(aes(x = AgeCollect, y = g, fill = Sex, col = Sex)) + 
+  
+  # Add scatter plot points for each subject.
+  geom_point() +
+  
+  # Add a polynomial regression line to show the relationship between age and cognition scores.
+  stat_poly_line() +
+  
+  # Display regression equation, p-value, and R-squared on the plot.
+  stat_poly_eq(use_label(c('p', 'R2', 'eq')),
+               label.x.npc = "right",
+               label.y.npc = "bottom") + 
+
+  # Set the plot title.
+  labs(title = 'Cognition scores against age') 
+
+```
+
+Observations: - No significant difference in age was observed between sexes. - A significant difference in cognition scores was found between sexes.
+
+### Sex differences with flux values and species abundances
+
+Next, I check for difference in flux results with sex.
+
+```{r, message=FALSE}
+sexDiffFlux <- 
+  fluxAll %>% 
+  group_by(metabolite) %>%  # Group data by metabolite.
+  wilcox_test(Flux ~ Sex,detailed = TRUE) %>%  # Perform Wilcoxon test to check for sex differences in flux values for each metabolite.
+  adjust_pvalue(method = "fdr") %>%  # Adjust p-values using False Discovery Rate (FDR) method.
+  arrange(p)  # Arrange results by p-value.
+
+metsSexDiff <- sexDiffFlux$metabolite[sexDiffFlux$p < 0.05]  # Extract metabolites with significant sex differences (p < 0.05).
+length(metsSexDiff) / length(sexDiffFlux$metabolite)  # Calculate the proportion of metabolites showing sex differences.
+
+```
+
+About 63% of metabolites have different fluxes in female samples compared to male samples.
+
+As the fluxes are based on the microbe abundances, I would expect the sex differences between the microbes. Next, I check which microbes have different abundances between male and female samples.
+
+```{r, message=FALSE}
+# Check for phylum sex differences
+phylumSexDiff <- microbiome %>% 
+  select(ID, Sex, Phylum, Abundance) %>%  # Select necessary columns from microbiome data.
+  group_by(Phylum, ID) %>%  # Group data by Phylum and ID.
+  summarise(Abundance = sum(Abundance, na.rm = TRUE)) %>%  # Sum abundances per Phylum per ID, ignoring NAs.
+  left_join(microbiome %>% select(ID, Sex) %>% unique()) %>%  # Join with unique Sex data.
+  group_by(Phylum) %>%  # Group by Phylum.
+  wilcox_test(Abundance ~ Sex, detailed=TRUE) %>%  # Perform Wilcoxon test for sex differences in phylum abundances.
+  adjust_pvalue(method = "fdr") %>%  # Adjust p-values using FDR.
+  arrange(p) %>%  # Arrange results by p-value.
+  select(-c('.y.'))  # Remove unnecessary columns.
+   
+
+# Check for species sex differences
+speciesSexDiff <- microbiome %>% 
+  select(ID,Sex,Species,Abundance) %>% 
+  group_by(Species) %>% 
+  wilcox_test(Abundance ~ Sex, detailed=TRUE) %>%
+  adjust_pvalue(method = "fdr") %>% arrange(p) %>% select(-c('.y.'))
+```
+
+Summarise the number of metabolites and species that had differences between males and females
+
+```{r}
+# Obtain the number of significantly differing species abundances based on sex
+sumSpeciesDiff <- 
+  speciesSexDiff %>%  # Start with the data containing species sex differences.
+  summarise(Tests = n(),  # Count the total number of tests performed.
+            `p<0.05` = sum(p < 0.05),  # Count how many tests had a p-value < 0.05.
+            `FDR<0.05` = sum(p.adj < 0.05),  # Count how many tests had an FDR-adjusted p-value < 0.05.
+            fractionPval = `p<0.05` / Tests * 100,  # Calculate the percentage of tests with p-value < 0.05.
+            fractionFDR = `FDR<0.05` / Tests * 100)  # Calculate the percentage of tests with FDR-adjusted p-value < 0.05.
+
+# Obtain the number of significantly differing fluxes based on sex
+sumSexDiff <- 
+  sexDiffFlux %>%  # Start with the data containing flux sex differences.
+  summarise(Tests = n(),  # Count the total number of tests performed.
+            `p<0.05` = sum(p < 0.05),  # Count how many tests had a p-value < 0.05.
+            `FDR<0.05` = sum(p.adj < 0.05),  # Count how many tests had an FDR-adjusted p-value < 0.05.
+            fractionPval = `p<0.05` / Tests * 100,  # Calculate the percentage of tests with p-value < 0.05.
+            fractionFDR = `FDR<0.05` / Tests * 100)  # Calculate the percentage of tests with FDR-adjusted p-value < 0.05.
+
+# Combine the results for species and fluxes into a single summary table
+SummarySexFluxMicrobeDiff <- tibble(Data = c('Species', 'Fluxes')) %>%  # Create a tibble with labels for the data types.
+  cbind(rbind(sumSpeciesDiff, sumSexDiff))  # Combine the results from species and flux analyses into one data frame.
+
+```
+
+Sex differences are less extreme and occur in a smaller fraction of species compared to those in the fluxes.
+
+### Sex influences on age and cognition regressions
+
+Now lets check if there are different associations in female samples compared to male samples. I will do the same for the metabolomics data.
+
+```{r, message=FALSE}
+# Filter the results for metabolites with significant sex differences in flux and specific formulas
+moderationResults <- 
+  fluxreg$Sex_moderation %>%  # Start with the moderation results data.
+  filter(metabolite %in% metsSexDiff) %>%  # Select metabolites that showed sex differences in flux.
+  filter(grepl('*Sex', Formula)) %>%  # Filter for rows where the formula contains 'Sex'.
+  filter(grepl('Flux', term)) %>%  # Filter for rows where the term relates to flux.
+  select(-c('term', 'std.error', 'Cohort', '2.5 %', '97.5 %', 'statistic'))  # Remove unnecessary columns.
+
+# Save significant metabolites where p-value < 0.05
+fluxCognitionSexRes <- moderationResults$metabolite[moderationResults$p.value < 0.05]  # Extract significant metabolites.
+
+```
+
+Sex does not influence the association with age with the flux data. Sex does influence the association with cognition for several metabolites. Does the association with cognition change for these metabolites?
+
+```{r, message=FALSE}
+# Check for changes in the association with cognition based on sex for specific metabolites
+fluxreg$Sex_moderation %>% 
+  filter(metabolite %in% fluxCognitionSexRes) %>%  # Filter to include metabolites with sex-dependent cognition associations.
+  filter(grepl('Male|Female', Cohort)) %>%  # Select only male and female cohorts.
+  filter(term == 'Flux') %>%  # Ensure the term is related to flux.
+  select(c('metabolite', 'Cohort', 'p.value')) %>%  # Select relevant columns.
+  pivot_wider(names_from = Cohort, values_from = p.value)  # Reshape the data to have p-values for each cohort.
+
+```
+
+Negative associations are found in the male samples, but not in the female samples for these metabolites.
+
+### Microbial sex influences on their association with cognition
+
+Which microbes highly correlate with metabolites that have sex dependent associations with cognition.
+
+```{r, message=FALSE}
+# Check the R-squared values for microbes correlated with cognition-associated metabolites
+fluxCognitionSexRes[str_detect(fluxCognitionSexRes, 'ryptophan')] <- 'L-tryptophan'  # Correct any typos in the metabolite names.
+met <- fluxCognitionSexRes  # Define the metabolites of interest.
+MicrobeR2 <- list()  # Initialize a list to store results.
+for (i in 1:length(met)) {  # Loop over each metabolite.
+  MicrobeR2[[met[i]]] <- fluxMicrobeReg %>%  # Select species and their association with the metabolite.
+    select(Species, glue(met[i])) %>% arrange(desc(pick(met[i])))  # Sort by p-value for each metabolite.
+  MicrobeR2[[met[i]]] %>% head() %>% print()  # Print top results.
+}
+```
+
+The most explained variation for SAM is only 8%. Any microbe cannot say much then.
+
+```{r, message=FALSE}
+# Display regression results for specific microbes of interest
+microbeNames <- c('Butyrivibrio crossotus', 'Bacteroides vulgatus')  # Define the microbes of interest.
+
+microbereg$Sex_moderation %>% 
+  filter(term == 'Flux' | term == 'Flux:SexMale') %>%  # Select relevant terms related to sex and flux.
+  filter(metabolite %in% microbeNames) %>%  # Filter for the specific microbes.
+  select(metabolite, p.value, Cohort, estimate, FDR, adj.R2, Formula) %>%  # Select the columns for output.
+  arrange(p.value) %>%  # Arrange by p-value.
+  arrange(desc(metabolite), Cohort) %>% print()  # Sort results by metabolite and cohort.
+
+
+```
+
+Butyrivibrio_crossotus, which explains respectively 24 and 25 per cent of the arginine and creatine fluxes shows a highly negative flux in male samples but not in female samples.
+
+Bacteroides_vulgatus, which explains 54 per cent of variation in tryptophan and kynuerine, negatively correlates with cognition in males, but not in females. Same with bacterioides uniformis, which explains 35% of variation.
+
+### Sex influences in serum metabolomics
+
+Now, we will check if these sex differences are also found in the metabolomics data.
+
+```{r, message=FALSE}
+# Check if sex differences in serum metabolites match those in the flux data
+metabolomereg$Sex_moderation %>% 
+  filter(term == 'Flux' | term == 'Flux:SexMale') %>%  # Select terms for flux and sex interaction.
+  filter(
+    metabolite %in% c('creatine', 'arginine', 'tryptophan', 'serotonin', 'indole', 'kynurenine')) %>%  # Focus on metabolites of interest.
+  select(metabolite, Cohort, estimate, p.value, FDR) %>% arrange(p.value)  # Select relevant columns and sort by p-value.
+```
+
+These sex influences are not found in the serum metabolomics.
+
+## Polygenic risk scores
+
+Next, we will check if there are associations between the polygenic risk scores and the fluxes.
+
+```{r, message=FALSE}
+# Check associations between polygenic risk scores (PRS) and fluxes
+fluxPRS <- fluxreg$AD_risk %>%  # Select the AD risk regression results.
+  filter(grepl('GRS_APOE|GRS|APOE_DIFF', term)) %>%  # Filter terms related to polygenic risk scores, including APOE.
+  select(metabolite, term, p.value, estimate, FDR, adj.R2, Formula) %>%  # Select relevant columns.
+  arrange(p.value) %>%  # Sort by p-value.
+  filter(grepl('GRS_APOE|APOE_DIFF', term))  # Filter again to focus on specific PRS terms.
+fluxPRS  # Display the filtered results.
+```
+
+There are a few metabolites that are associated with the polygenic risk score excluding APOE. Interestingly, the urso conjugated bile acids nonsignificnatly increase with increased PRS including APOE (p=0.07), which is similar in line with the result we found for cognition. Now, lets check if these scores are influenced by sex.
+
+```{r, message=FALSE}
+# Check if polygenic risk scores are influenced by sex
+fluxPRSSexRes <- fluxreg$Sex_moderation %>% 
+  filter(grepl('GRS_APOE|GRS|APOE_DIFF', term)) %>%  # Filter for terms related to polygenic risk scores.
+  filter(grepl('*Sex', Formula)) %>%  # Further filter for terms involving sex interaction.
+  select(-c('term', 'Cohort', '2.5 %', '97.5 %', 'statistic')) %>%  # Remove unnecessary columns.
+  arrange(p.value)  # Sort results by p-value.
+head(fluxPRSSexRes)  # Display the top results.
+```
+
+L-leucine and hydroxybutyrate are influenced by sex in the GRS. When including APOE, only leucine is influenced.
+
+## APOE flux analyses {#sec-apoe-analyses}
+
+After investigating the polygenic risk scores, we are assessing differences in flux predictions between the APOE E2, E3, and E4 genotypes.
+
+```{r, message=FALSE}
+# Load the APOE analysis function
+source(here('scripts','runAPOEanalyses.R'))
+
+# Analyze metabolic flux data
+# Generate output file name with current date for flux analyses
+file <- here('results', str_c('flux_APOE_stats_', Sys.Date(), '.xlsx'))
+# Run APOE analyses on flux data (default type='')
+apoeFluxRes <- runAPOEanalyses(fluxAll, '', file)
+
+# Analyze microbiome data
+# Generate output file name with current date for microbiome analyses
+file <- here('results', str_c('Microbes_APOE_stats_', Sys.Date(), '.xlsx'))
+# Run APOE analyses on microbiome data (type='microbiome')
+apoeMicroRes <- runAPOEanalyses(microbiome, 'microbiome', file)
+```
+
+Lets check which metabolites have significantly different fluxes when comparing E2, E3, and E4. Here, we performed a kruskall wallis test and subsequently a post-hoc multiple comparison dunns test.
+
+```{r, message=FALSE}
+# Display metabolites with p < 0.1 from Kruskal-Wallis test
+# Reorganize columns to show p-value after metabolite name
+apoeFluxRes$kruskall_Pooled %>% 
+  relocate(p, .after=metabolite) %>%  # Move p-value column after metabolite
+  filter(p < 0.1) %>%                 # Filter for trending/significant results
+  print()
+```
+
+Significant differences have been found for deoxycholate and SAM. The 7-dehydro-CA/CDCA bare missed significance. A post-hoc analysis will be done on these compounds.
+
+```{r, message=FALSE}
+# Get list of metabolites with p < 0.1 for further analysis
+metsToCheck <- apoeFluxRes$kruskall_Pooled$metabolite[apoeFluxRes$kruskall_Pooled$p < 0.1]
+
+# Create comprehensive summary statistics table
+apoeFluxSummaryStats <- 
+  apoeFluxRes$Dunns_Pooled %>% 
+  relocate(p, .after=metabolite) %>%              # Reorganize columns
+  relocate(statistic, .after=p) %>%
+  filter(metabolite %in% metsToCheck) %>%         # Filter for significant metabolites
+  mutate(groups = paste(group1, group2, sep = "_")) %>%  # Create group comparison labels
+  select(metabolite, p, groups) %>%
+  # Transform to wide format for easier comparison
+  pivot_wider(names_from = groups, values_from = c('p')) %>% 
+  # Add original Kruskal-Wallis p-values
+  left_join(
+    apoeFluxRes$kruskall_Pooled %>% 
+      relocate(p, .after = metabolite) %>% 
+      select(metabolite, p) %>% 
+      rename(kruskall_p = p)
+  ) %>% 
+  relocate(kruskall_p, .after = metabolite) %>%   # Move Kruskal p-value after metabolite
+  arrange(kruskall_p) %>%                         # Sort by significance
+  mutate(metabolite = gsub(', ', ' ', metabolite)) %>%  # Clean metabolite names
+  mutate(metabolite = gsub(', ', ' ', metabolite)) %>%
+  print() 
+```
+
+Several bile acids and indoles have different flux values in E2 samples compared to E3 or E4 samples. We know that deoxycholate is primarily driven by eggerthella lenta, however which microbes drive indole, and the 7-dehydro-CA/CDCA?
+
+```{r, message=FALSE}
+# Fix metabolite name for consistency
+metsToCheck[metsToCheck=='7-dehydro-CA/CDCA'] <- '7-Dehydrocholate'
+met <- metsToCheck
+
+# Calculate R-squared values for microbe-metabolite correlations
+MicrobeR2 <- list()
+for (i in 1:length(met)) {
+  # Extract correlation data for each metabolite
+  MicrobeR2[[met[i]]] <- fluxMicrobeReg %>% 
+    select(Species, glue(met[i])) %>%            # Select relevant columns
+    arrange(desc(pick(met[i])))                  # Sort by correlation strength
+  # Print top correlations
+  MicrobeR2[[met[i]]] %>% head() %>% print()
+}
+```
+
+Key findings from correlation analysis: - Bacteroides species (uniformis, coprocola, eggerthii) strongly correlate with indole and indole sulphate fluxes - All three species have been confirmed to produce these compounds: \* Bacteroides_eggerthii: YES \* Bacteroides_coprocola: YES \* Bacteroides_uniformis: YES
+
+Now, I want to check if similar results can be found for these species and prepare these results in a single table for microbes of interest
+
+```{r, message=FALSE}
+# Obtain the union of the top 5 species for 'Deoxycholate','S-Adenosyl-L-methionine','Formate','7-dehydro-CA/CDCA', and formaldehyde
+
+# Identify key microbial species associated with metabolites of interest
+met <- metsToCheck  # List of significant metabolites from previous analysis
+findMicrobes <- as.data.frame(fluxMicrobeReg)
+row.names(findMicrobes) <- fluxMicrobeReg$Species  # Set species as row names for easier indexing
+
+
+# Extract top 5 correlated species for each metabolite
+# Creates a unique list of microbes most strongly associated with metabolites of interest
+microbes <- lapply(met, function(m) {
+  findMicrobes %>%
+    select(glue(m)) %>%                    # Select correlation column for current metabolite
+    arrange(across(everything(), desc)) %>% # Sort by correlation strength
+    slice(1:5) %>%                         # Take top 5 correlations
+    row.names()                            # Get species names
+}) %>% unlist() %>% unique()              # Flatten list and remove duplicates
+
+# Statistical analysis of APOE effects on identified microbes
+microbeAPOEstats <- 
+  apoeMicroRes$Dunns_Pooled %>% 
+  relocate(p, .after=metabolite) %>%       # Reorganize columns for clarity
+  relocate(statistic, .after=p) %>%
+  filter(metabolite %in% microbes) %>%     # Focus on identified key microbes
+  mutate(groups = paste(group1, group2, sep = "_")) %>%  # Create comparison group labels
+  select(metabolite, p, groups) %>%
+  # Set factor levels for consistent ordering
+  mutate(groups = factor(groups, level = c('kruskall_p','E2_E3','E2_E4','E3_E4'))) %>%
+  # Transform to wide format for easier comparison
+  pivot_wider(names_from = groups, values_from = c('p')) %>% 
+  # Add Kruskal-Wallis test results
+  left_join(
+    apoeMicroRes$kruskall_Pooled  %>% 
+      select(metabolite, p) %>% 
+      rename(kruskall_p = p) 
+  ) %>% 
+  relocate(kruskall_p, .after = metabolite) %>%  # Move overall p-value after species name
+  arrange(kruskall_p) %>%                        # Sort by significance
+  mutate(metabolite = gsub(', ', ' ', metabolite)) %>% 
+  print()
+```
+
+Bacteroides thetaiotaomicron was the only species with a significant change between pooled genotypes. Further analysis with the dunns test found Bacteroides thetaiotaomicron to be decreased in E2 compared to E3 and weakly decreased in E2 compared to E4.
+
+Bacteroides uniformis was decreased in E2 and in E4. It was increased in E3.
+
+A weak association was found for eggethella lenta. An increase in its abundance was observed from E2 to E4.
+
+## APOE bile acid and cholesterol metabolomics analyses
+
+Analysis of serum metabolomics data for validation
+
+```{r, message=FALSE}
+# Filter metabolomics data for relevant compounds
+metabolomeAPOE <- metabolome %>% 
+  filter(
+    grepl('bile', SUB_PATHWAY, ignore.case = TRUE) |     # Select bile acid pathways
+    grepl('cholesterol', metabolite, ignore.case = TRUE) | # Select cholesterol metabolites
+    grepl('4-cholesten-3-one', metabolite, ignore.case = TRUE) |
+    grepl('7-alpha-hydroxy-3-oxo-4-cholestenoate', metabolite, ignore.case=TRUE)
+  )
+
+# Run APOE analyses on filtered metabolomics data
+file <- here('results', str_c('metabolome_APOE_stats_', Sys.Date(), '.xlsx'))
+apoeMetabolomeRes <- runAPOEanalyses(metabolomeAPOE, 'metabolome', file)
+```
+
+Now, lets Compare serum metabolome results with flux predictions for the bile acids
+
+```{r, message=FALSE}
+# Create comprehensive summary statistics for metabolome data
+apoeMetabolomeSummaryStats <- apoeMetabolomeRes$kruskall_Pooled %>% 
+  select(metabolite, p) %>% 
+  rename(kruskall_p = p) %>%
+  # Add Dunn's test results
+  left_join(
+    apoeMetabolomeRes$Dunns_Pooled %>% 
+    relocate(p, .after = metabolite) %>% 
+    mutate(groups = paste(group1, group2, sep = "_")) %>%
+    select(metabolite, p, groups) %>%
+    # Ensure consistent ordering of comparison groups
+    mutate(groups = factor(groups, level = c('kruskall_p','E2_E3','E2_E4','E3_E4'))) %>%
+    pivot_wider(names_from = groups, values_from = p)
+  ) %>%
+  mutate(metabolite = gsub('*', '', metabolite)) %>%  # Clean metabolite names
+  print()
+```
+
+The serum metabolomics are in line with the fluxes for deoxycholate. S-Adenosyl-L-methionine (SAM) is not present in the metabolome data.
+
+## Create figures
+
+```{r}
+# Run the following scripts to generate the figure for the manuscript
+source(here('scripts','Figure_1_age.R')) 
+source(here('scripts','Figure_2_apoe.R'))
+source(here('scripts','Figure_3_cognition.R'))
+source(here('scripts','Figure_4_sex.R'))
+```
+
+## Save results to supplementary excel tables
+
+
+Supplementary table S2 on the species-level read abundance statistics will be created by the following function.
+
+```{r}
+microbiomeSpeciesSummaryStats <- function(rawMicrobes, fluxAll, mappedSpecies, speciesInData){
+
+## Step 1: Process the raw read counts
+
+# Filter on flux samples
+processedTotalReads <- rawMicrobes %>%
+  
+  # Convert wide format data to long format
+  # Retains all columns except 'Taxon', pivoting others into 'ID' and 'value' columns.
+  pivot_longer(cols = -c('Taxon'), names_to = 'ID') %>%
+  
+  # Convert back to wide format, using 'Taxon' as column names
+  pivot_wider(names_from = 'Taxon') %>%
+  
+  # Clean up sample IDs by removing the prefix 'Sample'
+  mutate(ID = gsub('Sample', '', ID)) %>%
+  
+  # Filter to retain only samples present in the fluxAll dataset
+  filter(ID %in% fluxAll$ID) %>%
+  
+  # Convert back to long format for further transformations
+  pivot_longer(cols = -c('ID'), names_to = 'Taxon') %>%
+  
+  # Replace zero values with NA to avoid including them in calculations
+  mutate(value = if_else(value == 0, NA, value)) %>%
+  
+  # Extract species-level information from the 'Taxon' column
+  group_by(ID) %>%
+  mutate(
+    Taxon = if_else(
+      str_detect(Taxon, 's__'),                                      # Check if the 'Taxon' contains 's__'
+      str_extract(Taxon, '(?<=g__).*') %>% gsub('; s__', ' ', .), 'NA')) %>% # Extract and clean species name
+  ungroup() %>%
+  
+  # Identify whether each Taxon is in the mapped species list
+  mutate(Taxon = if_else(Taxon == 'Ruminococcus champanellensis', 
+                         'Ruminococcus chamellensis', Taxon),
+         Taxon = if_else(Taxon == 'Prevotella__9 copri', 
+                         'Prevotella_9 copri', Taxon),
+         mapped = if_else(Taxon %in% mappedSpecies$mapped, 'mapped', 'unmapped'))
+
+
+## Step 2: Normalise the read counts 
+
+normaliseReads <- function(x){
+  x %>% group_by(ID) %>%
+    mutate(
+      # Scale each value to the total abundance for the sample
+      value_norm = value / sum(value, na.rm = TRUE),
+      # Remove extremely low values by replacing them with NA
+      value_norm = if_else(value_norm < 1e-6, NA, value_norm))
+}
+
+# First normalise the species reads based on all reads
+normalisedSpecies <- processedTotalReads %>% 
+  # Normalise the species reads including all taxa that are not identified at the species level
+  normaliseReads() %>% rename(all_taxa = value_norm) %>%
+  
+  # Remove all non-species taxa
+  filter(Taxon %in% speciesInData) %>% 
+  
+  # Normalise the species reads again, but now without the other taxa
+  normaliseReads() %>% rename(all_species = value_norm)
+
+
+# Then, normalise only the mapped species
+normalisedMappedSpecies <- normalisedSpecies %>% 
+  select(ID, Taxon, value, mapped) %>% 
+  filter(mapped=="mapped") %>% 
+  normaliseReads() %>% 
+  rename(mapped_species = value_norm)
+
+# Combine data 
+normalisedSpeciesData <- normalisedSpecies %>% left_join(normalisedMappedSpecies)
+
+
+## Step 3: Generate summary statistics
+
+# Create function for formatting summary statistic data
+meanSD <- function(x) {str_c(format(mean(x, na.rm = TRUE)*100,digits=4),' (',format(sd(x, na.rm = TRUE)*100,digits=4),')')}
+
+raStatsSpecies <- normalisedSpeciesData %>% 
+  # Rename 'Taxon' to 'Species' for clarity
+  rename(Species = Taxon) %>%
+  # Summarize abundance statistics for each species across all samples
+  group_by(Species) %>%
+  summarise(`R.A all taxa: Mean (SD)` = meanSD(all_taxa),
+            `R.A mapped and unmapped species reads: Mean (SD)` = meanSD(all_species),
+            `R.A mapped species reads: Mean (SD)` = meanSD(mapped_species),
+            mean_mapped = mean(mapped_species,na.rm=TRUE)) %>%
+  arrange(desc(mean_mapped)) %>% select(-mean_mapped)
+
+return(raStatsSpecies)
+}
+```
+
+Supplementary table S3 on the phylum-level read abundance statistics will be created by the following function.
+
+```{r,message=FALSE,warning=FALSE}
+microbiomePhylumSummaryStats <- function(rawMicrobes, fluxAll, mappedSpecies, speciesInData){
+
+## Step 1: Process the raw read counts
+
+# Filter on flux samples
+processedTotalReads <- rawMicrobes %>%
+  
+  # Convert wide format data to long format
+  # Retains all columns except 'Taxon', pivoting others into 'ID' and 'value' columns.
+  pivot_longer(cols = -c('Taxon'), names_to = 'ID') %>%
+  
+  # Convert back to wide format, using 'Taxon' as column names
+  pivot_wider(names_from = 'Taxon') %>%
+  
+  # Clean up sample IDs by removing the prefix 'Sample'
+  mutate(ID = gsub('Sample', '', ID)) %>%
+  
+  # Filter to retain only samples present in the fluxAll dataset
+  filter(ID %in% fluxAll$ID) %>%
+  
+  # Convert back to long format for further transformations
+  pivot_longer(cols = -c('ID'), names_to = 'Taxon') %>%
+  
+  # Replace zero values with NA to avoid including them in calculations
+  mutate(value = if_else(value == 0, NA, value)) %>%
+  
+  # Extract species-level information from the 'Taxon' column
+  group_by(ID) %>%
+  mutate(
+    Species = if_else(
+      str_detect(Taxon, 's__'),                                      # Check if the 'Taxon' contains 's__'
+      str_extract(Taxon, '(?<=g__).*') %>% gsub('; s__', ' ', .), 'NA')) %>% # Extract and clean species name
+  ungroup() %>%
+  
+  
+  
+  # Identify whether each Taxon is in the mapped species list
+  mutate(Species = if_else(Species == 'Ruminococcus champanellensis', 
+                         'Ruminococcus chamellensis', Species),
+         Species = if_else(Species == 'Prevotella__9 copri', 
+                         'Prevotella_9 copri', Species),
+         mapped = if_else(Species %in% mappedSpecies$mapped, 'mapped', 'unmapped')) %>%
+  
+  # Find the Phylum names
+  mutate(Phylum = str_extract(Taxon, '(?<=p__)(.*?)(?=; c__)')) %>% select(-Taxon)
+
+
+# Calculate the phylum level reads for the total and mapped reads
+
+# First do it for all reads 
+calculatePhylumReads <- function(x){
+    x %>% group_by(ID, Phylum) %>% summarise(value = sum(value,na.rm = TRUE))
+}
+
+# Calculate the total phylum reads
+phylumReadsTotal <- processedTotalReads %>% calculatePhylumReads()
+# Calculate the mapped phylum reads
+phylumReadsMapped <- processedTotalReads %>% filter(mapped=="mapped") %>% calculatePhylumReads()
+
+
+## Step 2: Normalise the read counts 
+
+normaliseReads <- function(x){
+  x %>% group_by(ID) %>%
+    mutate(
+      # Scale each value to the total abundance for the sample
+      value_norm = value / sum(value, na.rm = TRUE),
+      # Remove extremely low values by replacing them with NA
+      value_norm = if_else(value_norm < 1e-6, NA, value_norm))
+}
+
+# First normalise the species reads based on all reads
+phylumReadsTotalnorm <- phylumReadsTotal %>% normaliseReads() %>% rename(all_reads = value_norm) %>% select(-value)
+phylumReadsMappednorm <- phylumReadsMapped %>% normaliseReads() %>% rename(mapped_reads = value_norm) %>% select(-value)
+
+# Combine data 
+phylumReadsNorm <- phylumReadsTotalnorm %>% left_join(phylumReadsMappednorm)
+
+
+## Step 3: Generate summary statistics
+
+# Create function for formatting summary statistic data
+meanSD <- function(x) {str_c(format(mean(x, na.rm = TRUE)*100,digits=4),' (',format(sd(x, na.rm = TRUE)*100,digits=4),')')}
+
+raStatsPhyla <- phylumReadsNorm %>% 
+  # Summarize abundance statistics for each species across all samples
+  group_by(Phylum) %>%
+  summarise(`R.A all reads: Mean (SD)` = meanSD(all_reads),
+            `R.A mapped reads: Mean (SD)` = meanSD(mapped_reads),
+            mean_mapped = mean(mapped_reads,na.rm=TRUE)) %>%
+  arrange(desc(mean_mapped)) %>% select(-mean_mapped)
+
+return(raStatsPhyla)
+}
+```
+
+The following function, getMicrobiomeSuppTables, will obtain Supplementary tables S1-S3. This function also calls the previously defined functions for summary statistics on species and phylum read abundance statistics. 
+
+```{r,message=FALSE,warning=FALSE}
+getMicrobiomeSuppTables <- function(fluxAll){
+
+# Load microbiome annotations
+taxa <- read.csv(here('inputs', 'microbiome_annotations.csv'))$microbe %>% sort()
+
+# Get mapped species
+# Reads a CSV file with species mapping, cleans up species names by removing prefixes,
+# replacing underscores with spaces, and selects only the 'mapped' column for further processing.
+mappedSpecies <- read.csv(here('inputs', 'MARS_species.csv')) %>%
+  mutate(Species = gsub('pan', '', Species),         # Remove 'pan' prefix
+         Species = gsub('_', ' ', Species)) %>%      # Replace underscores with spaces
+  rename(mapped = Species) %>%                      # Rename column to 'mapped'
+  select(mapped)                                    # Keep only the cleaned species column
+
+# Function to extract taxonomy at a specific rank
+# This utility function helps extract taxonomic classification between two levels (curr and nex).
+extractTaxon <- function(x, curr, nex) {
+  if_else(
+    str_detect(x, paste0(curr, '_')) & !str_detect(x, paste0(nex, '_')), # Condition for extracting taxa
+    str_extract(x, paste0('(?<=_', curr, '_).*')),                      # If true, extract between '_curr_'
+    str_extract(x, paste0('(?<=_', curr, '_)(.*?)(?=_', nex, '_)'))     # If false, extract between '_curr_' and '_nex_'
+  )
+}
+
+# Obtain taxonomic classifications
+# Applies the `extractTaxon` function across all taxonomic ranks and organizes them into a tidy tibble.
+taxaOri <- taxa
+taxaTable <- list(
+  Phylum = extractTaxon(taxa, 'p', 'c'),
+  Class = extractTaxon(taxa, 'c', 'o'),
+  Order = extractTaxon(taxa, 'o', 'f'),
+  Family = extractTaxon(taxa, 'f', 'g'),
+  Genus = extractTaxon(taxa, 'g', 's'),
+  Species = extractTaxon(taxa, 's', 'strain')
+) %>%
+  lapply(function(x) { gsub('NA', '', x) }) %>%  # Remove 'NA' placeholders
+  as_tibble() %>%
+  mutate(
+    Species = if_else(Species != '', str_c(Genus, ' ', Species), Species),  # Add Genus to Species
+    Species = if_else(Species == 'Ruminococcus champanellensis', 
+                      'Ruminococcus chamellensis', Species),               # Correct a specific mislabel
+    AGORA2_mapped = if_else(Species %in% mappedSpecies$mapped, 'mapped', 'unmapped')) %>%
+  arrange(AGORA2_mapped)
+
+# Load raw microbiome data
+# Reads a taxonomy table and arranges it by the 'Taxon' column.
+rawMicrobes <- read.csv(here('inputs', 'microbiome_abundances_and_taxonomy.csv')) %>% arrange(Taxon)
+
+# Obtain all species in data
+speciesInData <- taxaTable %>% filter(Species != '') %>% .$Species 
+
+# Obtain read counts for the original, species, and mapped reads
+speciesMappingAbundances <- microbiomeSpeciesSummaryStats(rawMicrobes, fluxAll, mappedSpecies, speciesInData)
+
+
+# Obtain summary statistics on phylum-level relative abundances before and after mapping
+phylumMappingAbundances <- microbiomePhylumSummaryStats(rawMicrobes, fluxAll, mappedSpecies, speciesInData)
+
+
+
+# Return a list of results
+microbiomeTables <- list(taxaTable,speciesMappingAbundances, phylumMappingAbundances)
+return(microbiomeTables)
+}
+```
+
+We will also define a function for generating summary statistics on the flux results here:
+
+```{r,message=FALSE,warning=FALSE}
+getFluxSummary <- function(){
+
+# Prepare function for formatting the average and sd values for each metabolite
+source(here('scripts','prepareFluxes.R'))
+  
+# Define a function to format mean and standard deviation (MSD)
+formatMSD <- function(x) {
+  # Compute the mean and standard deviation, round them, and format the result
+  paste0(
+    format(round(mean(x, na.rm = TRUE), 1), nsmall = 1, big.mark = ","), ' (',  # Mean
+    format(round(sd(x, na.rm = TRUE), 2), nsmall = 1, big.mark = ","), ' )'   # Standard deviation
+  )
+}
+
+# Process and scale microbiome fluxes
+scaledFluxes <- prepareFluxes('NET', 6) %>%
+  
+  # Transform wide format to long format for 'NET' microbiome fluxes
+  pivot_longer(cols = -c('ID', 'Sex'), names_to = 'Metabolite', values_to = 'Net microbiome flux') %>%
+  
+  # Join with host-microbiome flux data
+  left_join(
+    prepareFluxes('', 6) %>%
+      pivot_longer(cols = -c('ID', 'Sex'), names_to = 'Metabolite', values_to = 'Host-microbiome flux')
+  ) %>%
+  
+  # Join with fractional microbiome contribution data
+  left_join(
+    prepareFluxes('FRAC', 6) %>%
+      pivot_longer(cols = -c('ID', 'Sex'), names_to = 'Metabolite', values_to = 'Fractional microbiome contribution')
+  ) %>%
+  
+  # Transform data into a long format for further processing
+  pivot_longer(
+    cols = -c('ID', 'Sex', 'Metabolite'), 
+    names_to = 'Type', 
+    values_to = 'value'
+  ) %>%
+  
+  # Convert 'Type' into a factor to control the order of levels
+  mutate(Type = factor(
+    Type, 
+    levels = c('Host-microbiome flux', 'Net microbiome flux', 'Fractional microbiome contribution')
+  )) %>%
+  
+  # Group by metabolite, sex, and type to compute summaries
+  group_by(Metabolite, Sex, Type) %>%
+  
+  # Apply the `formatMSD` function to compute and format mean and SD for each group
+  summarise(Mean = formatMSD(value)) %>%
+  
+  # Transform the summarized data back into a wide format for presentation
+  pivot_wider(
+    names_from = c('Sex', 'Type'), 
+    values_from = 'Mean'
+  ) %>%
+  
+  # Ungroup the data to return a flat table
+  ungroup()
+} 
+```
+
+Define function for collecting supplementary tables
+
+```{r,message=FALSE,warning=FALSE}
+# Define function for collecting all results to be collected in the supplementary materials.
+collectSupplements <- function(table, description){
+# INPUTS:
+#   table        - Data frame containing a table with study results
+#   description  - Character array describing the associated table with results
+#
+# OUTPUTS:
+#   sheetInfo    - List array with supplementary material tables
+#   counter      - Counting variable indicating the last added supplementary table
+#
+# .. Author: - Tim Hensen
+#            - Annotated version created on 2024-11-18
+  
+  # Set as global sheet list variable  
+  if (!exists("sheetInfo")){
+    sheetInfo <<- list()
+  }
+  # Initialise global counter
+  if(is_empty(sheetInfo)){
+    counter <<- 0
+  }
+  
+  if (!description %in% sheetInfo[['header']]){
+    # increment counter if description is not already in list
+    counter <<- counter + 1    
+  }
+
+  
+  # Collect information for supplementary table
+  sheetInfo[['name']][counter] <<- paste0('Table S',counter)
+  sheetInfo[['header']][counter] <<- paste0(sheetInfo[['name']][counter],': ',description)
+  sheetInfo[['table']][[counter]] <<- table
+}
+
+
+# A new global list is created, which will be populated with all supplementary tables
+sheetInfo <<- list()
+```
+
+
+All supplementary tables 
+
+```{r,message=FALSE,warning=FALSE}
+# Generate tables for microbiome mapping coverages
+microbiomeTables <- getMicrobiomeSuppTables(fluxAll)
+
+# Add these tables to the supplementary materials
+collectSupplements(microbiomeTables[[1]], 'Measured microbial taxa.')
+#collectSupplements(microbiomeTables[[2]], 'Species mapping statistics')
+#collectSupplements(microbiomeTables[[3]], 'Taxonomic read statistics')
+
+# Also add stats on phylum and species abundances
+collectSupplements(microbiomeTables[[2]], 'Mean percentage relative phylum abundances before and after mapping.')
+collectSupplements(microbiomeTables[[3]], 'Mean percentage relative species before and after mapping.')
+
+# Add metabolite list
+collectSupplements(fluxSamples, 'List of in silico investigated metabolites.')
+
+# Add raw flux predictions
+rawfluxes <- prepareFluxes('',6) # Round fluxes on six decimals
+rawfluxes$ID <- 1:length(rawfluxes$ID)
+collectSupplements(rawfluxes, 'Predicted maximal fluxes in blood in mmol/day/person.')
+
+# Add summary statistics on metabolite fluxes
+fluxSummary <- getFluxSummary()
+
+# Add summary statistics to the supplementary table
+collectSupplements(fluxSummary, 'List of sex-specific mean flux values (SD).')
+
+# Extract info on the metabolic groups
+fluxgroups <- lapply(results$groups, paste,collapse = '; ') %>%
+              as_tibble() %>% 
+              pivot_longer(cols=everything(),names_to = 'Groups',values_to = 'Included metabolites')
+
+# Add flux groups to supplementary table info
+collectSupplements(fluxgroups, 'Metabolic groups of essentially identical flux distributions.')
+
+```
+
+Next, we are adding the regression outcomes to the supplementary results. However, we first nee to clean the regression tables.
+
+```{r,message=FALSE,warning=FALSE}
+
+# Set function for cleaning the regression tables
+cleanRegressionTables <- function(x){
+x <- x %>% 
+  select(-term) %>% # Remove predictor and cohort information
+  relocate(Formula,.after=metabolite) %>% # Move regression formula
+  mutate(Cohort = gsub('Complete','All samples',Cohort),
+         Formula = gsub('AgeERGO5','Age in years',Formula), # Process age information
+         Formula = gsub('Flux','Flux in blood',Formula),
+         Formula = gsub('g ','Global cognition score ',Formula), # Clarify the global cognition score
+         Formula = gsub('GRS_APOE','Polygenic risk score',Formula)) %>%
+  # Rename variables
+  rename(`regression formula` = Formula,
+         `2.5% CI` = `2.5 %`,
+         `97.5% CI` = `97.5 %`,
+         `regression beta` = `estimate`)
+  
+# Ensure each row name is capitalised
+x[[1]] <- str_to_title(x[[1]])
+return(x)
+}
+
+# Clean regression table on the fluxes
+regSuplFluxes <- cleanRegressionTables(fluxreg$AD_risk) %>% select(-Cohort)
+regSuplFluxesModeration <- cleanRegressionTables(fluxreg$Sex_moderation)
+
+# Clean regressions on the microbiota
+regSuplMicrobes <- cleanRegressionTables(microbereg$AD_risk) %>% 
+  select(-Cohort) %>%
+  mutate(`regression formula` = gsub('Flux in blood', 'Relative abundance',`regression formula`)) %>% # Fix regression formula
+  rename(Species = metabolite)
+
+regSuplMicrobesModeration <- cleanRegressionTables(microbereg$Sex_moderation) %>% 
+  mutate(`regression formula` = gsub('Flux in blood', 'Relative abundance',`regression formula`)) %>% # Fix regression formula
+  rename(Species = metabolite)
+
+
+
+# Rerun the metabolomic regressions again
+metabolomeFiltered <- metabolome %>% 
+  filter(grepl('bile', SUB_PATHWAY, ignore.case = TRUE) | 
+         grepl('^tryptophan|^kynurenine|^creatine|^Butyrate/Isobutyrate (4:0)|^arginine', metabolite, ignore.case = TRUE) |
+         grepl('cholesterol', metabolite, ignore.case = TRUE) | 
+         grepl('4-cholesten-3-one', metabolite, ignore.case = TRUE) |
+         grepl('7-alpha-hydroxy-3-oxo-4-cholestenoate', metabolite, ignore.case = TRUE))
+metabolomereg <-runRegressionAnalyses(metabolomeFiltered,'AD_risk','Sex_moderation','','',file,'metabolome')
+
+# Clean regressions table on the serum metabolomics
+regSuplMetabolome <- cleanRegressionTables(metabolomereg$AD_risk) %>% select(-Cohort)
+regSuplMetabolomeModeration <- cleanRegressionTables(metabolomereg$Sex_moderation)
+
+```
+
+All other supplementary tables are now collected:
+
+```{r,message=FALSE,warning=FALSE}
+## Regression outcomes
+collectSupplements(regSuplFluxes, 'Regression outcomes on predicted fluxes against age and against global cognition')
+
+## microbe-metabolite correlations
+collectSupplements(metMicrobeLinks, 'Links between species and their respective ability to produce a given metabolite.')
+collectSupplements(fluxMicrobeReg, 'Explained variance (R-squared) between species relative abundances and metabolic fluxes for metabolites each species can produce.')
+
+## Microbe regressions
+collectSupplements(regSuplMicrobes, 'Regression outcomes on relative species abundances against age and against global cognition')
+```
+
+Next, we will update the serum_metabolites table to include information on which metabolites were analysed
+```{r,message=FALSE,warning=FALSE}
+serum_metabolites_supplement <- serum_metabolites %>%
+  rename(`super pathway` = SUPER_PATHWAY, `sub pathway` = SUB_PATHWAY) %>% 
+  mutate(`analysed metabolite` = grepl('bile', `sub pathway`, ignore.case = TRUE) | 
+         grepl('^tryptophan|^kynurenine|^creatine|^Butyrate/Isobutyrate (4:0)|^arginine', metabolite, ignore.case = TRUE) |
+         grepl('cholesterol', metabolite, ignore.case = TRUE) | 
+         grepl('4-cholesten-3-one', metabolite, ignore.case = TRUE) |
+         grepl('7-alpha-hydroxy-3-oxo-4-cholestenoate', metabolite, ignore.case = TRUE)) %>%
+  arrange(desc(`analysed metabolite`))
+
+# Capitalise the first letter
+serum_metabolites_supplement[[1]] <- str_to_title(serum_metabolites_supplement[[1]])
+
+# Serum metabolite names
+collectSupplements(serum_metabolites_supplement, 'Named metabolites in serum metabolomics.')
+
+
+# Add metabolite regressions to supplementary materials
+collectSupplements(regSuplMetabolome, 'Regression outcomes on serum metabolomic concentrations against age and against global cognition')
+```
+
+Cleaning of the results will also be done for the univariate test results
+
+```{r,message=FALSE,warning=FALSE}
+
+# Set function for cleaning the univariate test results
+cleanUnivariateTestTables <- function(x){
+x <- x %>% 
+  relocate(method,.after=1) %>% 
+  # Remove unnecessary variables 
+  select(-any_of(c('estimate','estimate1','estimate2','conf.low','conf.high','alternative','p.adj.signif','.y.'))) %>% 
+  # Rename columns for clarity
+  rename_with(~ if_else(. == 'p', 'p.value', .), everything()) %>%
+  rename_with(~ if_else(. == 'p', 'FDR', .), everything()) %>%
+  rename_with(~ if_else(. == 'df', 'degrees of freedom', .), everything())
+
+# Ensure each row name is capitalised
+x[[1]] <- str_to_title(x[[1]])
+return(x)
+}
+
+# Clean results on fluxes and APOE genotype
+apoeSuplFlux <- cleanUnivariateTestTables(apoeFluxRes$kruskall_Pooled)
+apoeSuplFluxDun <- cleanUnivariateTestTables(apoeFluxRes$Dunns_Pooled)
+
+# Clean results on species relative abundances and APOE genotype
+apoeSuplMicrobes <- cleanUnivariateTestTables(apoeMicroRes$kruskall_Pooled)
+apoeSuplMicrobesDun <- cleanUnivariateTestTables(apoeMicroRes$Dunns_Pooled)
+
+# Clean results on serum metabolomics and APOE genotype
+apoeSuplMetabolome <- cleanUnivariateTestTables(apoeMetabolomeRes$kruskall_Pooled)
+apoeSuplMetabolomeDun <- cleanUnivariateTestTables(apoeMetabolomeRes$Dunns_Pooled)
+
+# Clean results on sex differences with mapped phylum and species reads
+phylumSexDiffSupl <- cleanUnivariateTestTables(phylumSexDiff)
+speciesSexDiffSupl <- cleanUnivariateTestTables(speciesSexDiff)
+
+# Finally, clean the results on sex differences with the fluxes
+sexDiffFluxSupl <- cleanUnivariateTestTables(sexDiffFlux)
+
+```
+
+Next, we continue to add the APOE results to the supplementary materials
+
+```{r,message=FALSE,warning=FALSE}
+# Add APOE results to supplementary materials
+collectSupplements(apoeSuplFlux, 'Kruskall-Wallis test statistics on the flux predictions against APOE risk groups.')
+collectSupplements(apoeFluxRes$Dunns_Pooled, 'Dunns multiple comparison statistics of flux predictions against the pooled APOE genotypes.')
+
+# APOE results on pan species abundances
+collectSupplements(apoeSuplMicrobes, 'Kruskall-Wallis test statistics on the relative species abundances against APOE risk groups.')
+collectSupplements(apoeSuplMicrobesDun, 'Dunns multiple comparison statistics of relative species abundances against the pooled APOE genotypes.')
+
+# Save metabolomics results
+collectSupplements(apoeSuplMetabolome, 'Kruskall-Wallis test statistics of serum metabolite concentrations in cholesterol and bile acid metabolism against APOE risk groups.')
+collectSupplements(apoeSuplMetabolomeDun, 'Dunns multiple comparison statistics of serum metabolite concentrations in cholesterol and bile acid metabolism against the pooled APOE genotypes.')
+
+# Sex-specific microbe and flux abundances
+collectSupplements(phylumSexDiffSupl, 'Wilcoxon statistics on phylum-level sex differences.')
+collectSupplements(speciesSexDiffSupl, 'Wilcoxon statistics on species-level sex differences.')
+collectSupplements(sexDiffFluxSupl, 'Wilcoxon statistics on sex differences for the predicted fluxes')
+
+# Regression outcomes of sex-specific results against cognition
+collectSupplements(regSuplFluxesModeration, 'Sex-specific and sex stratified regression outcomes on flux predictions against global cognition')
+collectSupplements(regSuplMicrobesModeration, 'Sex-specific and sex stratified regression outcomes on relative species abundances against global cognition')
+
+collectSupplements(regSuplMetabolomeModeration, 'Sex-specific and sex stratified regression outcomes on serum metabolite concentrations against global cognition')
+```
+
+Now, lets save the supplementary tables
+
+```{r}
+## Add index table
+
+# Increase JAVA memory
+options(java.parameters = "- Xmx1024m")
+# Load function for automated excel saving
+source(here('scripts','r2excel.r'))
+# Create workbook
+wb <- createWorkbook(type="xlsx")
+
+# Create tibble with headers
+headers <- sheetInfo$header %>% as_tibble() %>% rename(`Overview of supplemental tables.`=value)
+# Then, create the new sheet
+sheet <- createSheet(wb, sheetName = 'Index')
+
+# Add index table to workbook
+xlsx.addTable(wb, sheet, headers, startCol=1,row.names=TRUE)
+
+# Add sheets in sheetInfo to workbook
+for (i in 1:length(sheetInfo$name)){
+# Then, create the new sheet
+sheet <- createSheet(wb, sheetName = sheetInfo$name[i])
+
+# Add header
+xlsx.addHeader(wb, sheet, value=sheetInfo$header[i],level=2, color="black")
+xlsx.addLineBreak(sheet, 1)
+
+# Add table : add a data frame
+xlsx.addTable(wb, sheet, sheetInfo$table[[i]], startCol=1,row.names=TRUE)
+}
+
+# save the workbook to an Excel file
+path <- here("Supplementary_Tables.xlsx")
+if (file.exists(path)){
+  file.remove(path)
+}
+saveWorkbook(wb, path)
+```
+
+
+## Save data and tables to manuscript
+
+```{r}
+
+# Define a utility function for writing tables to files
+txtWrite <- function(table, filename) {
+  # Write the given table to a file in the 'overleaf' directory
+  # - Row names are excluded
+  # - Fields are separated by commas
+  # - Quotes around character values are not included
+  write.table(table, here('overleaf', filename), row.names = FALSE, sep = ',', quote = FALSE)
+}
+
+# Write data tables for the manuscript latex source code
+
+# Write the table of phylum-level abundances to a text file
+txtWrite(phylumAbun, 'phylumAbundances.txt')
+
+# Write the first three rows of the species-level abundance table to a text file
+txtWrite(speciesAbun[1:3, ], 'speciesAbundances.txt')
+
+# Generate a table of metabolite grouping statistics
+metaboliteGroupings <- tibble(
+  Metabolites_raw = ncol(fluxes) - 2,                     # Number of raw metabolites (excluding ID/Sex columns)
+  Filtered_metabolites = ncol(fluxesPruned) - 2,         # Number of metabolites after filtering
+  Groups = length(results$groups),                      # Total number of groups identified
+  Metabolites_in_groups = sum(sapply(results$groups, length)), # Total number of metabolites across all groups
+  Analysed_metabolites = ncol(fluxes2) - 2               # Number of metabolites after consolidating groups
+) %>%
+# Write the metabolite grouping statistics to a file
+txtWrite(., 'metaboliteGroupingStats.txt')
+
+# Analyze flux sample classification and removal statistics
+fluxSamples %>%
+  group_by(Classification, Removed) %>%                   # Group by classification and removal status
+  summarise(value = n()) %>%                              # Count the number of samples in each group
+  pivot_wider(names_from = Removed) %>%                   # Reshape data to have columns for 'Removed' values
+  mutate(Classification = tolower(Classification)) %>%    # Convert the classification names to lowercase
+  # Write the resulting table to a file
+  txtWrite(., 'metaboliteClassNumbers.txt')
+
+## Next, we define results for flux microbe correlations
+# Filter and export selected metabolites of interest
+fluxMicrobeReg %>%
+  select(c('Species', 'L-arginine', '3-Dehydrocholate', '7-Dehydrocholate',
+           'Deoxycholate', 'Lithocholate', 'Creatine', 'L-arginine', 
+           'S-Adenosyl-L-methionine', 'L-tryptophan', 'Formaldehyde', 'Formate')) %>%
+  arrange(Species) %>%                            # Sort by species for clarity
+  txtWrite(., 'flux_microbe_correlations.txt')    # Save results to a file
+
+## Save age and cognition flux results
+fluxreg$AD_risk %>%
+  filter(metabolite %in% c('L-arginine', '3-dehydro-CA/CDCA', 'Deoxycholate',
+                           'Lithocholate', '7-dehydro-CA/CDCA'), # Select specific metabolites of interest
+         term %in% c('AgeERGO5', 'Flux')) %>%                    # Select terms relevant to age or flux
+  select(metabolite, term, p.value, FDR) %>%                     # Keep relevant columns for results
+  txtWrite(., 'ageCognitionfluxresults.txt')                     # Save results to a file
+
+## Save age and cognition microbe results
+# Define microbes of interest
+microbesOfInterest <- c('Parabacteroides distasonis', 'Bilophila wadsworthia', 
+                        'Collinsella aerofaciens', 'Butyrivibrio crossotus', 
+                        'Eggerthella lenta')
+
+microbereg$AD_risk %>%
+  filter(metabolite %in% microbesOfInterest,              # Filter for microbes of interest
+         term %in% c('AgeERGO5', 'Flux')) %>%             # Select terms relevant to age or flux
+  select(metabolite, term, p.value, FDR) %>%              # Keep relevant columns
+  arrange(term, p.value) %>%                              # Sort by term and then by p-value
+  txtWrite(., 'ageCognitionMicrobeResults.txt')           # Save results to a file
+
+## Save cognition serum metabolite results
+metabolomereg$AD_risk %>%
+  filter(term == 'Flux') %>%                              # Filter for flux-specific terms
+  filter(grepl('cholic|cholate', metabolite)) %>%         # Select metabolites containing "cholic" or "cholate"
+  select(metabolite, estimate, p.value, FDR) %>%          # Keep relevant columns
+  rename_with(~ gsub(".", "", .x, fixed = TRUE)) %>%      # Remove dots in column names for clean output
+  txtWrite(., 'cognitionSerumResults.txt')                # Save results to a file
+
+## Save APOE flux results
+# Combine APOE-related summary statistics from multiple data frames
+apoePvalues <- rbind(apoeFluxSummaryStats,                 # Flux summary statistics
+                     microbeAPOEstats,                    # Microbe statistics
+                     apoeMetabolomeSummaryStats) %>%      # Metabolome statistics
+  relocate(E2_E3, .before = E2_E4)                        # Reorder columns for clarity
+txtWrite(apoePvalues, 'apoePvalues.txt')                  # Save the combined table to a file
+
+
+# Phylum and species abundances
+# Save sex differences in phylum abundances
+txtWrite(
+  phylumSexDiff %>% 
+    select(Phylum, p, p.adj),              # Select only Phylum, p-value, and adjusted p-value columns
+  'phylumSexDifferences.txt'              # Save to a file for phylum-level results
+)
+
+# Save sex differences in species abundances
+txtWrite(
+  speciesSexDiff %>%
+    select(Species, p, p.adj) %>%         # Select only Species, p-value, and adjusted p-value columns
+    slice(1:5),                           # Keep only the top 5 rows for compact output
+  'speciesSexDifferences.txt'             # Save to a file for species-level results
+)
+
+## Save cognition-related sex-specific results
+txtWrite(
+  sexdiff,                                 # Data containing cognition and sex-specific results
+  'sexdifferencesAgeCog.txt'              # Save the results to a file
+)
+
+# Summarize flux and species flux differences
+txtWrite(
+  SummarySexFluxMicrobeDiff,               # Summary data of flux differences by sex
+  'sexDiffSummary.txt'                     # Save to a file for a high-level summary
+)
+
+# Save cognition flux differences by sex
+fluxreg$Sex_moderation %>%
+  filter(
+    metabolite %in% fluxCognitionSexRes,   # Filter for metabolites related to sex-specific cognition results
+    term %in% c('Flux', 'Flux:SexMale')    # Include terms related to general flux and male-specific flux
+  ) %>%
+  mutate(term = factor(term, levels = c('Flux:SexMale', 'Flux'))) %>%  # Reorder terms for logical grouping
+  select(metabolite, term, Cohort, estimate, p.value, FDR) %>%         # Select relevant columns
+  arrange(metabolite, term) %>%                                       # Sort results by metabolite and term
+  txtWrite(., 'sexFluxCogResults.txt')                                # Save to a file for flux-based results
+
+# Save cognition-related microbe differences by sex
+microbereg$Sex_moderation %>%
+  filter(term %in% c('Flux', 'Flux:SexMale')) %>%                      # Include terms for general flux and male-specific flux
+  select(metabolite, term, Cohort, estimate, p.value, FDR) %>%         # Select relevant columns
+  filter(metabolite %in% c('Bacteroides caccae',                      # Filter for specific microbes of interest
+                           'Bacteroides vulgatus', 
+                           'Bacteroides ovatus')) %>%
+  mutate(term = factor(term, levels = c('Flux:SexMale', 'Flux'))) %>% # Reorder terms for logical grouping
+  arrange(metabolite, term) %>%                                       # Sort results by metabolite and term
+  txtWrite(., 'sexMicrobeCogResults.txt')                             # Save to a file for microbe-based results
+```

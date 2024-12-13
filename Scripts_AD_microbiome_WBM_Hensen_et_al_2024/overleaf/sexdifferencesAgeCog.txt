@@ -1,0 +1,4 @@
+term,p
+AgeERGO5,0.886
+g,2.14e-12
+AgeERGO5:SexMale,0.168235077777136

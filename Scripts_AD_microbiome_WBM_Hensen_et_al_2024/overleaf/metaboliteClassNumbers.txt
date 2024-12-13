@@ -1,0 +1,10 @@
+Classification,No,Yes
+amino acid and energy metabolites,15,NA
+branched-chain amino acids,3,NA
+lipid compounds,2,2
+methionine and cysteine metabolism,6,NA
+neurotransmitters,10,NA
+polyamines,3,1
+secondary bile acids,10,1
+short-chain fatty acids,7,NA
+tryptophan metabolites,7,NA
