@@ -1,0 +1,4 @@
+Species,Mean relative abundance,SD of abundance
+Faecalibacterium prausnitzii,16.3318931137547,12.3027943024049
+Ruminococcus bromii,8.30541139616137,7.96173285155255
+Butyrivibrio crossotus,8.21897072958457,10.9453031813407

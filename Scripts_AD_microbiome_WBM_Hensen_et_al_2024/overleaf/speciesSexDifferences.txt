@@ -1,0 +1,6 @@
+Species,p,p.adj
+Anaerostipes hadrus,4.09e-06,0.00024131
+Faecalibacterium prausnitzii,0.000218,0.00479866666666667
+Alistipes shahii,0.000244,0.00479866666666667
+Dorea longicatena,0.00235,0.0346625
+Ruminococcus bromii,0.00373,0.044014

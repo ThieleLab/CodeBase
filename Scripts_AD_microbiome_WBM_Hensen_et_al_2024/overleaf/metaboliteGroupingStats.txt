@@ -1,0 +1,2 @@
+Metabolites_raw,Filtered_metabolites,Groups,Metabolites_in_groups,Analysed_metabolites
+67,63,9,31,41

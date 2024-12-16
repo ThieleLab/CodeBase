@@ -1,0 +1,20 @@
+"Variable" "N" "Female" "Male" "{p-valuedag}"
+"1" "Samples" "1065" "608" "457" NA
+"2" "Age" "1064" "61.66 (5.38)" "61.64 (5.48)" "9.59e-01"
+"3" "BMI" "1065" "27.24 (4.85)" "27.62 (4.07)" "1.69e-01"
+"4" "Education** (N)" "1062" "39-261-156-150" "23-87-164-182" "1.17e-16"
+"5" NA NA NA NA NA
+"6" "Mini mental state examination score***" "1065" "28.56 (1.42)" "28.51 (1.36)" "5.97e-01"
+"7" "Letter-digit substitution score" "1065" "33.2 (6.43)" "31.17 (5.52)" "8.2e-08"
+"8" "Stroop colour and word test score" "1065" "43.58 (12.27)" "44.32 (11.24)" "3.11e-01"
+"9" "Word fluency score test" "1065" "24.97 (5.6)" "24.39 (5.62)" "9.21e-02"
+"10" "Delayed word fluency test score" "1065" "9.33 (2.65)" "8.21 (2.66)" "1.14e-11"
+"11" "Left hand Purdue pegboard score" "1065" "38.39 (4.51)" "35.41 (4.94)" "1.33e-23"
+"12" "Global cognition score" "1065" "0.3 (1.5)" "-0.35 (1.44)" "1.87e-12"
+"13" NA NA NA NA NA
+"14" "APOE E2/E2 (N)" "5" "5" "0" NA
+"15" "APOE E2/E3 (N)" "121" "74" "47" NA
+"16" "APOE E2/E4 (N)" "25" "15" "10" NA
+"17" "APOE E3/E3 (N)" "644" "350" "294" NA
+"18" "APOE E3/E4 (N)" "251" "157" "94" NA
+"19" "APOE E4/E4 (N)" "19" "7" "12" NA
