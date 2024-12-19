@@ -1,10 +1,10 @@
 # Figure 2: Creates multi-panel figures showing APOE-related metabolic analyses
 #
 # USAGE:
-#    createAPOEFigures(fluxAll, microbiome, metabolome)
+#    createAPOEFigures(fluxAllpruned, microbiome, metabolome)
 #
 # INPUTS:
-#    fluxAll          DataFrame containing metabolic flux data
+#    fluxAllpruned          DataFrame containing metabolic flux data
 #    microbiome       DataFrame containing microbial abundance data
 #    metabolome       DataFrame containing serum metabolite concentrations
 #
@@ -15,12 +15,74 @@
 # .. Author: - Tim Hensen
 #            - Annotated version created on 2024-11-18
 
+
+updateBoxplotPvals <- function(object, input) {
+# INPUTS:
+# figure object: object
+# Original dataset filtered on metabolite of interest
+
+# Step 1: Calculate the correct p-values from a Dunns test
+
+if ( any(variable.names(input)=='Flux') ) {
+  dunnsRes <- dunn_test(input, Flux ~ apoePooled, detailed = TRUE)
+}
+  
+if ( any(variable.names(input)=='Abundance') ) {
+  dunnsRes <- dunn_test(input, Abundance ~ apoePooled, detailed = TRUE)
+}
+  
+if ( any(variable.names(input)=='Concentration') ) {
+  dunnsRes <- dunn_test(input, Concentration ~ apoePooled, detailed = TRUE)
+}
+
+dunnStats <- dunnsRes %>%
+  select(group1, group2, p) %>% 
+  arrange(c(1,3,2)) # Arrange for future merging
+
+# Step 2: Obtain the p-value data from the figure
+figureData <- ggplot_build(object)
+objectData <- figureData$data[[2]]
+
+# Find indices in the target (objectData) and source (dunnStats)
+
+# Get target data
+target <- objectData %>% select(annotation, group)
+
+# Alter dunnStats so that it can be merged with the target
+dunnStats1 <- dunnStats %>%
+  mutate(group = paste(group1, group2, row_number(), sep = "-"))
+
+# Merge with target
+newData <- target %>%
+  left_join(dunnStats1, by = "group") %>%
+  mutate(annotation = ifelse(!is.na(p), p, annotation))
+
+# Trim values so that the last two nonzero digits are preserved.
+
+lastNzDigit <- floor(log10(newData$p)) # Find the first non-zero digit
+roundingFactor <- abs(lastNzDigit)+1 # Add the second
+
+# Trim values and add them to annotation
+newData$annotation <- as.character(round(newData$p, digits = roundingFactor))
+
+# Add new data to figureData
+figureData$data[[2]]$annotation <- newData$annotation
+
+# Transform figureData back to graph
+objectNew <- ggplotify::as.ggplot(ggplot_gtable(figureData))
+return(objectNew)
+}
+
+
 # Define statistical comparison groups for APOE genotypes
 my_comparisons <- list(
   c('E2', 'E3'),  # Compare E2 vs E3
   c('E3', 'E4'),  # Compare E3 vs E4
   c("E2", "E4")   # Compare E2 vs E4
 )
+
+# Filter out E2/E4 genotype from analysis
+fluxAllpruned <- fluxAll %>% filter(apoe != 24)
 
 # Create custom theme for consistency across all plots
 myTheme <- theme(
@@ -30,8 +92,10 @@ myTheme <- theme(
 )
 
 ## Panel A: Deoxycholate Flux Analysis
-a <- fluxAll %>% 
+a <- fluxAllpruned %>% 
   filter(metabolite %in% 'Deoxycholate') %>% 
+  # Test
+  filter(!is.na(Flux)) %>%
   ggplot(aes(x=apoePooled, y=Flux, fill=apoePooled)) + 
   geom_boxplot(outlier.alpha=0.2) +  # Semi-transparent outliers
   theme_bw() + 
@@ -44,8 +108,13 @@ a <- fluxAll %>%
   scale_fill_brewer(palette="Set2") + 
   myTheme
 
+# Update p-values shown in a with those obtained from a dunns test
+input <- fluxAllpruned %>% filter(metabolite == 'Deoxycholate')
+a <- updateBoxplotPvals(a, input)
+
+
 ## Panel B: S-Adenosyl-L-methionine Flux Analysis
-b <- fluxAll %>% 
+b <- fluxAllpruned %>% 
   filter(metabolite %in% 'S-Adenosyl-L-methionine') %>% 
   ggplot(aes(x=apoePooled, y=Flux, fill=apoePooled)) + 
   geom_boxplot(outlier.alpha=0.2) +
@@ -59,8 +128,16 @@ b <- fluxAll %>%
   scale_fill_brewer(palette="Set2") + 
   myTheme
 
+# Update p-values shown in a with those obtained from a dunns test
+input <- fluxAllpruned %>% filter(metabolite == 'S-Adenosyl-L-methionine')
+b <- updateBoxplotPvals(b, input)
+
+
+# Prune microbiome data
+microbiomePruned <- microbiome  %>% filter(apoe != 24)
+
 ## Panel C: Eggerthella lenta Abundance Analysis
-c <- microbiome %>% 
+c <- microbiomePruned %>% 
   filter(Species %in% 'Eggerthella lenta') %>% 
   ggplot(aes(x=apoePooled, y=scale(log2(Abundance)), fill=apoePooled)) + 
   geom_boxplot(outlier.alpha=0.2) +
@@ -74,8 +151,16 @@ c <- microbiome %>%
   scale_fill_brewer(palette="Set2") + 
   myTheme
 
+# Update p-values shown in a with those obtained from a dunns test
+input <- microbiomePruned %>% filter(Species == 'Eggerthella lenta')
+c <- updateBoxplotPvals(c, input)
+
+
+# Prune metabolome data
+metabolomePruned <- metabolome %>% filter(apoe != 24)
+
 ## Panel D: Serum Deoxycholate Concentration Analysis
-d <- metabolome %>% 
+d <- metabolomePruned %>% 
   filter(metabolite %in% 'deoxycholate') %>% 
   ggplot(aes(x=apoePooled, y=Concentration, fill=apoePooled)) + 
   geom_boxplot(outlier.alpha=0.2) +
@@ -89,9 +174,13 @@ d <- metabolome %>%
   scale_fill_brewer(palette="Set2") + 
   myTheme
 
+# Update p-values shown in a with those obtained from a dunns test
+input <- metabolomePruned %>% filter(metabolite == 'deoxycholate')
+d <- updateBoxplotPvals(d, input)
+
 ## Additional Panels (E-I): Cholesterol-Related Metabolites Analysis
 # Panel E: Serum Cholesterol
-e <- metabolome %>% 
+e <- metabolomePruned %>% 
   filter(metabolite %in% 'cholesterol') %>% 
   ggplot(aes(x=apoePooled, y=Concentration, fill=apoePooled)) + 
   geom_boxplot(outlier.alpha=0.2) +
@@ -105,8 +194,12 @@ e <- metabolome %>%
   scale_fill_brewer(palette="Set2") + 
   myTheme
 
+# Update p-values shown in a with those obtained from a dunns test
+input <- metabolomePruned %>% filter(metabolite == 'cholesterol')
+e <- updateBoxplotPvals(e, input)
+
 # Panel F: 4-cholesten-3-one
-f <- metabolome %>% 
+f <- metabolomePruned %>% 
   filter(metabolite %in% '4-cholesten-3-one') %>% 
   ggplot(aes(x=apoePooled, y=Concentration, fill=apoePooled)) + 
   geom_boxplot(outlier.alpha=0.2) +
@@ -120,8 +213,12 @@ f <- metabolome %>%
   scale_fill_brewer(palette="Set2") + 
   myTheme
 
+# Update p-values shown in a with those obtained from a dunns test
+input <- metabolomePruned %>% filter(metabolite == '4-cholesten-3-one')
+f <- updateBoxplotPvals(f, input)
+
 # Panel G: 3beta-hydroxy-5-cholestenoate
-g <- metabolome %>% 
+g <- metabolomePruned %>% 
   filter(metabolite %in% '3beta-hydroxy-5-cholestenoate') %>% 
   ggplot(aes(x=apoePooled, y=Concentration, fill=apoePooled)) + 
   geom_boxplot(outlier.alpha=0.2) +
@@ -134,6 +231,10 @@ g <- metabolome %>%
   ) + 
   scale_fill_brewer(palette="Set2") + 
   myTheme
+
+# Update p-values shown in a with those obtained from a dunns test
+input <- metabolomePruned %>% filter(metabolite == '3beta-hydroxy-5-cholestenoate')
+g <- updateBoxplotPvals(g, input)
 
 # Panel H: 7-alpha-hydroxy-3-oxo-4-cholestenoate
 h <- metabolome %>% 
@@ -150,8 +251,12 @@ h <- metabolome %>%
   scale_fill_brewer(palette="Set2") + 
   myTheme
 
+# Update p-values shown in a with those obtained from a dunns test
+input <- metabolomePruned %>% filter(metabolite == '7-alpha-hydroxy-3-oxo-4-cholestenoate (7-Hoca)')
+h <- updateBoxplotPvals(h, input)
+
 # Panel I: Glycolithocholate
-i <- metabolome %>% 
+i <- metabolomePruned %>% 
   filter(metabolite %in% 'glycolithocholate') %>% 
   ggplot(aes(x=apoePooled, y=Concentration, fill=apoePooled)) + 
   geom_boxplot(outlier.alpha=0.2) +
@@ -164,6 +269,10 @@ i <- metabolome %>%
   ) + 
   scale_fill_brewer(palette="Set2") + 
   myTheme
+
+# Update p-values shown in a with those obtained from a dunns test
+input <- metabolomePruned %>% filter(metabolite == 'glycolithocholate')
+i <- updateBoxplotPvals(i, input)
 
 # Define layout grid for combined plot
 layout <- "
