@@ -84,6 +84,9 @@ Process the flux data
 ```{r, message=FALSE}
 source(here('scripts','prepareFluxes.R'))
 fluxes <- prepareFluxes('NET',6)
+
+# Save the processed flux table for tracktability
+write.csv(fluxes, file = here('results', 'processed_fluxes.csv'))
 ```
 
 After preparing the flux results, fluxes were removed where no net microbiome flux was predicted, i.e., a net flux of zero. This step was taken as the absence of microbes that produce a given metabolite could bias correlation and regression analyses.
