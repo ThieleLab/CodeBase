@@ -94,6 +94,12 @@ title(strcat(metsToTest(i,2), type),'FontWeight','normal')
 ylabel('')
 xlabel('')
 
+% Add N samples to plot legend
+ax=gca;
+pdIdx = matches(ax.XTickLabel,'PD');
+ax.XTickLabel(pdIdx==0) = append(ax.XTickLabel(pdIdx==0), ' (N=',cellstr(string( fluxRes.Control_N(i) )), ')'); % Add control sample size
+ax.XTickLabel(pdIdx==1) = append(ax.XTickLabel(pdIdx==1), ' (N=',cellstr(string( fluxRes.PD_N(i) )), ')'); % Add PD sample size
+
 % Format axis labels
 set(gca,'FontSize',12)
 set(gca,'TitleFontSizeMultiplier',1.5)
@@ -116,7 +122,7 @@ fSize = 14;
 text(xcoord,ycoord,textInput,'HorizontalAlignment','center','FontName','Arial','FontSize',fSize,'Interpreter','none');
 
 % Annotate plot with plot names
-subPlotNames = 'ABCDEFGH';
+subPlotNames = 'abcdefgh';
 titleProperties = get(gca,'Title');
 text(0.5, titleProperties.Position(2),subPlotNames(i),'FontSize',12*1.5,'VerticalAlignment','bottom')
 end

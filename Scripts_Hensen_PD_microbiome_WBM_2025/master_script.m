@@ -230,7 +230,7 @@ paths.prunedMetadataPath = pruneFluxOutliersFromMetadata(sampleImportanceTable,p
 % Define the confounders to control for
 confounders = {...
     'Age_at_collection',...
-    'Sex','Age_at_collection',...
+    'Sex',...
     'Do_you_drink_alcohol',...
     'Laxatives',...
     'Probiotic',...
@@ -247,7 +247,7 @@ confounders = {...
 % Set name of output file
 paths.parkinsonFluxes = fullfile(paths.outputs,'fluxRegressions.csv');
 
-[regressionResults,preparedInputTable,preparedMetadata] = performParkinsonAnalysis( ...
+[regressionResults,preparedInputTable,preparedMetadata, ~, regressions] = performParkinsonAnalysis( ...
     paths.fluxPath, ...
     paths.metadataPath, ...
     confounders, ...
@@ -264,8 +264,13 @@ close all; createViolinsPD(regressionResults,preparedInputTable,preparedMetadata
 % Update the paths variable with new fields
 paths.rxnsOfInterest = regressionResults.Flux.Reaction(regressionResults.Flux.FDR < FDRthreshold );
 
+% Investigate the influence of age and sex on the regression results
+[fullModRes, paths.modResPath] = moderationAnalysisPD(preparedInputTable, preparedMetadata, confounders, paths.rxnsOfInterest, paths.outputs);
 
+% Investigate if lifestyle variables should be added. 
 
+[lifeStyleInfluence,filePath] = analyseLifeStyleFactorsPD(paths, confounders, regressions, paths.outputs);
+% No lifestyle variables will be added as confounders to the regressions
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %           Identifying flux-associated microbial species               %%
@@ -354,12 +359,8 @@ tic
 % Perform cluster correlations
 [bestCorrPerSizeList, minbestCorrPerSizeList, rxnsOfInterest] = clusterFluxRaCorr(paths, top,onlyCorrTopMicrobes);
 toc % ~100 seconds for top 4
-%%
-% To continue
-% processClusterCorrForVis
-%
-%
-% Add the correlation coefficiennts of the summed relative abundances for
+
+% Add the correlation coefficients of the summed relative abundances for
 % the sets of flux-associated microbes
 bestCorrPerSizeList = addCorrForSummedFluxLinkedTaxa(corrTable,bestCorrPerSizeList, rxnsOfInterest);
 minbestCorrPerSizeList = addCorrForSummedFluxLinkedTaxa(corrTable,minbestCorrPerSizeList, rxnsOfInterest);
@@ -371,6 +372,10 @@ topCorrelations = removevars(topCorrelations,'clusterIndex');
 % Save results to table
 paths.topClusterCorr = fullfile(paths.microbeToFlux, 'top_microbialClusterCorrelates.csv');
 writetable(topCorrelations,paths.topClusterCorr)
+
+% Generate adjacency matrix for visualisation for the metabolite-microbe
+% assocations.
+[adjMatrix,filePath] = extractTopFluxMicrobeLinks(paths);
 
 
 %% Supplementary tables
@@ -425,17 +430,17 @@ writeSupplement(mergedTaxa, description, paths.outputs, summaryMerged)
 
 % Get model summary statistics
 disp('Start model content analysis')
-if 1
-tic
-[modelStats, summaryStats] = getPdMicrobiomeWBMstats(paths.mWbms, feature('numCores')); % 
-toc % 168 seconds with 18 parallel workers on an intel core i9-10890xe
-
-
-% Save model content information to table
-description = cell(2,1); 
-description{1} = 'Summary statistics of microbiome-WBM model content'; % Header
-description{2} = ''; % Details
-writeSupplement(summaryStats, description, paths.outputs)
+if 1 % This part can take 168 seconds with 18 parallel workers on an intel core i9-10890xe
+    tic
+    [modelStats, summaryStats] = getPdMicrobiomeWBMstats(paths.mWbms, feature('numCores')); % 
+    toc 
+    
+    
+    % Save model content information to table
+    description = cell(2,1); 
+    description{1} = 'Summary statistics of microbiome-WBM model content'; % Header
+    description{2} = ''; % Details
+    writeSupplement(summaryStats, description, paths.outputs)
 end
 %%
 %%%% DIET ->
@@ -462,14 +467,19 @@ writeSupplement(suplMetaboliteTable, description, paths.outputs)
 
 %%%% REGRESSION RESULTS ->
 
-preparedfluxRegressionTable = prepareFluxRegressionResults(paths.parkinsonFluxes);
+preparedfluxRegressionTable = prepareFluxRegressionResults(paths.parkinsonFluxes); % Flux regression results
+preparedfluxModerationRegressionTable = prepareFluxModerationRegressionResults(paths.modResPath); % Flux regression results for moderation of age and sex
+
 % Save dietary information to table
 description = cell(2,1); 
 description{1} = 'Logistic regression outcomes of predicted fluxes against Parkinson diagnosis'; % Header
 description{2} = ['The logistic regressions were performed on log2-transformed and z-scaled blood fluxes. ', ...
     'The regression log odds represent the estimated change in log odd probability of PD with an increase in predicted log2 flux of one standard deviation.', ...
-    'Positive regression coefficients indicate positive associations between predicted fluxes and PD, while negative regression coefficients indicate negative correlations with the fluxes.']; % details
-writeSupplement(preparedfluxRegressionTable, description, paths.outputs)
+    'Positive regression coefficients indicate positive associations between predicted fluxes and PD, while negative regression coefficients indicate negative correlations with the fluxes.', ...
+    'The regression log odds for the age-flux interaction represent the estimated change in the regression coefficient for flux and PD status with an increase in age of 1 log2 z-scaled unit of age in years', ...
+    'The regression log odds for the sex-flux interaction represent the estimated change in the regression coefficient for flux and PD status with a change from male to female samples.'];% details
+writeSupplement(preparedfluxRegressionTable, description, paths.outputs, preparedfluxModerationRegressionTable)
+
 
 %%%% METABOLITE FLUX CONTRIBUTIONS ->
 

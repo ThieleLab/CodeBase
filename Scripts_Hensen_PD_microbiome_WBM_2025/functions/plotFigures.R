@@ -201,13 +201,24 @@ dev.off()
 ################################################################################
 # Create chord diagram of top microbe-metabolite interactions
 
-library(ggalluvial)
-
+speciesToPlot <- c('Alistipes putredinis','Bacteroides dorei','Bacteroides ovatus','Bacteroides uniformis','Bacteroides vulgatus',
+                   'Blautia wexlerae','Collinsella aerofaciens','Eubacterium rectale','Faecalibacterium prausnitzii',
+                   'Phocaeicola plebeius','Prevotella copri','Roseburia intestinalis','Ruthenibacterium lactatiformans')
 
 topClusterCombinations <- read.csv(
-  here('parkinson_recreated','outputs','topClusterMicrobePresenceTable.csv'),
-  check.names=F) %>% 
+  here('parkinson_recreated','outputs','microbeToFlux','mostImportantMicrobialLimiters.csv'),check.names=F) %>%
   rename(Species = Row) %>%
+  select(-Leucylleucine) %>%
+  rename(`L-leucine / Leucylleucine` = `L-leucine`) %>%
+  mutate(Species = gsub('_',' ',Species)) %>%
+  filter(Species %in% speciesToPlot) %>%
+  pivot_longer(-Species, names_to = 'Metabolite') %>%
+  filter(value!=0) 
+
+topClusterCombinations <- read.csv(
+  here('parkinson_recreated','outputs','microbeToFlux','topClusterMicrobePresenceTable.csv'),
+  check.names=F) %>% 
+  #rename(Species = Row) %>%
   select(-Leucylleucine) %>%
   rename(`L-leucine / Leucylleucine` = `L-leucine`) %>%
   pivot_longer(-Species, names_to = 'Metabolite') %>%
@@ -217,23 +228,23 @@ topClusterCombinations <- read.csv(
 
 # Start r graphics png
 fileName <- here('parkinson_recreated','outputs','figures','topMicrobeMets_alluvium.png')
-png(file=fileName,width = 9, height = 6, units = "in", res = 450)
+png(file=fileName,width = 10, height = 6, units = "in", res = 450)
 
 ggplot(data = topClusterCombinations,
        aes(axis1 = Species, axis2 = Metabolite, y=value)) +
   geom_alluvium(aes(fill = Metabolite)) +
   geom_stratum(fill='grey90') +
   geom_text(stat = "stratum", 
-            aes(label = after_stat(stratum)),size=3) +
+            aes(label = after_stat(stratum)),size=4) +
   scale_x_discrete(limits = c("Species", "Metabolite"),expand = c(0, 0),
                    labels=c("Species" = "Gut microbial species", 
                             "Metabolite" = "Predicted metabolite\nin blood")) +
   scale_fill_viridis_d() +
   labs(title = 'Predicted key influencers of metabolic productions in blood',y='') +
   theme_minimal() +
-  theme(#legend.position = "none",
+  theme(legend.position = "none",
         axis.text.y=element_blank(),
-        axis.text.x=element_text(size=12),
+        axis.text.x=element_text(size=14),
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank())
 dev.off()

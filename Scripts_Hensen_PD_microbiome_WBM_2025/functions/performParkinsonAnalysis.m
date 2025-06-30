@@ -1,4 +1,4 @@
-function [results,preparedInputTable,preparedMetadata, preparedRawInputTable] = performParkinsonAnalysis(dataPath, metadataPath, confounders, savePath)
+function [results,preparedInputTable,preparedMetadata, preparedRawInputTable, regressions] = performParkinsonAnalysis(dataPath, metadataPath, confounders, savePath)
 % This function prepares the flux/reads tables and then performs
 % regressions.
 %
@@ -9,6 +9,34 @@ function [results,preparedInputTable,preparedMetadata, preparedRawInputTable] = 
 inputTable = readtable(dataPath,'VariableNamingRule','preserve');
 inputTable.ID = erase(inputTable.ID,{'muWBM_','_male','_female'});
 metadata = readtable(metadataPath,'VariableNamingRule','preserve');
+
+if 1
+    % The following dietary and lifestyle factors not accounted for yet, were
+% available for the analysis. 
+lifestyleFactors = {'How_often_do_you_eat_GRAINS',...
+    'How_often_do_you_eat_POULTRY_BEEF_PORK_SEAFOOD_EGGS',...
+    'How_often_do_you_eat_FRUITS_or_VEGETABLES',...
+    'How_often_do_you_eat_NUTS',...
+    'How_often_do_you_eat_YOGURT',...
+    'Do_you_smoke',...
+    'Do_you_drink_caffeinated_beverages'};
+
+% The dietary variables have more than two categories. However, to
+% understand if these dietary variables are relevant for the regression
+% analyses, we will only consider a binary of daily intake (Yes) vs a
+% non-daily intake of each food category. This decision is informed by the
+% original authors of the published microbiome dataset
+% (https://doi.org/10.1038/s41467-022-34667-x). Note that the variable
+% How_often_do_you_eat_YOGURT is encoded by "Few times a week" instead of
+% "At least once a day". This cutoff was made due to low sample sizes of
+% individuals that ate yogurt on a daily basis.
+baseCat = {'At least once a day','At least once a day','At least once a day','At least once a day','Few times a week','Y','Y'};
+
+% Encode the lifestyle variables.
+for i=1:length(lifestyleFactors)
+    metadata.(lifestyleFactors{i}) = double(matches(metadata.(lifestyleFactors{i}), baseCat{i}));
+end
+end
 
 
 %dataForTim = outerjoin(metadata,inputTable,'MergeKeys',true,'Type','left');
