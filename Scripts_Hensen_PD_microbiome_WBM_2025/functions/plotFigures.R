@@ -14,7 +14,7 @@ using<-function(...) {
 setwd('C://Users//mspg//Documents')
 
 # - Load required packages
-using('tidyverse','readxl','UpSetR','here','grid','pheatmap','RColorBrewer','viridis','tidytext','ggalluvial')
+using('tidyverse','readxl','UpSetR','here','grid','pheatmap','RColorBrewer','viridis','tidytext','ggalluvial','ggplotify')
 
 
 ################################################################################
@@ -104,10 +104,10 @@ dataPruned2 <- dataPruned1 %>%
 # Start r graphics png
 fileName <- here('parkinson_recreated','outputs','figures','fluxSensitivityPlot.png')
 #png(file=fileName,width = 8, height = 8, units = "in", res = 450)
-png(file=fileName,width = 8, height = 9, units = "in", res = 450)
-#png(file=fileName,width = 9, height = 6, units = "in", res = 450)
+#png(file=fileName,width = 8, height = 9, units = "in", res = 450)
+#png(file=fileName,width = 7.2, height = 10, units = "in", res = 450)
 # horizontal
-ggplot(dataPruned2) +
+barplt <- ggplot(dataPruned2) +
   geom_col( aes(x=Mean, y=reorder_within(Taxa,Mean,Metabolite),fill=Direction ),colour='black') +
   geom_errorbarh(aes(y = reorder_within(Taxa,Mean,Metabolite), xmax = `97.5CI`, xmin = `2.5CI`,),height = .3) +
   scale_y_reordered() +
@@ -120,7 +120,11 @@ ggplot(dataPruned2) +
   scale_fill_viridis(discrete = TRUE, option='viridis') +
   theme_bw()+
   theme(legend.position="bottom")
-dev.off()
+
+print(barplt)
+ggsave(fileName, device='png', width = 7.2, height = 10, units = 'in')
+
+#dev.off()
 
 
 ################################################################################
@@ -138,7 +142,7 @@ data <- data %>% filter(Species != 'Flux-associated taxa')
 
 if (F) { # Do not apply now
   # Filter on microbes that correlate above the threshold
-  threshold <- 0.15
+  threshold <- 0.2
   fun <- function(x,t) {abs(data[sapply(x, is.numeric)]) > t }
   data <- data[apply(fun(data,threshold), 1, any),]
 }
@@ -174,27 +178,42 @@ ann_colors = list(
   Phylum = c(Actinobacteria="#fcfdbf", Bacteroidetes="#fe9f6d", Euryarchaeota="#de4968",
              Firmicutes="#8c2981",Proteobacteria="#3b0f70",Verrucomicrobia="#000004"))
 
+# Round values on two decimals
+#dataProcessed[abs(dataProcessed)<0.009] <- 0
+dataProcessed <- round(dataProcessed, digits = 2)
+
 # Create heatmap and save figure
 filePath <- here('parkinson_recreated','outputs','figures','fluxMicrobeCorr.png')
 #png(filePath, width = 5, height = 6, units = 'in', res = 450)
-png(filePath, width = 6, height = 8, units = 'in', res = 450)
+#png(filePath, width = 6, height = 8, units = 'in', res = 450)
 plt <- pheatmap(dataProcessed,
                 #color = colorRampPalette(c("blue", "white", "red"))(10),
                 color = mycol,
                 breaks = breaks,
                 display_numbers = T,
-                cluster_rows = F, cluster_cols = F,
+                fontsize_number = 5,
+                number_color = "black",
+                number_format = "%0.2g",
+                cluster_rows = T, cluster_cols = F,
                 clustering_method="average",
                 clustering_distance_rows='euclidean',
                 clustering_distance_cols='euclidean',         
-                fontsize_row=7,
-                fontsize_col=8,
-                fontsize = 6,
+                fontsize_row=9,
+                fontsize_col=9,
+                fontsize = 8,
                 annotation_row = spec,
                 annotation_colors = ann_colors,
-                main = "Correlations of species relative abundances with\nmetabolite blood fluxes in mmol/day/person",
+                angle_col = 315,
+                #main = "Correlations of species relative abundances\n with metabolite blood fluxes in mmol/day/person",
 )
-print(plt)
+ggplt <- as.ggplot(plt) +
+  labs(title = "Correlations of species relative abundances\nwith metabolite blood fluxes in mmol/day/person") +
+  guides(fill = guide_legend(ncol=1))
+
+print(ggplt)
+ggsave(here('parkinson_recreated','outputs','figures','fluxMicrobeCorr.png'), device='png', width = 7, height = 8, units = 'in')
+
+
 dev.off()
 
 
@@ -226,25 +245,33 @@ topClusterCombinations <- read.csv(
          Metabolite = gsub('_',' ',Metabolite)) %>%
   filter(value!=0) 
 
+# Make species labels italics
+topClusterCombinations1 <- topClusterCombinations %>% mutate(Species = paste0("italic('",Species,"')"),
+                                                            Metabolite = gsub(' ','',Metabolite))
 # Start r graphics png
 fileName <- here('parkinson_recreated','outputs','figures','topMicrobeMets_alluvium.png')
 png(file=fileName,width = 10, height = 6, units = "in", res = 450)
 
-ggplot(data = topClusterCombinations,
+ggplot(data = topClusterCombinations1,
        aes(axis1 = Species, axis2 = Metabolite, y=value)) +
   geom_alluvium(aes(fill = Metabolite)) +
   geom_stratum(fill='grey90') +
-  geom_text(stat = "stratum", 
-            aes(label = after_stat(stratum)),size=4) +
+  geom_text(stat = "stratum",
+            aes(label = after_stat(stratum)
+                ),
+            parse = T,
+            size=4) +
   scale_x_discrete(limits = c("Species", "Metabolite"),expand = c(0, 0),
                    labels=c("Species" = "Gut microbial species", 
                             "Metabolite" = "Predicted metabolite\nin blood")) +
   scale_fill_viridis_d() +
-  labs(title = 'Predicted key influencers of metabolic productions in blood',y='') +
+  labs(title = 'Predicted associations between gut microbes and blood metabolites in PD',y='') +
   theme_minimal() +
   theme(legend.position = "none",
         axis.text.y=element_blank(),
         axis.text.x=element_text(size=14),
+        title = element_text(size=14),
         panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank())
+        panel.grid.minor = element_blank()
+        )
 dev.off()
